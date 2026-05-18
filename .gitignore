@@ -1,0 +1,42 @@
+# Node & TypeScript
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+packages/registry/dist/
+
+# Python & PyQGIS
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+*.egg-info/
+packages/qgis-plugin/dist/
+packages/qgis-plugin/geostrata/catalog.sqlite
+packages/qgis-plugin/geostrata/manifest.json
+
+# Static Website Build
+_site/
+packages/website/icons/
+packages/website/catalog.json
+packages/website/manifest.json
+packages/website/geostrata.zip
+packages/website/plugins.xml
+
+# SQLite temporary files
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+symbology-style.db
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

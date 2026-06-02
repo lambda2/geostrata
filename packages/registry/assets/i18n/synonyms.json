@@ -1,0 +1,138 @@
+{
+	"categories": {
+		"basemap": {
+			"fr": ["fond de carte", "carte de base"],
+			"en": ["basemap", "base map", "background map"],
+			"es": ["mapa base", "plano base"],
+			"ar": ["خريطة أساسية", "خريطة"]
+		},
+		"elevation": {
+			"fr": ["altitude", "relief", "altimetrie", "mnt", "mns", "dem", "dsm", "dtm"],
+			"en": ["elevation", "dem", "dtm", "dsm", "terrain", "altitude"],
+			"es": ["elevacion", "altitud", "relieve", "mdt", "mde"],
+			"ar": ["ارتفاع", "تضاريس", "نموذج ارتفاع رقمي"]
+		},
+		"hydrography": {
+			"fr": ["eau", "eaux", "hydrographie", "hydrologie"],
+			"en": ["water", "hydrography", "hydrology"],
+			"es": ["agua", "hidrografia", "hidrologia"],
+			"ar": ["ماء", "مياه", "هيدروغرافيا"]
+		},
+		"transport": {
+			"fr": ["transport", "transports", "mobilite", "deplacement"],
+			"en": ["transport", "transportation", "mobility"],
+			"es": ["transporte", "movilidad"],
+			"ar": ["نقل", "مواصلات"]
+		},
+		"admin": {
+			"fr": ["administratif", "limites administratives", "decoupage administratif", "frontieres"],
+			"en": ["administrative", "boundaries", "borders"],
+			"es": ["administrativo", "limites administrativos", "fronteras"],
+			"ar": ["حدود إدارية", "حدود"]
+		},
+		"buildings": {
+			"fr": ["batiment", "batiments", "bati", "constructions"],
+			"en": ["building", "buildings", "footprints", "structures"],
+			"es": ["edificio", "edificios", "construcciones"],
+			"ar": ["مباني", "مبنى", "منشآت"]
+		},
+		"landuse": {
+			"fr": ["occupation du sol", "usage du sol", "couverture du sol", "environnement"],
+			"en": ["landuse", "land use", "landcover", "land cover", "lulc"],
+			"es": ["uso del suelo", "cobertura del suelo", "lulc"],
+			"ar": ["استخدام الأراضي", "غطاء أرضي"]
+		},
+		"imagery": {
+			"fr": ["imagerie", "satellite", "orthophoto", "orthophotos", "photo aerienne", "ortho"],
+			"en": ["imagery", "satellite", "orthophoto", "orthophotos", "aerial photo", "orthoimagery"],
+			"es": ["imagen", "satelite", "ortofoto", "ortofotos", "fotografia aerea"],
+			"ar": ["صور جوية", "صور فضائية", "أقمار صناعية", "أورثوفوتو"]
+		},
+		"utilities": {
+			"fr": ["reseaux", "reseau", "infrastructures techniques", "utilities"],
+			"en": ["utilities", "utility network", "technical infrastructure"],
+			"es": ["servicios publicos", "redes tecnicas", "infraestructura"],
+			"ar": ["مرافق", "بنية تحتية", "شبكات"]
+		},
+		"crisis": {
+			"fr": ["crise", "urgence", "secours", "humanitaire", "protection civile"],
+			"en": ["crisis", "emergency", "humanitarian", "relief", "civil defense"],
+			"es": ["crisis", "emergencia", "humanitario", "socorro"],
+			"ar": ["أزمة", "طوارئ", "إنساني", "إغاثة"]
+		}
+	},
+	"countries": {
+		"FR": {
+			"names": ["France", "République française", "Francia", "فرنسا"]
+		},
+		"CH": {
+			"names": ["Suisse", "Switzerland", "Schweiz", "Svizzera", "Suiza", "سويسرا"]
+		},
+		"BE": {
+			"names": ["Belgique", "Belgium", "België", "Bélgica", "Wallonie", "Flandre", "Bruxelles", "بلجيكا"]
+		},
+		"LU": {
+			"names": ["Luxembourg", "Luxemburg", "Luxemburgo", "لوكسمبورغ"]
+		},
+		"DE": {
+			"names": ["Allemagne", "Germany", "Deutschland", "Alemania", "ألمانيا"]
+		},
+		"ES": {
+			"names": ["Espagne", "Spain", "España", "إسبانيا"]
+		},
+		"IT": {
+			"names": ["Italie", "Italy", "Italia", "إيطاليا"]
+		},
+		"GB": {
+			"names": ["Royaume-Uni", "United Kingdom", "Great Britain", "Angleterre", "UK", "Reino Unido", "بريطانيا"]
+		},
+		"NL": {
+			"names": ["Pays-Bas", "Netherlands", "Nederland", "Hollande", "Países Bajos", "هولندا"]
+		},
+		"AT": {
+			"names": ["Autriche", "Austria", "Österreich", "النمسا"]
+		},
+		"PT": {
+			"names": ["Portugal", "البرتغال"]
+		},
+		"TR": {
+			"names": ["Turquie", "Turkey", "Türkiye", "Turquía", "تركيا"]
+		},
+		"UA": {
+			"names": ["Ukraine", "Україна", "Ucrania", "أوكرانيا"]
+		},
+		"US": {
+			"names": ["États-Unis", "United States", "USA", "Estados Unidos", "الولايات المتحدة"]
+		},
+		"CA": {
+			"names": ["Canada", "Canadá", "كندا"]
+		},
+		"MA": {
+			"names": ["Maroc", "Morocco", "Marruecos", "المغرب"]
+		},
+		"SN": {
+			"names": ["Sénégal", "Senegal", "السنغال"]
+		},
+		"CI": {
+			"names": ["Côte d'Ivoire", "Ivory Coast", "Costa de Marfil", "ساحل العاج"]
+		},
+		"CD": {
+			"names": ["République démocratique du Congo", "RDC", "DRC", "Congo Kinshasa", "الكونغو"]
+		},
+		"LR": {
+			"names": ["Liberia", "Libéria", "ليبيريا"]
+		},
+		"HT": {
+			"names": ["Haïti", "Haiti", "Haití", "هايتي"]
+		},
+		"LB": {
+			"names": ["Liban", "Lebanon", "Líbano", "لبنان"]
+		},
+		"SY": {
+			"names": ["Syrie", "Syria", "Siria", "سوريا"]
+		},
+		"MG": {
+			"names": ["Madagascar", "مدغشقر"]
+		}
+	}
+}

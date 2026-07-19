@@ -1,0 +1,33 @@
+- id: be-ngi-cartoweb-topo
+  name: IGN Belgique / NGI - CartoWeb Topographique
+  description: Carte topographique officielle de la Belgique produite par l'Institut Géographique National (IGN/NGI).
+  type: wmts
+  category: basemap
+  url: https://cartoweb.wmts.ngi.be/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=topo&STYLE=default&TILEMATRIXSET=3857&FORMAT=image/png
+  crs: EPSG:3857
+  country_iso: BE
+  tags:
+    - ign belgique
+    - ngi
+    - cartoweb
+    - topographie
+    - belgique
+  license: Open Data IGN Belgique
+  attribution: "© Institut Géographique National (IGN/NGI Belgique)"
+
+- id: be-wallonie-orthophotos
+  name: Géoportail de la Wallonie (WalOnMap) - Orthophotos
+  description: Orthophotographies aériennes les plus récentes couvrant la Région wallonne (SPW).
+  type: wms
+  category: imagery
+  url: https://geoservices.wallonie.be/arcgis/services/IMAGERIE/ORTHO_LAST/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&LAYERS=0&FORMAT=image/jpeg
+  crs: EPSG:3857
+  country_iso: BE
+  tags:
+    - wallonie
+    - walonmap
+    - orthophoto
+    - spw
+    - belgique
+  license: Open Data Wallonie (SPW)
+  attribution: "© Service public de Wallonie (SPW)"

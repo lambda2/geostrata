@@ -1,0 +1,400 @@
+- id: tr-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Turquie)
+  description: Polygones des limites administratives de niveau ADM1 (Turquie)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/tur.gpkg
+  crs: EPSG:4326
+  country_iso: TR
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - turquie
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: tr-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Turquie)
+  description: Polygones des limites administratives de niveau ADM2 (Turquie)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/tur.gpkg
+  crs: EPSG:4326
+  country_iso: TR
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - turquie
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ua-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Ukraine)
+  description: Polygones des limites administratives de niveau ADM1 (Ukraine)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/ukr.gpkg
+  crs: EPSG:4326
+  country_iso: UA
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - ukraine
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ua-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Ukraine)
+  description: Polygones des limites administratives de niveau ADM2 (Ukraine)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/ukr.gpkg
+  crs: EPSG:4326
+  country_iso: UA
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - ukraine
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ma-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Maroc)
+  description: Polygones des limites administratives de niveau ADM1 (Maroc)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/mar.gpkg
+  crs: EPSG:4326
+  country_iso: MA
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - maroc
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: sn-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Sénégal)
+  description: Polygones des limites administratives de niveau ADM1 (Sénégal)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/sen.gpkg
+  crs: EPSG:4326
+  country_iso: SN
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - sénégal
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ci-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Côte d Ivoire)
+  description: Polygones des limites administratives de niveau ADM1 (Côte d
+    Ivoire) fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA
+    HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/civ.gpkg
+  crs: EPSG:4326
+  country_iso: CI
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - côte d ivoire
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: cd-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (RD Congo)
+  description: Polygones des limites administratives de niveau ADM1 (RD Congo)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/cod.gpkg
+  crs: EPSG:4326
+  country_iso: CD
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - rd congo
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: cd-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (RD Congo)
+  description: Polygones des limites administratives de niveau ADM2 (RD Congo)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/cod.gpkg
+  crs: EPSG:4326
+  country_iso: CD
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - rd congo
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: lr-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Liberia)
+  description: Polygones des limites administratives de niveau ADM1 (Liberia)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/lbr.gpkg
+  crs: EPSG:4326
+  country_iso: LR
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - liberia
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: lr-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Liberia)
+  description: Polygones des limites administratives de niveau ADM2 (Liberia)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/lbr.gpkg
+  crs: EPSG:4326
+  country_iso: LR
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - liberia
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ht-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Haïti)
+  description: Polygones des limites administratives de niveau ADM1 (Haïti)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/hti.gpkg
+  crs: EPSG:4326
+  country_iso: HT
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - haïti
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: ht-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Haïti)
+  description: Polygones des limites administratives de niveau ADM2 (Haïti)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/hti.gpkg
+  crs: EPSG:4326
+  country_iso: HT
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - haïti
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: lb-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Liban)
+  description: Polygones des limites administratives de niveau ADM1 (Liban)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/lbn.gpkg
+  crs: EPSG:4326
+  country_iso: LB
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - liban
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: lb-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Liban)
+  description: Polygones des limites administratives de niveau ADM2 (Liban)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/lbn.gpkg
+  crs: EPSG:4326
+  country_iso: LB
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - liban
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: sy-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Syrie)
+  description: Polygones des limites administratives de niveau ADM1 (Syrie)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/syr.gpkg
+  crs: EPSG:4326
+  country_iso: SY
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - syrie
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: sy-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Syrie)
+  description: Polygones des limites administratives de niveau ADM2 (Syrie)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/syr.gpkg
+  crs: EPSG:4326
+  country_iso: SY
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - syrie
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: mg-fieldmaps-adm1
+  name: FieldMaps / HDX - Limites Administratives ADM1 (Madagascar)
+  description: Polygones des limites administratives de niveau ADM1 (Madagascar)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/mdg.gpkg
+  crs: EPSG:4326
+  country_iso: MG
+  tags:
+    - adm1
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - madagascar
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml
+- id: mg-fieldmaps-adm2
+  name: FieldMaps / HDX - Limites Administratives ADM2 (Madagascar)
+  description: Polygones des limites administratives de niveau ADM2 (Madagascar)
+    fournis par FieldMaps.io et Humanitarian Data Exchange (UN OCHA HDX).
+  type: fgb
+  category: admin
+  url: /vsicurl/https://data.fieldmaps.io/cod/originals/mdg.gpkg
+  crs: EPSG:4326
+  country_iso: MG
+  tags:
+    - adm2
+    - fieldmaps
+    - hdx
+    - cod-ab
+    - humanitaire
+    - limites administratives
+    - frontieres
+    - madagascar
+  license: CC-BY-4.0 / ODbL-1.0
+  attribution: © FieldMaps.io / UN OCHA HDX / OpenStreetMap contributors
+  style_file: admin.qml

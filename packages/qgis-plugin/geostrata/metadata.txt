@@ -1,0 +1,19 @@
+[general]
+name=Geostrata
+qgisMinimumVersion=3.28
+qgisMaximumVersion=4.99
+supportsQt6=True
+description=Moteur de recherche spatialisé universel (Ctrl+K) de couches géographiques locales et mondiales (WFS, WMTS, COG, VRT, FlatGeobuf, Overpass, XYZ).
+about=Geostrata intègre un catalogue communautaire 100 % statique (SQLite R-Tree + FTS5) directement dans la barre de recherche universelle de QGIS (Ctrl+K, préfixe gst). Tapez un mot-clé (ex: eau, dem, hopital, orthophoto) pour trouver instantanément toutes les couches locales et mondiales qui intersectent l'emprise actuelle du canevas, les charger en streaming (Entrée) ou les extraire hors-ligne en GeoPackage/GeoTIFF (Maj + Entrée).
+version=1.0.0
+author=André Aubin
+email=andre@andral.xyz
+license=GPL-2.0-or-later
+tracker=https://github.com/lambda2/geostrata/issues
+repository=https://github.com/lambda2/geostrata
+homepage=https://lambda2.github.io/geostrata/
+tags=catalog,strata,locator,search,wfs,wmts,cog,flatgeobuf,overpass,osm,dem,opendata
+icon=assets/icons/geostrata.svg
+category=Web
+experimental=False
+deprecated=False

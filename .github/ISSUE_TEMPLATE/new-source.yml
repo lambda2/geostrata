@@ -1,0 +1,94 @@
+name: Proposer une nouvelle source géographique
+description: Ajouter un flux (WFS, WMTS, COG, VRT, FlatGeobuf, XYZ, Overpass) dans Geostrata sans coder.
+title: "[Source] "
+labels: ["new-source"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de contribuer à **Geostrata** ! Remplissez les champs ci-dessous ou collez directement l'export YAML généré depuis le menu **Web -> Geostrata -> Partager une couche** dans QGIS.
+
+  - type: input
+    id: name
+    attributes:
+      label: Nom de la couche
+      description: Nom lisible qui sera affiché dans la barre de recherche QGIS (Ctrl+K).
+      placeholder: "Ex: Métropole de Lyon - Bornes fontaines et points d'eau"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type technique du flux
+      options:
+        - wfs
+        - wmts
+        - wms
+        - xyz
+        - tms
+        - cog
+        - vrt
+        - fgb
+        - geojson
+        - vectortile
+        - archive
+        - overpass
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Catégorie thématique
+      options:
+        - basemap
+        - elevation
+        - hydrography
+        - transport
+        - admin
+        - buildings
+        - landuse
+        - imagery
+        - utilities
+        - crisis
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: URL du flux ou recette Overpass
+      placeholder: "https://..."
+    validations:
+      required: true
+
+  - type: input
+    id: country_iso
+    attributes:
+      label: Code Pays ISO-3166-1 alpha-2 (optionnel)
+      description: Code à 2 lettres majuscules (ex. FR, CH, BE). Laisser vide pour une source mondiale.
+      placeholder: "FR"
+
+  - type: input
+    id: license
+    attributes:
+      label: Licence des données
+      placeholder: "Licence Ouverte / Etalab 2.0"
+    validations:
+      required: true
+
+  - type: input
+    id: attribution
+    attributes:
+      label: Attribution / Copyright
+      placeholder: "© Métropole de Lyon"
+    validations:
+      required: true
+
+  - type: textarea
+    id: yaml_snippet
+    attributes:
+      label: Fiche YAML complète (optionnel)
+      description: Si vous avez utilisé l'outil "Partager une couche" dans QGIS, collez le YAML ici.
+      render: yaml

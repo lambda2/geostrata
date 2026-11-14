@@ -344,4 +344,13 @@ TRANSLATIONS: Dict[str, str] = {
         "{freed} supprimés. {kept} conservés : utilisés par une couche du projet ouvert "
         "ou en cours de téléchargement."
     ),
+    "Group identical warnings and hide network errors after a few seconds": (
+        "Regrouper les avertissements identiques et masquer les erreurs réseau après quelques secondes"
+    ),
+    "A slow or unreachable server makes QGIS repeat the same warning for every request. "
+    "Every message stays available in the QGIS log panel.": (
+        "Un serveur lent ou injoignable fait répéter à QGIS le même avertissement à chaque requête. "
+        "Tous les messages restent disponibles dans le journal de QGIS."
+    ),
+    "Message bar:": "Barre de messages :",
 }

@@ -23,6 +23,24 @@ class ResolvedLayerSpec:
     display_name: str
 
 
+def _wfs_geometry_probe_option() -> str:
+    """Ask QGIS 4 to read one feature before declaring the layer geometry type.
+
+    DescribeFeatureType often announces 2D geometries while the features carry
+    Z values (IGN BD TOPO), which QGIS 4 reports as "Received feature geometry
+    has Z values but the layer type does not". QGIS 3 drops Z silently and does
+    not know this option, so it is only added from QGIS 4.
+    """
+    try:
+        from qgis.core import Qgis
+
+        if int(Qgis.QGIS_VERSION_INT) >= 40000:
+            return " forceInitialGetFeature='true'"
+    except Exception:
+        pass
+    return ""
+
+
 def _quote_uri_value(value: str) -> str:
     """Escape a layer or style name for a QGIS provider URI.
 
@@ -379,6 +397,7 @@ def build_provider_uri(
             f"preferCoordinatesForWfsT11='false' "
             f"restrictToRequestBBOX='1' srsname='{crs}' "
             f"typename='{typename}' url='{base_url}' version='{version}'"
+            f"{_wfs_geometry_probe_option()}"
         )
         return ResolvedLayerSpec(
             uri=uri,

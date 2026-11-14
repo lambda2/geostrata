@@ -52,6 +52,7 @@ from ..core.overpass_task import (
     save_configured_overpass_servers,
 )
 from ..core.sync_manager import DEFAULT_MANIFEST_URL, SyncManager
+from .message_tamer import SETTINGS_TAME_MESSAGES_KEY, tame_messages_enabled
 from .locator_filter import (
     SETTINGS_ICON_MODE_KEY,
     SETTINGS_INCLUDE_ELI_KEY,
@@ -176,6 +177,18 @@ class GeostrataSettingsDialog(QDialog):
             general_tab,
         )
         form.addRow(tr("ELI sources:"), self._eli_checkbox)
+
+        self._tame_messages_checkbox = QCheckBox(
+            tr("Group identical warnings and hide network errors after a few seconds"),
+            general_tab,
+        )
+        self._tame_messages_checkbox.setToolTip(
+            tr(
+                "A slow or unreachable server makes QGIS repeat the same warning for every request. "
+                "Every message stays available in the QGIS log panel."
+            )
+        )
+        form.addRow(tr("Message bar:"), self._tame_messages_checkbox)
 
         icon_row = QHBoxLayout()
         self._icon_mode_combo = QComboBox(general_tab)
@@ -323,6 +336,7 @@ class GeostrataSettingsDialog(QDialog):
         raw_eli = settings.value(SETTINGS_INCLUDE_ELI_KEY, True)
         include_eli = str(raw_eli).lower() not in ("false", "0", "no")
         self._eli_checkbox.setChecked(include_eli)
+        self._tame_messages_checkbox.setChecked(tame_messages_enabled())
 
         icon_mode = str(settings.value(SETTINGS_ICON_MODE_KEY, "custom") or "custom")
         idx = self._icon_mode_combo.findData(icon_mode)
@@ -629,6 +643,10 @@ class GeostrataSettingsDialog(QDialog):
             str(self._language_combo.currentData() or "auto"),
         )
         settings.setValue(SETTINGS_INCLUDE_ELI_KEY, self._eli_checkbox.isChecked())
+        settings.setValue(
+            SETTINGS_TAME_MESSAGES_KEY,
+            self._tame_messages_checkbox.isChecked(),
+        )
         settings.setValue(
             SETTINGS_ICON_MODE_KEY,
             str(self._icon_mode_combo.currentData() or "custom"),

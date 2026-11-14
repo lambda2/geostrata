@@ -17,6 +17,7 @@ from .i18n import N_, get_ui_language, tr
 from .ui.browser_dock import GeostrataDockWidget
 from .ui.coverage_preview import CoveragePreview
 from .ui.locator_filter import GeostrataLocatorFilter
+from .ui.message_tamer import MessageBarTamer
 from .ui.settings_dialog import GeostrataSettingsDialog
 from .ui.share_dialog import GeostrataShareDialog
 
@@ -41,6 +42,7 @@ class GeostrataPlugin:
         self._locator_filter: Optional[GeostrataLocatorFilter] = None
         self._dock_widget: Optional[GeostrataDockWidget] = None
         self._coverage_preview: Optional[CoveragePreview] = None
+        self._message_tamer: Optional[MessageBarTamer] = None
         self._actions: List[QAction] = []
         # (action, English text, English tooltip or None) for retranslation.
         self._action_texts: List[Tuple[QAction, str, Optional[str]]] = []
@@ -55,6 +57,9 @@ class GeostrataPlugin:
         )
         initial_paths = self._sync_manager.get_cached_sqlite_paths()
         self._db_client = CatalogDatabaseClient(initial_paths)
+
+        # Groups repeated provider warnings and hides network errors after a few seconds.
+        self._message_tamer = MessageBarTamer(self._iface)
 
         # One footprint highlight shared by the locator and the dock.
         self._coverage_preview = CoveragePreview(self._iface)
@@ -113,6 +118,10 @@ class GeostrataPlugin:
         """Deregister locator filter, dock widget, and remove plugin menu actions."""
         # Running downloads keep their partial file and resume on the next load.
         cancel_active_file_load_tasks()
+        if getattr(self, "_message_tamer", None) is not None:
+            self._message_tamer.dispose()
+            self._message_tamer.deleteLater()
+            self._message_tamer = None
         if self._locator_filter is not None:
             self._iface.deregisterLocatorFilter(self._locator_filter)
             self._locator_filter = None

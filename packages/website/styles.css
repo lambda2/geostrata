@@ -665,8 +665,13 @@ kbd {
 	margin: 0;
 	padding: 0;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
 	gap: 14px;
+}
+
+/* Grid items default to min-width: auto, which lets one long word widen the whole column. */
+.catalog-grid > li {
+	min-width: 0;
 }
 
 .catalog-empty {
@@ -714,6 +719,15 @@ kbd {
 	width: 26px;
 	height: 26px;
 	flex-shrink: 0;
+}
+
+.source-card-top > div {
+	min-width: 0;
+}
+
+.source-card-title,
+.source-card-desc {
+	overflow-wrap: anywhere;
 }
 
 .source-card-title {
@@ -766,6 +780,8 @@ kbd {
 }
 
 .badge {
+	max-width: 100%;
+	overflow-wrap: anywhere;
 	font-size: 0.8rem;
 	padding: 2px 8px;
 	border-radius: var(--radius);

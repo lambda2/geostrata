@@ -227,6 +227,31 @@
 		return list
 	}
 
+	// Some sources give a licence page instead of a licence name: a full URL does not fit in a card.
+	function isUrl(value) {
+		return /^https?:\/\//i.test(String(value ? value : '').trim())
+	}
+
+	function getShortLicense(license) {
+		var text = String(license ? license : '').trim()
+		if (!isUrl(text)) {
+			return text
+		}
+		try {
+			return new URL(text).hostname.replace(/^www\./, '')
+		} catch (e) {
+			return text
+		}
+	}
+
+	function getLicenseHtml(license) {
+		var text = String(license ? license : '').trim()
+		if (!isUrl(text)) {
+			return escapeHtml(text)
+		}
+		return '<a href="' + escapeHtml(text) + '" rel="noopener">' + escapeHtml(text) + '</a>'
+	}
+
 	function isEliSource(item) {
 		return String(item.id).indexOf('-eli-') !== -1 || String(item.id).indexOf('eli-') === 0
 	}
@@ -586,7 +611,7 @@
 					(isEliSource(item) ? '<span class="badge badge-eli">OSM ELI</span>' : '') +
 					(item.health_status === 'dead' ? '<span class="badge badge-dead">' + escapeHtml(TEXT.statusDead) + '</span>' : '') +
 					'<span class="badge">' +
-					escapeHtml(item.license) +
+					escapeHtml(getShortLicense(item.license)) +
 					'</span>' +
 					'</div>' +
 					'</article>' +
@@ -651,7 +676,7 @@
 			'<dt>' +
 			escapeHtml(TEXT.license) +
 			'</dt><dd>' +
-			escapeHtml(item.license) +
+			getLicenseHtml(item.license) +
 			'</dd>' +
 			'<dt>' +
 			escapeHtml(TEXT.coverage) +

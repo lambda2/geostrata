@@ -13,7 +13,7 @@
 
 Dans l'écosystème QGIS, l'accès rapide à la donnée géographique est fragmenté :
 - **QuickMapServices (QMS)** dépend d'un backend centralisé et se limite essentiellement aux fonds de carte rasters (TMS/XYZ/WMS), sans couvrir la donnée brute exploitable (vecteurs, MNT/DEM, données humanitaires).
-- **Les flux métiers et humanitaires** (WFS locaux, Cloud-Optimized GeoTIFF, FlatGeobuf, limites administratives FieldMaps/HDX, requêtes Overpass OSM) sont dispersés sur des dizaines de portails.
+- **Les flux métiers et humanitaires** (WFS locaux, Cloud-Optimized GeoTIFF, FlatGeobuf, limites administratives COD UN OCHA / geoBoundaries, requêtes Overpass OSM) sont dispersés sur des dizaines de portails.
 - **Aucun moteur de recherche spatialisé unifié** ne permettait de taper un mot-clé (`gst eau`, `gst dem`, `gst hopital`, `gst communes`) et d'obtenir en moins de 3 millisecondes toutes les couches locales et mondiales qui intersectent l'emprise actuelle du canevas QGIS.
 
 ---
@@ -26,6 +26,8 @@ Dans l'écosystème QGIS, l'accès rapide à la donnée géographique est fragme
   - `Entrée` : Charge le flux en direct (`/vsicurl/`, WFS avec `restrictToRequestBBOX='1'`, WMTS, XYZ, ou requête Overpass multi-miroirs) avec application automatique du style `.qml` et de l'attribution.
   - `Maj + Entrée` : Découpe et extrait la couche sur l'emprise du canevas en tâche de fond (`QgsTask`) vers un fichier local `.gpkg`, `.tif` ou `.geojson`.
 - **OSM Editor Layer Index (ELI) & Icônes personnalisables** : Accès optionnel aux couches mondiales et régionales d'orthophotos ELI, pack de 12 icônes SVG thématiques et support d'icônes personnalisées par couche ou par catégorie.
+- **Aperçu avant chargement** : Le panneau Geostrata et la barre de recherche affichent la description, la licence, la date des données et l'état du lien de chaque couche, et dessinent son emprise sur la carte avant tout chargement.
+- **Interface en français et en anglais** : Le plugin suit la langue de QGIS (anglais par défaut), avec un réglage pour la forcer.
 - **100 % Statique & Multi-catalogue** : Aucune dépendance Python externe (`pip`). Compatible QGIS 3 (Qt5) et QGIS 4 (Qt6). Possibilité d'attacher simultanément le catalogue public et des catalogues privés (`ATTACH DATABASE`).
 
 ---

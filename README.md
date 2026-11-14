@@ -13,7 +13,7 @@
 
 Finding and loading geospatial datasets in QGIS is traditionally fragmented:
 - **QuickMapServices (QMS)** relies on a centralized backend and primarily focuses on raster basemaps (TMS/XYZ/WMS), leaving out raw analytical datasets (vectors, elevation models, humanitarian boundaries).
-- **Thematic and national open-data streams** (local WFS, Cloud-Optimized GeoTIFFs, FlatGeobuf, FieldMaps/HDX administrative boundaries, live OSM Overpass queries) are scattered across dozens of portals.
+- **Thematic and national open-data streams** (local WFS, Cloud-Optimized GeoTIFFs, FlatGeobuf, UN OCHA COD / geoBoundaries administrative boundaries, live OSM Overpass queries) are scattered across dozens of portals.
 - **No unified spatial search engine** previously allowed typing a keyword (`gst water`, `gst dem`, `gst hospital`, `gst cadastre`) to retrieve in under 3 milliseconds every local, national, and global dataset intersecting your active QGIS map canvas.
 
 ---
@@ -26,6 +26,8 @@ Finding and loading geospatial datasets in QGIS is traditionally fragmented:
   - `Enter`: Streams the layer directly (`/vsicurl/`, WFS with `restrictToRequestBBOX='1'`, WMTS, XYZ, or multi-mirror Overpass query) and automatically applies embedded `.qml` cartographic styling and attribution metadata.
   - `Shift + Enter`: Clips and extracts the dataset to your current map canvas extent in a background task (`QgsTask`) as a local `.gpkg`, `.tif`, or `.geojson` file.
 - **OSM Editor Layer Index (ELI) & Customizable Icons**: Optional toggle for 170+ regional and global imagery layers from the OSM Editor Layer Index, 12 bundled thematic SVG icons, and support for user-defined custom `.svg`/`.png` icons per category or layer ID.
+- **Preview Before Loading**: The Geostrata panel and the locator show each layer's description, license, data date and link status, and outline its coverage on the map before anything is loaded.
+- **English & French Interface**: The plugin follows the QGIS language (English by default), with a setting to override it.
 - **100% Static & Multi-Catalog**: Zero external Python dependencies (`pip`). Runs natively on Windows, macOS, and Linux across QGIS 3 (Qt5) and QGIS 4 (Qt6). Supports querying public and private team/NGO catalogs simultaneously via SQLite `ATTACH DATABASE`.
 
 ---

@@ -24,6 +24,7 @@ The QGIS main UI thread must **never** freeze:
    - **SQLite Connections**: Always open a dedicated read-only connection per worker thread (`sqlite3.connect(f'file:{db_path}?mode=ro', uri=True, check_same_thread=False)`) and close it in a `finally:` block.
    - **Canvas Extent Access**: Never call `iface.mapCanvas()` from `fetchResults`. Capture the canvas extent (`QgsRectangle`) and CRS inside `prepare(string, context)` on the main thread and transform it to `EPSG:4326` using `QgsCoordinateTransform`.
    - Periodically check `feedback.isCanceled()` inside loops.
+   - **Ranking and filters**: `CatalogDatabaseClient.search_sources()` returns results already ranked (see `architecture.md`, section 3). Pass the ELI toggle, the category and the exact geometry test (`accept=`) to it instead of filtering its output, so the limit is applied last.
 
 2. **Background Catalog Synchronization (`sync_manager.py`)**:
    - Use a `QgsTask` subclass to download `manifest.json` and `catalog.sqlite.gz`.
@@ -33,9 +34,22 @@ The QGIS main UI thread must **never** freeze:
    - Run clipping inside a `QgsTask` calling `processing.run("native:extractbyextent", ...)` for vectors or `processing.run("gdal:cliprasterbyextent", ...)` for rasters.
    - Only instantiate and add the resulting `.gpkg` or `.tif` layer to `QgsProject.instance()` inside `QgsTask.finished(result)` on the main thread.
 
+4. **Canvas Preview (`ui/coverage_preview.py`)**:
+   - Use the shared `CoveragePreview` to highlight a footprint; never create another `QgsRubberBand`. It must only be called from the main thread (`triggerResultFromAction`, dock slots) and is disposed in `unload()`.
+
 ---
 
-## 3. Provider URI Construction (`uri_builder.py`)
+## 3. User-Visible Strings (`i18n/`)
+
+- Write every user-visible string in **English** and wrap it in `tr()`: `tr("Layer loaded: {name}", name=title)`. Use named placeholders, never f-strings or concatenation, and `tr_n(singular, plural, count)` for counted strings.
+- Module-level constants are marked with `N_("...")` and translated where they are displayed with `tr(constant)`.
+- Add the French text to `geostrata/i18n/fr.py` in the same change; `tests/test_core.py` fails on a missing translation, an unused key or mismatched placeholders.
+- Do not use `QCoreApplication.translate()` or `.ts`/`.qm` files: the plugin ships without a compile step.
+- `core/` modules must stay importable without QGIS (`i18n` is pure Python), so the test suite runs with a plain `python3`.
+
+---
+
+## 4. Provider URI Construction (`uri_builder.py`)
 
 | `type` | QGIS Provider | PyQGIS Class | URI Format |
 | :--- | :--- | :--- | :--- |
@@ -49,7 +63,7 @@ The QGIS main UI thread must **never** freeze:
 
 ---
 
-## 4. Applying QML Styling and Attribution Metadata
+## 5. Applying QML Styling and Attribution Metadata
 
 Once a layer is valid (`layer.isValid()`):
 1. **Attribution & License**:

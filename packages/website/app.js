@@ -75,6 +75,20 @@
 			.toLowerCase()
 	}
 
+	function getLocalizedName(item) {
+		if (isFr && item && item.i18n && item.i18n.fr && item.i18n.fr.name) {
+			return String(item.i18n.fr.name)
+		}
+		return String(item && item.name ? item.name : '')
+	}
+
+	function getLocalizedDescription(item) {
+		if (isFr && item && item.i18n && item.i18n.fr && item.i18n.fr.description) {
+			return String(item.i18n.fr.description)
+		}
+		return String(item && item.description ? item.description : '')
+	}
+
 	function updateRepoXmlUrl() {
 		var el = document.getElementById('repo-xml-url')
 		if (!el) {
@@ -150,11 +164,15 @@
 				return false
 			}
 			if (tokens.length > 0) {
+				var i18nFrName = item.i18n && item.i18n.fr && item.i18n.fr.name ? item.i18n.fr.name : ''
+				var i18nFrDesc = item.i18n && item.i18n.fr && item.i18n.fr.description ? item.i18n.fr.description : ''
 				var haystack = normalizeText(
 					[
 						item.id,
 						item.name,
 						item.description,
+						i18nFrName,
+						i18nFrDesc,
 						item.attribution,
 						item.category,
 						item.country_iso,
@@ -249,7 +267,7 @@
 					'" alt="" />' +
 					'<div>' +
 					'<h3 class="source-card-title">' +
-					escapeHtml(item.name) +
+					escapeHtml(getLocalizedName(item)) +
 					'</h3>' +
 					'<div class="source-card-provider">' +
 					escapeHtml(item.attribution) +
@@ -313,14 +331,16 @@
 			return
 		}
 
-		titleEl.textContent = item.name
+		var localizedTitle = getLocalizedName(item)
+		var localizedDesc = getLocalizedDescription(item)
+		titleEl.textContent = localizedTitle
 		idEl.textContent = item.id
 		iconEl.src = getIconForSource(item)
 
-		var firstKeyword = Array.isArray(item.tags) && item.tags.length > 0 ? item.tags[0] : item.name.split(/\s+/)[0]
+		var firstKeyword = Array.isArray(item.tags) && item.tags.length > 0 ? item.tags[0] : localizedTitle.split(/\s+/)[0]
 		bodyEl.innerHTML =
 			'<p>' +
-			escapeHtml(item.description) +
+			escapeHtml(localizedDesc) +
 			'</p>' +
 			'<p><strong>' +
 			(isFr ? 'Attribution :' : 'Attribution:') +

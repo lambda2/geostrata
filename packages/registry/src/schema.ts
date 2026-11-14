@@ -50,6 +50,13 @@ export const BoundingBoxSchema = z
 
 export type BoundingBox = z.infer<typeof BoundingBoxSchema>
 
+export const LocalizedMetadataSchema = z.object({
+	name: z.string().min(1).optional(),
+	description: z.string().optional(),
+})
+
+export type LocalizedMetadata = z.infer<typeof LocalizedMetadataSchema>
+
 export const CatalogEntrySchema = z
 	.object({
 		id: z
@@ -57,6 +64,7 @@ export const CatalogEntrySchema = z
 			.regex(/^[a-z0-9-]+$/, 'id must be a valid lowercase kebab-case slug (^[a-z0-9-]+$)'),
 		name: z.string().min(1),
 		description: z.string().optional(),
+		i18n: z.record(z.string().min(2), LocalizedMetadataSchema).optional(),
 		type: SourceTypeSchema,
 		category: SourceCategorySchema,
 		url: z.string().min(1),

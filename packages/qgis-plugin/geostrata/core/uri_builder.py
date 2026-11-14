@@ -81,6 +81,7 @@ def build_provider_uri(
     raw_url = entry.url.strip()
     crs = entry.crs or "EPSG:4326"
     bbox = canvas_bbox_4326 or (entry.min_x, entry.min_y, entry.max_x, entry.max_y)
+    display_title = entry.localized_name()
 
     if source_type in ("xyz", "tms"):
         zmin = entry.min_zoom if entry.min_zoom is not None else 0
@@ -91,7 +92,7 @@ def build_provider_uri(
             uri=uri,
             provider="wms",
             layer_kind="raster",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type in ("wms", "wmts"):
@@ -100,7 +101,7 @@ def build_provider_uri(
                 uri=raw_url,
                 provider="wms",
                 layer_kind="raster",
-                display_name=entry.name,
+                display_name=display_title,
             )
 
         base_url, params = _parse_query_params_ci(raw_url)
@@ -131,7 +132,7 @@ def build_provider_uri(
             uri=uri,
             provider="wms",
             layer_kind="raster",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type == "wfs":
@@ -140,7 +141,7 @@ def build_provider_uri(
                 uri=raw_url,
                 provider="WFS",
                 layer_kind="vector",
-                display_name=entry.name,
+                display_name=display_title,
             )
         base_url, params = _parse_query_params_ci(raw_url)
         typename = (
@@ -160,7 +161,7 @@ def build_provider_uri(
             uri=uri,
             provider="WFS",
             layer_kind="vector",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type == "vectortile":
@@ -171,7 +172,7 @@ def build_provider_uri(
             uri=uri,
             provider="vectortile",
             layer_kind="vectortile",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type in ("cog", "vrt"):
@@ -184,7 +185,7 @@ def build_provider_uri(
             uri=uri,
             provider="gdal",
             layer_kind="raster",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type in ("fgb", "geojson"):
@@ -197,7 +198,7 @@ def build_provider_uri(
             uri=uri,
             provider="ogr",
             layer_kind="vector",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type == "archive":
@@ -211,7 +212,7 @@ def build_provider_uri(
             uri=uri,
             provider="gdal" if is_raster else "ogr",
             layer_kind="raster" if is_raster else "vector",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     if source_type == "overpass":
@@ -222,7 +223,7 @@ def build_provider_uri(
             uri=uri,
             provider="ogr",
             layer_kind="vector",
-            display_name=entry.name,
+            display_name=display_title,
         )
 
     raise ValueError(f"Unsupported Geostrata source type: {entry.type}")
@@ -235,9 +236,10 @@ def apply_layer_metadata_and_style(layer: Any, entry: CatalogSourceRecord) -> No
 
     try:
         metadata = layer.metadata()
-        metadata.setTitle(entry.name)
-        if entry.description:
-            metadata.setAbstract(entry.description)
+        metadata.setTitle(entry.localized_name())
+        desc = entry.localized_description()
+        if desc:
+            metadata.setAbstract(desc)
         metadata.setRights([entry.attribution])
         metadata.setLicenses([entry.license])
         layer.setMetadata(metadata)

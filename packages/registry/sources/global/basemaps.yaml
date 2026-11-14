@@ -1,11 +1,15 @@
 - id: global-osm-standard
   name: OpenStreetMap Standard
-  description: Carte mondiale collaborative OpenStreetMap (rendu standard Mapnik).
+  description: Collaborative worldwide OpenStreetMap basemap (standard Mapnik rendering).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 19
   tags:
@@ -15,16 +19,24 @@
     - routes
     - mondial
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors"
-
+  attribution: © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: OpenStreetMap Standard
+      description: Carte mondiale collaborative OpenStreetMap (rendu standard Mapnik).
 - id: global-opentopomap
   name: OpenTopoMap
-  description: Carte topographique mondiale avec courbes de niveau et ombrage du relief basée sur OpenStreetMap et SRTM.
+  description: Worldwide topographic basemap with contour lines and hillshading
+    based on OpenStreetMap and SRTM.
   type: xyz
   category: basemap
   url: https://a.tile.opentopomap.org/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 17
   tags:
@@ -34,16 +46,25 @@
     - courbes de niveau
     - randonnee
   license: CC-BY-SA-3.0 / ODbL-1.0
-  attribution: "© OpenTopoMap (CC-BY-SA) | Data © OpenStreetMap contributors"
-
+  attribution: © OpenTopoMap (CC-BY-SA) | Data © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: OpenTopoMap
+      description: Carte topographique mondiale avec courbes de niveau et ombrage du
+        relief basée sur OpenStreetMap et SRTM.
 - id: global-esri-world-imagery
   name: Esri World Imagery
-  description: Imagerie satellitaire et aérienne mondiale haute résolution assemblée par Esri.
+  description: High-resolution worldwide satellite and aerial imagery mosaic
+    compiled by Esri.
   type: xyz
   category: imagery
   url: https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 19
   tags:
@@ -53,15 +74,24 @@
     - imagerie mondiale
   license: Esri Master License Agreement
   attribution: "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
-
+  i18n:
+    fr:
+      name: Esri World Imagery
+      description: Imagerie satellitaire et aérienne mondiale haute résolution
+        assemblée par Esri.
 - id: global-esri-world-topo
   name: Esri World Topographic Map
-  description: Fond de carte topographique mondial détaillé avec relief ombré, hydrographie et limites administratives.
+  description: Detailed worldwide topographic basemap featuring shaded relief,
+    hydrography, and administrative boundaries.
   type: xyz
   category: basemap
   url: https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 19
   tags:
@@ -70,16 +100,26 @@
     - fond de carte
     - relief
   license: Esri Master License Agreement
-  attribution: "Sources: Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS"
-
+  attribution: "Sources: Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO,
+    USGS, FAO, NPS"
+  i18n:
+    fr:
+      name: Esri World Topographic Map
+      description: Fond de carte topographique mondial détaillé avec relief ombré,
+        hydrographie et limites administratives.
 - id: global-esri-world-hillshade
-  name: Esri World Hillshade (Estompage du Relief Mondial)
-  description: Estompage multi-directionnel du relief terrestre mondial pour l'analyse topographique et géomorphologique.
+  name: Esri World Hillshade (Global Shaded Relief)
+  description: Multi-directional global terrain hillshade for topographic and
+    geomorphological analysis.
   type: xyz
   category: elevation
   url: https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 16
   tags:
@@ -91,16 +131,26 @@
     - altitude
     - mnt
   license: Esri Master License Agreement
-  attribution: "Sources: Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA"
-
+  attribution: "Sources: Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson,
+    NCEAS, NLS, OS, NMA"
+  i18n:
+    fr:
+      name: Esri World Hillshade (Estompage du Relief Mondial)
+      description: Estompage multi-directionnel du relief terrestre mondial pour
+        l'analyse topographique et géomorphologique.
 - id: global-carto-positron
-  name: CartoDB Positron (Fond Clair Épuré)
-  description: Fond de carte minimaliste clair conçu pour la superposition de données thématiques et statistiques.
+  name: CartoDB Positron (Light Minimalist Basemap)
+  description: Clean, light minimalist basemap designed for overlaying thematic
+    and statistical data.
   type: xyz
   category: basemap
   url: https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 20
   tags:
@@ -112,16 +162,25 @@
     - minimaliste
     - fond de carte
   license: CC-BY-3.0 / ODbL-1.0
-  attribution: "© CARTO | © OpenStreetMap contributors"
-
+  attribution: © CARTO | © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: CartoDB Positron (Fond Clair Épuré)
+      description: Fond de carte minimaliste clair conçu pour la superposition de
+        données thématiques et statistiques.
 - id: global-carto-dark-matter
-  name: CartoDB Dark Matter (Fond Sombre)
-  description: Fond de carte minimaliste sombre idéal pour faire ressortir les flux lumineux, réseaux et données de crise.
+  name: CartoDB Dark Matter (Dark Minimalist Basemap)
+  description: Dark minimalist basemap ideal for highlighting bright networks,
+    flows, and crisis response data.
   type: xyz
   category: basemap
   url: https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 20
   tags:
@@ -133,16 +192,25 @@
     - nuit
     - fond de carte
   license: CC-BY-3.0 / ODbL-1.0
-  attribution: "© CARTO | © OpenStreetMap contributors"
-
+  attribution: © CARTO | © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: CartoDB Dark Matter (Fond Sombre)
+      description: Fond de carte minimaliste sombre idéal pour faire ressortir les
+        flux lumineux, réseaux et données de crise.
 - id: global-cyclosm
-  name: CyclOSM (Carte Cyclable Mondiale)
-  description: Rendu cartographique dédié au vélo mettant en évidence les pistes cyclables, voies vertes, parkings vélo et reliefs.
+  name: CyclOSM (Global Bicycle Map)
+  description: Bicycle-focused cartographic rendering highlighting cycleways,
+    greenways, bike parking, and terrain relief.
   type: xyz
   category: transport
   url: https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 20
   tags:
@@ -153,16 +221,25 @@
     - bicycle
     - cycleway
   license: ODbL-1.0
-  attribution: "© CyclOSM | Map data © OpenStreetMap contributors (Hosted by OSM France)"
-
+  attribution: © CyclOSM | Map data © OpenStreetMap contributors (Hosted by OSM France)
+  i18n:
+    fr:
+      name: CyclOSM (Carte Cyclable Mondiale)
+      description: Rendu cartographique dédié au vélo mettant en évidence les pistes
+        cyclables, voies vertes, parkings vélo et reliefs.
 - id: global-openrailwaymap
-  name: OpenRailwayMap (Réseau Ferroviaire Mondial)
-  description: Surcouche mondiale détaillée des infrastructures ferroviaires, vitesses de ligne, électrification et signalisation.
+  name: OpenRailwayMap (Global Railway Network)
+  description: Detailed worldwide overlay of railway infrastructure, track speeds,
+    electrification, and signaling.
   type: xyz
   category: transport
   url: https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 19
   tags:
@@ -174,16 +251,25 @@
     - sncf
     - railway
   license: ODbL-1.0
-  attribution: "© OpenRailwayMap | Map data © OpenStreetMap contributors"
-
+  attribution: © OpenRailwayMap | Map data © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: OpenRailwayMap (Réseau Ferroviaire Mondial)
+      description: Surcouche mondiale détaillée des infrastructures ferroviaires,
+        vitesses de ligne, électrification et signalisation.
 - id: global-esa-worldcover-2021
-  name: ESA WorldCover 10m (Occupation du Sol Mondiale)
-  description: Carte mondiale d'occupation du sol à 10 mètres de résolution produite par l'Agence Spatiale Européenne (Sentinel-1 & Sentinel-2).
+  name: ESA WorldCover 10m (Global Land Cover)
+  description: Global 10-meter resolution land cover map produced by the European
+    Space Agency (Sentinel-1 & Sentinel-2).
   type: wms
   category: landuse
   url: https://services.terrascope.be/wms/v2?SERVICE=WMS&VERSION=1.3.0&LAYERS=WORLDCOVER_2021_MAP&FORMAT=image/png
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   tags:
     - esa
     - worldcover
@@ -194,16 +280,25 @@
     - agriculture
     - sentinel
   license: CC-BY-4.0
-  attribution: "© ESA WorldCover project 2021 / Modified Copernicus Sentinel data processed by VITO"
-
+  attribution: © ESA WorldCover project 2021 / Modified Copernicus Sentinel data
+    processed by VITO
+  i18n:
+    fr:
+      name: ESA WorldCover 10m (Occupation du Sol Mondiale)
+      description: Carte mondiale d'occupation du sol à 10 mètres de résolution
+        produite par l'Agence Spatiale Européenne (Sentinel-1 & Sentinel-2).
 - id: global-versatiles-osm
-  name: VersaTiles OSM (Tuiles Vectorielles Mondiales)
-  description: Tuiles vectorielles OpenStreetMap mondiales rapides et libres hébergées par VersaTiles.org.
+  name: VersaTiles OSM (Global Vector Tiles)
+  description: Fast, open worldwide OpenStreetMap vector tiles hosted by VersaTiles.org.
   type: vectortile
   category: basemap
   url: https://tiles.versatiles.org/tiles/osm/{z}/{x}/{y}
   crs: EPSG:3857
-  bbox: [-180, -85.05, 180, 85.05]
+  bbox:
+    - -180
+    - -85.05
+    - 180
+    - 85.05
   min_zoom: 0
   max_zoom: 14
   tags:
@@ -213,4 +308,9 @@
     - osm
     - fond de carte
   license: ODbL-1.0
-  attribution: "© VersaTiles.org | Data © OpenStreetMap contributors"
+  attribution: © VersaTiles.org | Data © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: VersaTiles OSM (Tuiles Vectorielles Mondiales)
+      description: Tuiles vectorielles OpenStreetMap mondiales rapides et libres
+        hébergées par VersaTiles.org.

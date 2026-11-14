@@ -224,7 +224,15 @@ export function convertEliFeatureToCatalogEntry(
 		name: props.name,
 		description: props.description
 			? props.description
-			: `Couche issue du registre OpenStreetMap Editor Layer Index (${props.name}).`,
+			: `Layer from the OpenStreetMap Editor Layer Index (${props.name}).`,
+		i18n: {
+			fr: {
+				name: props.name,
+				description: props.description
+					? props.description
+					: `Couche issue du registre OpenStreetMap Editor Layer Index (${props.name}).`,
+			},
+		},
 		type: normalized.type,
 		category,
 		url: normalized.url,

@@ -243,7 +243,8 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
 
             scope_badge = entry.country_iso if entry.country_iso else "Global"
             type_badge = entry.type.upper()
-            display_title = f"[{type_badge} · {scope_badge}] {entry.name}"
+            title_str = entry.localized_name()
+            display_title = f"[{type_badge} · {scope_badge}] {title_str}"
             payload_json = json.dumps(asdict(entry))
 
             result = QgsLocatorResult(self, display_title, payload_json)
@@ -301,6 +302,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             return
 
         entry = self._dict_to_record(raw_data)
+        title_str = entry.localized_name()
         bbox_4326 = self._capture_canvas_bbox_4326() or (
             entry.min_x,
             entry.min_y,
@@ -318,7 +320,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             if self._iface is not None and self._iface.messageBar() is not None:
                 self._iface.messageBar().pushMessage(
                     "Geostrata",
-                    f"Requête Overpass lancée en tâche de fond (multi-miroirs) : {entry.name}",
+                    f"Requête Overpass lancée en tâche de fond (multi-miroirs) : {title_str}",
                     level=Qgis.MessageLevel.Info,
                     duration=4,
                 )
@@ -331,7 +333,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             if self._iface is not None and self._iface.messageBar() is not None:
                 self._iface.messageBar().pushMessage(
                     "Geostrata",
-                    f"Extraction hors-ligne démarrée en tâche de fond : {entry.name}",
+                    f"Extraction hors-ligne démarrée en tâche de fond : {title_str}",
                     level=Qgis.MessageLevel.Info,
                     duration=4,
                 )
@@ -356,7 +358,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
                 if self._iface is not None and self._iface.messageBar() is not None:
                     self._iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Couche WFS dense ajoutée ({entry.name}) : zoomez à 1:50 000 pour afficher les entités.",
+                        f"Couche WFS dense ajoutée ({title_str}) : zoomez à 1:50 000 pour afficher les entités.",
                         level=Qgis.MessageLevel.Info,
                         duration=6,
                     )
@@ -364,14 +366,14 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
                 if self._iface is not None and self._iface.messageBar() is not None:
                     self._iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Couche chargée en streaming : {entry.name} ({entry.attribution})",
+                        f"Couche chargée en streaming : {title_str} ({entry.attribution})",
                         level=Qgis.MessageLevel.Success,
                         duration=4,
                     )
             QgsProject.instance().addMapLayer(layer)
         else:
             err_msg = (
-                f"Impossible de charger le flux '{entry.name}' "
+                f"Impossible de charger le flux '{title_str}' "
                 f"(provider={spec.provider}, uri={spec.uri})"
             )
             QgsMessageLog.logMessage(
@@ -411,4 +413,5 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             max_zoom=data.get("max_zoom"),
             archive_target=data.get("archive_target"),
             health_status=str(data.get("health_status") or "ok"),
+            i18n=dict(data.get("i18n") or {}),
         )

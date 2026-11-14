@@ -25,6 +25,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ..core.db_client import SETTINGS_LANGUAGE_KEY
 from ..core.sync_manager import DEFAULT_MANIFEST_URL, SyncManager
 from .locator_filter import (
     SETTINGS_ICON_MODE_KEY,
@@ -55,6 +56,21 @@ class GeostrataSettingsDialog(QDialog):
         layout.addWidget(options_label)
 
         form = QFormLayout()
+        self._language_combo = QComboBox(self)
+        self._language_combo.addItem(
+            "Automatique (selon la langue de QGIS)",
+            "auto",
+        )
+        self._language_combo.addItem(
+            "English (Default)",
+            "en",
+        )
+        self._language_combo.addItem(
+            "Français (i18n.fr)",
+            "fr",
+        )
+        form.addRow("Langue des couches :", self._language_combo)
+
         self._eli_checkbox = QCheckBox(
             "Inclure les couches OSM Editor Layer Index (ELI — orthophotos & cartes mondiales)",
             self,
@@ -136,6 +152,11 @@ class GeostrataSettingsDialog(QDialog):
 
     def _load_state(self) -> None:
         settings = QgsSettings()
+        lang_mode = str(settings.value(SETTINGS_LANGUAGE_KEY, "auto") or "auto")
+        lang_idx = self._language_combo.findData(lang_mode)
+        if lang_idx >= 0:
+            self._language_combo.setCurrentIndex(lang_idx)
+
         raw_eli = settings.value(SETTINGS_INCLUDE_ELI_KEY, True)
         include_eli = str(raw_eli).lower() not in ("false", "0", "no")
         self._eli_checkbox.setChecked(include_eli)
@@ -223,6 +244,10 @@ class GeostrataSettingsDialog(QDialog):
 
     def _on_save(self) -> None:
         settings = QgsSettings()
+        settings.setValue(
+            SETTINGS_LANGUAGE_KEY,
+            str(self._language_combo.currentData() or "auto"),
+        )
         settings.setValue(SETTINGS_INCLUDE_ELI_KEY, self._eli_checkbox.isChecked())
         settings.setValue(
             SETTINGS_ICON_MODE_KEY,

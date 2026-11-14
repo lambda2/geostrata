@@ -190,7 +190,11 @@ class GeostrataShareDialog(QDialog):
         yaml_text = (
             f"id: {entry_id}\n"
             f"name: {layer.name()}\n"
-            f"description: Couche partagée depuis QGIS ({layer.name()}).\n"
+            f"description: Layer shared from QGIS ({layer.name()}).\n"
+            f"i18n:\n"
+            f"  fr:\n"
+            f"    name: {layer.name()}\n"
+            f"    description: Couche partagée depuis QGIS ({layer.name()}).\n"
             f"type: {source_type}\n"
             f"category: {category}\n"
             f"url: {layer.source()}\n"

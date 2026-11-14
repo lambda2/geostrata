@@ -75,6 +75,8 @@ class TestGeostrataCore(unittest.TestCase):
 
         self.assertGreaterEqual(len(results), 4)
         self.assertEqual(results[0].id, "fr-grandlyon-bornes-fontaines")
+        self.assertIn("Drinking Water Fountains", results[0].localized_name("en"))
+        self.assertIn("Bornes fontaines", results[0].localized_name("fr"))
         result_ids = [r.id for r in results]
         self.assertIn("fr-ign-bdtopo-cours-eau", result_ids)
         self.assertIn("global-overpass-drinking-water", result_ids)

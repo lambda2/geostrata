@@ -20,8 +20,9 @@ Each YAML file may contain either a single source object or an array of sources 
 | Field | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `string` | Yes | Unique kebab-case identifier (`^[a-z0-9-]+$`), e.g. `fr-ign-orthophotos`. |
-| `name` | `string` | Yes | Human-readable title displayed in QGIS (`Ctrl+K`). |
-| `description` | `string` | No | Detailed dataset description (indexed in FTS5). |
+| `name` | `string` | Yes | Default English title displayed in QGIS (`Ctrl+K`). |
+| `description` | `string` | No | Default English dataset description (indexed in FTS5). |
+| `i18n` | `Record<string, { name?: string, description?: string }>` | No | Localized translations keyed by 2-letter language code (e.g. `i18n.fr.name`, `i18n.fr.description`). All translated strings are also indexed in FTS5. |
 | `type` | `SourceType` | Yes | `'xyz' \| 'tms' \| 'wms' \| 'wmts' \| 'wfs' \| 'vectortile' \| 'cog' \| 'vrt' \| 'fgb' \| 'geojson' \| 'archive' \| 'overpass'` |
 | `category` | `SourceCategory` | Yes | `'basemap' \| 'elevation' \| 'hydrography' \| 'transport' \| 'admin' \| 'buildings' \| 'landuse' \| 'imagery' \| 'utilities' \| 'crisis'` |
 | `url` | `string` | Yes | Stream URL, `/vsicurl/https://...` path, or Overpass QL / tag filter expression. |

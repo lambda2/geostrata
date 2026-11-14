@@ -1,6 +1,7 @@
 - id: ch-swisstopo-pixelkarte-farbe
-  name: Swisstopo - Carte Nationale Suisse (Couleur)
-  description: Cartes nationales topographiques multi-échelles officielles de la Suisse produites par l'Office fédéral de topographie (swisstopo).
+  name: Swisstopo - Swiss National Map (Color)
+  description: Official multi-scale national topographic maps of Switzerland
+    produced by the Federal Office of Topography (swisstopo).
   type: wms
   category: basemap
   url: https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&LAYERS=ch.swisstopo.pixelkarte-farbe&FORMAT=image/jpeg
@@ -13,11 +14,16 @@
     - topographie
     - alpes
   license: Open Government Data (OGD) swisstopo
-  attribution: "© swisstopo (geo.admin.ch)"
-
+  attribution: © swisstopo (geo.admin.ch)
+  i18n:
+    fr:
+      name: Swisstopo - Carte Nationale Suisse (Couleur)
+      description: Cartes nationales topographiques multi-échelles officielles de la
+        Suisse produites par l'Office fédéral de topographie (swisstopo).
 - id: ch-swisstopo-swissimage
-  name: Swisstopo - SWISSIMAGE (Orthophotos 10 cm)
-  description: Mosaïque d'orthophotos numériques haute résolution (10 cm en plaine, 25 cm dans les Alpes) sur toute la Suisse.
+  name: Swisstopo - SWISSIMAGE (10 cm Orthoimagery)
+  description: High-resolution digital orthoimagery mosaic (10 cm in lowlands, 25
+    cm in the Alps) covering all of Switzerland.
   type: wms
   category: imagery
   url: https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&LAYERS=ch.swisstopo.swissimage&FORMAT=image/jpeg
@@ -30,11 +36,16 @@
     - photo aerienne
     - suisse
   license: Open Government Data (OGD) swisstopo
-  attribution: "© swisstopo (geo.admin.ch)"
-
+  attribution: © swisstopo (geo.admin.ch)
+  i18n:
+    fr:
+      name: Swisstopo - SWISSIMAGE (Orthophotos 10 cm)
+      description: Mosaïque d'orthophotos numériques haute résolution (10 cm en
+        plaine, 25 cm dans les Alpes) sur toute la Suisse.
 - id: ch-swisstopo-swissalti3d-hillshade
-  name: Swisstopo - swissALTI3D Estompage du Relief (2m / 0.5m)
-  description: Relief ombré très haute précision issu du modèle numérique de terrain LiDAR swissALTI3D.
+  name: Swisstopo - swissALTI3D Hillshade (2m / 0.5m Relief)
+  description: High-precision shaded relief derived from the swissALTI3D LiDAR
+    Digital Terrain Model.
   type: wms
   category: elevation
   url: https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&LAYERS=ch.swisstopo.swissalti3d-reliefschattierung&FORMAT=image/png
@@ -50,11 +61,16 @@
     - relief
     - suisse
   license: Open Government Data (OGD) swisstopo
-  attribution: "© swisstopo (geo.admin.ch)"
-
+  attribution: © swisstopo (geo.admin.ch)
+  i18n:
+    fr:
+      name: Swisstopo - swissALTI3D Estompage du Relief (2m / 0.5m)
+      description: Relief ombré très haute précision issu du modèle numérique de
+        terrain LiDAR swissALTI3D.
 - id: ch-swisstopo-gemeindegrenzen
-  name: Swisstopo - swissBOUNDARIES3D (Limites Communales et Cantonales)
-  description: Frontières administratives officielles des communes et cantons suisses (swissBOUNDARIES3D).
+  name: Swisstopo - swissBOUNDARIES3D (Municipal & Cantonal Boundaries)
+  description: Official administrative boundaries of Swiss municipalities and
+    cantons (swissBOUNDARIES3D).
   type: wms
   category: admin
   url: https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&LAYERS=ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill&FORMAT=image/png
@@ -67,4 +83,9 @@
     - limites administratives
     - suisse
   license: Open Government Data (OGD) swisstopo
-  attribution: "© swisstopo (geo.admin.ch)"
+  attribution: © swisstopo (geo.admin.ch)
+  i18n:
+    fr:
+      name: Swisstopo - swissBOUNDARIES3D (Limites Communales et Cantonales)
+      description: Frontières administratives officielles des communes et cantons
+        suisses (swissBOUNDARIES3D).

@@ -3,12 +3,37 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sqlite3
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
+
+SETTINGS_LANGUAGE_KEY = "geostrata/language"
+
+
+def get_preferred_language() -> str:
+    """Resolve preferred 2-letter catalog language code ('en', 'fr', etc.)."""
+    try:
+        from qgis.core import QgsApplication, QgsSettings
+
+        settings = QgsSettings()
+        configured = str(settings.value(SETTINGS_LANGUAGE_KEY, "auto") or "auto").strip().lower()
+        if configured and configured != "auto":
+            return configured[:2]
+
+        qgis_locale = str(QgsApplication.locale() or "").strip().lower()
+        if not qgis_locale:
+            qgis_locale = str(settings.value("locale/userLocale", "") or "").strip().lower()
+        if qgis_locale:
+            return qgis_locale[:2]
+    except Exception:
+        pass
+
+    env_lang = os.environ.get("GEOSTRATA_LANG") or os.environ.get("LANG") or "en"
+    return env_lang.strip().lower()[:2] or "en"
 
 
 @dataclass(frozen=True)
@@ -37,6 +62,29 @@ class CatalogSourceRecord:
     max_zoom: Optional[int]
     archive_target: Optional[str]
     health_status: str
+    i18n: Dict[str, Dict[str, str]] = field(default_factory=dict)
+
+    def localized_name(self, lang: Optional[str] = None) -> str:
+        """Return the translated layer name for lang (or preferred language), falling back to English name."""
+        target = (lang or get_preferred_language()).strip().lower()[:2]
+        if target != "en" and self.i18n:
+            entry = self.i18n.get(target)
+            if isinstance(entry, dict):
+                translated = entry.get("name")
+                if translated and str(translated).strip():
+                    return str(translated).strip()
+        return self.name
+
+    def localized_description(self, lang: Optional[str] = None) -> str:
+        """Return the translated layer description for lang (or preferred language), falling back to English description."""
+        target = (lang or get_preferred_language()).strip().lower()[:2]
+        if target != "en" and self.i18n:
+            entry = self.i18n.get(target)
+            if isinstance(entry, dict):
+                translated = entry.get("description")
+                if translated and str(translated).strip():
+                    return str(translated).strip()
+        return self.description
 
 
 def strip_diacritics(text: str) -> str:
@@ -169,6 +217,13 @@ class CatalogDatabaseClient:
 
                 joins_sql = " ".join(join_clauses)
                 where_sql = " AND ".join(where_clauses)
+                cols = {
+                    row[1]
+                    for row in conn.execute(
+                        f"PRAGMA {schema}.table_info(sources)"
+                    ).fetchall()
+                }
+                i18n_expr = "s.i18n_json" if "i18n_json" in cols else "'{}' AS i18n_json"
 
                 subquery = f"""
                     SELECT
@@ -187,6 +242,7 @@ class CatalogDatabaseClient:
                         s.area_deg2,
                         s.geom_wkt,
                         s.tags_json,
+                        {i18n_expr},
                         s.license,
                         s.attribution,
                         s.style_qml,
@@ -223,6 +279,14 @@ class CatalogDatabaseClient:
                 except (ValueError, TypeError):
                     parsed_tags = []
 
+                raw_i18n = row["i18n_json"] if "i18n_json" in row.keys() else "{}"
+                try:
+                    parsed_i18n = json.loads(raw_i18n) if raw_i18n else {}
+                    if not isinstance(parsed_i18n, dict):
+                        parsed_i18n = {}
+                except (ValueError, TypeError):
+                    parsed_i18n = {}
+
                 results_by_id[source_id] = CatalogSourceRecord(
                     id=source_id,
                     name=str(row["name"]),
@@ -252,6 +316,7 @@ class CatalogDatabaseClient:
                     if row["archive_target"]
                     else None,
                     health_status=str(row["health_status"] or "ok"),
+                    i18n=parsed_i18n,
                 )
 
             return list(results_by_id.values())

@@ -266,7 +266,7 @@ def launch_overpass_fetch_task(
 
         def __init__(self) -> None:
             super().__init__(
-                f"Geostrata Overpass : {entry.name}",
+                f"Geostrata Overpass : {entry.localized_name()}",
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_geojson_path
@@ -303,10 +303,11 @@ def launch_overpass_fetch_task(
                 return False
 
         def finished(self, result: bool) -> None:
+            title_str = entry.localized_name()
             if not result or not self.output_file.is_file():
                 msg = (
                     self.error_message
-                    or f"Échec de la requête Overpass pour {entry.name}"
+                    or f"Échec de la requête Overpass pour {title_str}"
                 )
                 QgsMessageLog.logMessage(
                     msg, "Geostrata", Qgis.MessageLevel.Warning
@@ -324,7 +325,7 @@ def launch_overpass_fetch_task(
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Aucune entité OSM trouvée sur cette emprise pour : {entry.name}",
+                        f"Aucune entité OSM trouvée sur cette emprise pour : {title_str}",
                         level=Qgis.MessageLevel.Info,
                         duration=5,
                     )
@@ -333,7 +334,7 @@ def launch_overpass_fetch_task(
             suffix = " [Local]" if is_offline_extract else ""
             layer = QgsVectorLayer(
                 str(self.output_file),
-                f"{entry.name}{suffix}",
+                f"{title_str}{suffix}",
                 "ogr",
             )
             if layer.isValid():
@@ -345,7 +346,7 @@ def launch_overpass_fetch_task(
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"{self.feature_count} entités OSM chargées : {entry.name}{clamp_note}",
+                        f"{self.feature_count} entités OSM chargées : {title_str}{clamp_note}",
                         level=Qgis.MessageLevel.Success,
                         duration=5,
                     )

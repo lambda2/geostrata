@@ -20,8 +20,9 @@ Chaque fichier YAML peut contenir une source unique (objet YAML) ou une liste de
 | Champ | Type | Requis | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `string` | Oui | Identifiant unique en kebab-case (`^[a-z0-9-]+$`), ex: `fr-ign-orthophotos`. |
-| `name` | `string` | Oui | Nom lisible affiché dans QGIS (`Ctrl+K`). |
-| `description` | `string` | Non | Description détaillée des données (indexée dans FTS5). |
+| `name` | `string` | Oui | Titre par défaut en anglais affiché dans QGIS (`Ctrl+K`). |
+| `description` | `string` | Non | Description par défaut en anglais (indexée dans FTS5). |
+| `i18n` | `Record<string, { name?: string, description?: string }>` | Non | Traductions localisées indexées par code langue ISO-2 (ex: `i18n.fr.name`, `i18n.fr.description`). Toutes les langues sont également indexées dans FTS5. |
 | `type` | `SourceType` | Oui | `'xyz' \| 'tms' \| 'wms' \| 'wmts' \| 'wfs' \| 'vectortile' \| 'cog' \| 'vrt' \| 'fgb' \| 'geojson' \| 'archive' \| 'overpass'` |
 | `category` | `SourceCategory` | Oui | `'basemap' \| 'elevation' \| 'hydrography' \| 'transport' \| 'admin' \| 'buildings' \| 'landuse' \| 'imagery' \| 'utilities' \| 'crisis'` |
 | `url` | `string` | Oui | URL du flux, chemin `/vsicurl/https://...`, ou requête/expression Overpass. |

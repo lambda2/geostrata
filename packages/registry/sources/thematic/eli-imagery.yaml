@@ -1,7 +1,6 @@
 - id: za-eli-south-africa-cd-ngi-aerial
   name: South Africa CD:NGI Aerial
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (South
-    Africa CD:NGI Aerial).
+  description: Layer from the OpenStreetMap Editor Layer Index (South Africa CD:NGI Aerial).
   type: xyz
   category: imagery
   url: https://aerial.openstreetmap.org.za/ngi-aerial/{z}/{x}/{y}.jpg
@@ -21,6 +20,11 @@
   license: OSM Editor Layer Index License
   attribution: © South Africa CD:NGI Aerial
   max_zoom: 22
+  i18n:
+    fr:
+      name: South Africa CD:NGI Aerial
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (South
+        Africa CD:NGI Aerial).
 - id: aq-eli-osmim-imagicode-usgs-250k-ant
   name: "imagico.de: USGS 250k Topos Antarctica"
   description: USGS Antarctica 1:250k Reconnaissance Series topographic maps
@@ -43,6 +47,12 @@
   license: https://imagico.de/map/osmim_tiles.php
   attribution: imagico.de OSM images for mapping
   max_zoom: 11
+  i18n:
+    fr:
+      name: "imagico.de: USGS 250k Topos Antarctica"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (imagico.de: USGS 250k Topos Antarctica) : USGS Antarctica 1:250k
+        Reconnaissance Series topographic maps"
 - id: aq-eli-osmim-imagicode-usgs-500k-ant
   name: "imagico.de: USGS 500k Antarctica maps"
   description: "Various USGS 1:500k maps: Antarctia Reconnaissance preliminary
@@ -67,6 +77,13 @@
   license: https://imagico.de/map/osmim_tiles.php
   attribution: imagico.de OSM images for mapping
   max_zoom: 10
+  i18n:
+    fr:
+      name: "imagico.de: USGS 500k Antarctica maps"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (imagico.de: USGS 500k Antarctica maps) : Various USGS 1:500k maps:
+        Antarctia Reconnaissance preliminary base (East Antarctic coast) and
+        Antarctia sketch map (West Antarctic) (gray)"
 - id: aq-eli-osmim-imagicode-usgs-50k-ant
   name: "imagico.de: USGS 50k Topos McMurdo Dry Valleys"
   description: 1:50k topographic maps of the McMurdo Dry Valleys produced by USGS/LINZ
@@ -89,10 +106,16 @@
   license: https://imagico.de/map/osmim_tiles.php
   attribution: imagico.de OSM images for mapping
   max_zoom: 12
+  i18n:
+    fr:
+      name: "imagico.de: USGS 50k Topos McMurdo Dry Valleys"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (imagico.de: USGS 50k Topos McMurdo Dry Valleys) : 1:50k topographic
+        maps of the McMurdo Dry Valleys produced by USGS/LINZ"
 - id: zz-eli-osm-cambodia-laos-thailand-vietnam-bilingual
   name: Cambodia, Laos, Thailand, Vietnam, Malaysia, Myanmar bilingual
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Cambodia, Laos, Thailand, Vietnam, Malaysia, Myanmar bilingual).
+  description: Layer from the OpenStreetMap Editor Layer Index (Cambodia, Laos,
+    Thailand, Vietnam, Malaysia, Myanmar bilingual).
   type: xyz
   category: basemap
   url: https://a.tile.osm-tools.org/osm/{z}/{x}/{y}.png
@@ -112,6 +135,11 @@
   license: OSM Editor Layer Index License
   attribution: © osm-tools.org & OpenStreetMap contributors, CC-BY-SA
   max_zoom: 20
+  i18n:
+    fr:
+      name: Cambodia, Laos, Thailand, Vietnam, Malaysia, Myanmar bilingual
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Cambodia, Laos, Thailand, Vietnam, Malaysia, Myanmar bilingual).
 - id: jp-eli-gsi-go-jp-std-map
   name: Japan GSI Standard Map
   description: Japan GSI Standard Map. Widely covered.
@@ -134,10 +162,15 @@
   license: https://wiki.openstreetmap.org/wiki/GSImaps
   attribution: GSI Japan
   max_zoom: 18
+  i18n:
+    fr:
+      name: Japan GSI Standard Map
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Japan
+        GSI Standard Map) : Japan GSI Standard Map. Widely covered."
 - id: ph-eli-arenda-oam
   name: Lupang Arenda, Taytay Drone Imagery
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Lupang
-    Arenda, Taytay Drone Imagery).
+  description: Layer from the OpenStreetMap Editor Layer Index (Lupang Arenda,
+    Taytay Drone Imagery).
   type: xyz
   category: imagery
   url: https://tiles.openaerialmap.org/5d25d7bf161a790005c03e6e/0/5d25d7bf161a790005c03e6f/{z}/{x}/{y}.png
@@ -158,6 +191,11 @@
   attribution: © Lupang Arenda, Taytay Drone Imagery
   min_zoom: 14
   max_zoom: 22
+  i18n:
+    fr:
+      name: Lupang Arenda, Taytay Drone Imagery
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Lupang
+        Arenda, Taytay Drone Imagery).
 - id: tw-eli-nlsc-emap5
   name: NLSC General Map with Contour line
   description: The emap from Taiwan National Land Surveying and Mapping Center
@@ -180,10 +218,15 @@
   license: https://data.gov.tw/license
   attribution: © National Land Surveying and Mapping Center, Taiwan OGDL 1.0
   max_zoom: 15
+  i18n:
+    fr:
+      name: NLSC General Map with Contour line
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NLSC
+        General Map with Contour line) : The emap from Taiwan National Land
+        Surveying and Mapping Center"
 - id: tw-eli-tw-nlsc-wms-emap6
   name: Taiwan e-Map Open Data
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Taiwan
-    e-Map Open Data).
+  description: Layer from the OpenStreetMap Editor Layer Index (Taiwan e-Map Open Data).
   type: xyz
   category: basemap
   url: https://wmts.nlsc.gov.tw/wmts/EMAP6_OPENDATA/default/GoogleMapsCompatible/{z}/{y}/{x}
@@ -203,6 +246,11 @@
   license: https://github.com/osmlab/editor-layer-index/pull/255#issuecomment-266776138
   attribution: © National Land Surveying and Mapping Center, Taiwan OGDL 1.0
   max_zoom: 15
+  i18n:
+    fr:
+      name: Taiwan e-Map Open Data
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Taiwan
+        e-Map Open Data).
 - id: at-eli-basemap-at
   name: basemap.at
   description: Basemap of Austria, based on government data.
@@ -225,6 +273,11 @@
   license: https://wiki.openstreetmap.org/w/images/1/1d/Permission_to_Incorporate_basemap.at_Into_OpenStreetMap_.pdf
   attribution: basemap.at
   max_zoom: 20
+  i18n:
+    fr:
+      name: basemap.at
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (basemap.at) : Basemap of Austria, based on government data."
 - id: at-eli-basemap-at-orthofoto
   name: basemap.at Orthofoto
   description: Orthofoto layer provided by basemap.at. "Successor" of geoimage.at imagery.
@@ -247,9 +300,15 @@
   license: https://wiki.openstreetmap.org/w/images/1/1d/Permission_to_Incorporate_basemap.at_Into_OpenStreetMap_.pdf
   attribution: basemap.at
   max_zoom: 20
+  i18n:
+    fr:
+      name: basemap.at Orthofoto
+      description: 'Couche issue du registre OpenStreetMap Editor Layer Index
+        (basemap.at Orthofoto) : Orthofoto layer provided by basemap.at.
+        "Successor" of geoimage.at imagery.'
 - id: at-eli-wien-gv-at-labels
   name: "Vienna: Beschriftungen (annotations)"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index (Vienna:
+  description: "Layer from the OpenStreetMap Editor Layer Index (Vienna:
     Beschriftungen (annotations))."
   type: xyz
   category: basemap
@@ -271,9 +330,14 @@
   attribution: Stadt Wien
   min_zoom: 12
   max_zoom: 19
+  i18n:
+    fr:
+      name: "Vienna: Beschriftungen (annotations)"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Vienna:
+        Beschriftungen (annotations))."
 - id: at-eli-wien-gv-at-gp
   name: "Vienna: Mehrzweckkarte (general purpose)"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index (Vienna:
+  description: "Layer from the OpenStreetMap Editor Layer Index (Vienna:
     Mehrzweckkarte (general purpose))."
   type: xyz
   category: basemap
@@ -295,6 +359,11 @@
   attribution: Stadt Wien
   min_zoom: 10
   max_zoom: 19
+  i18n:
+    fr:
+      name: "Vienna: Mehrzweckkarte (general purpose)"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Vienna:
+        Mehrzweckkarte (general purpose))."
 - id: at-eli-basemap-at-overlay
   name: basemap.at Overlay
   description: Annotation overlay provided by basemap.at.
@@ -317,6 +386,11 @@
   license: https://wiki.openstreetmap.org/w/images/1/1d/Permission_to_Incorporate_basemap.at_Into_OpenStreetMap_.pdf
   attribution: basemap.at
   max_zoom: 20
+  i18n:
+    fr:
+      name: basemap.at Overlay
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (basemap.at Overlay) : Annotation overlay provided by basemap.at."
 - id: at-eli-basemap-at-surface
   name: basemap.at Surface
   description: Surface layer provided by basemap.at.
@@ -340,6 +414,11 @@
   attribution: basemap.at
   min_zoom: 1
   max_zoom: 19
+  i18n:
+    fr:
+      name: basemap.at Surface
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (basemap.at Surface) : Surface layer provided by basemap.at."
 - id: at-eli-basemap-at-terrain
   name: basemap.at Terrain
   description: Terrain layer provided by basemap.at.
@@ -363,10 +442,14 @@
   attribution: basemap.at
   min_zoom: 1
   max_zoom: 19
+  i18n:
+    fr:
+      name: basemap.at Terrain
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (basemap.at Terrain) : Terrain layer provided by basemap.at."
 - id: be-eli-dv-grb
   name: Digitaal Vlaanderen GRB
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Digitaal
-    Vlaanderen GRB).
+  description: Layer from the OpenStreetMap Editor Layer Index (Digitaal Vlaanderen GRB).
   type: xyz
   category: basemap
   url: https://geo.api.vlaanderen.be/GRB/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=grb_bsk&STYLE=&FORMAT=image/png&tileMatrixSet=GoogleMapsVL&tileMatrix={z}&tileRow={y}&tileCol={x}
@@ -386,9 +469,14 @@
   license: https://overheid.vlaanderen.be/sites/default/files/media/Digitale%20overheid/GRB/GRB%20open%20data%20licentie(2)(1).pdf
   attribution: © Digitaal Vlaanderen
   max_zoom: 21
+  i18n:
+    fr:
+      name: Digitaal Vlaanderen GRB
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Digitaal
+        Vlaanderen GRB).
 - id: be-eli-dv-orthophoto
   name: Digitaal Vlaanderen most recent aerial imagery
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Digitaal
+  description: Layer from the OpenStreetMap Editor Layer Index (Digitaal
     Vlaanderen most recent aerial imagery).
   type: xyz
   category: imagery
@@ -409,10 +497,15 @@
   license: https://download.vlaanderen.be/Producten/Detail?id=1545
   attribution: © Digitaal Vlaanderen
   max_zoom: 21
+  i18n:
+    fr:
+      name: Digitaal Vlaanderen most recent aerial imagery
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Digitaal
+        Vlaanderen most recent aerial imagery).
 - id: be-eli-osmbe-nl
   name: OpenStreetMap (Belgian Style - Dutch)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Belgian Style - Dutch)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Belgian Style - Dutch)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.be/osmbe-nl/{z}/{x}/{y}.png
@@ -432,10 +525,15 @@
   license: https://github.com/jbelien/openstreetmap-carto-be/wiki/Tile-Usage-Policy
   attribution: © OpenStreetMap contributors, CC-BY-SA; Tiles courtesy of GEO-6
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenStreetMap (Belgian Style - Dutch)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Belgian Style - Dutch)).
 - id: be-eli-osmbe-fr
   name: OpenStreetMap (Belgian Style - French)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Belgian Style - French)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Belgian Style - French)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.be/osmbe-fr/{z}/{x}/{y}.png
@@ -455,10 +553,15 @@
   license: https://github.com/jbelien/openstreetmap-carto-be/wiki/Tile-Usage-Policy
   attribution: © OpenStreetMap contributors, CC-BY-SA; Tiles courtesy of GEO-6
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenStreetMap (Belgian Style - French)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Belgian Style - French)).
 - id: be-eli-osmbe
   name: OpenStreetMap (Belgian Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Belgian Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Belgian Style)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.be/osmbe/{z}/{x}/{y}.png
@@ -478,6 +581,11 @@
   license: https://github.com/jbelien/openstreetmap-carto-be/wiki/Tile-Usage-Policy
   attribution: © OpenStreetMap contributors, CC-BY-SA; Tiles courtesy of GEO-6
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenStreetMap (Belgian Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Belgian Style)).
 - id: bg-eli-bg-maf-orthophoto-latest
   name: Bulgaria MAF Orthophoto
   description: Latest orthorectified aerial imagery provided by the Ministry of
@@ -502,10 +610,16 @@
   attribution: Ministry of Agriculture and Food
   min_zoom: 0
   max_zoom: 20
+  i18n:
+    fr:
+      name: Bulgaria MAF Orthophoto
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Bulgaria MAF Orthophoto) : Latest orthorectified aerial imagery
+        provided by the Ministry of Agriculture and Food of Bulgaria."
 - id: ch-eli-geneve-orthophoto-2024
   name: Canton de Génève, Orthophoto 2024 (4cm) (SITG)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Canton
-    de Génève, Orthophoto 2024 (4cm) (SITG)).
+  description: Layer from the OpenStreetMap Editor Layer Index (Canton de Génève,
+    Orthophoto 2024 (4cm) (SITG)).
   type: xyz
   category: imagery
   url: https://raster.sitg.ge.ch/arcgis/rest/services/ORTHOPHOTOS_2024_EPSG3857/MapServer/tile/{z}/{y}/{x}
@@ -525,6 +639,11 @@
   license: https://sitg.ge.ch/ressources/conditions-utilisation-donnees
   attribution: Système d'information du territoire à Genève (SITG)
   min_zoom: 2
+  i18n:
+    fr:
+      name: Canton de Génève, Orthophoto 2024 (4cm) (SITG)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Canton
+        de Génève, Orthophoto 2024 (4cm) (SITG)).
 - id: ch-eli-aargau-agis-2025
   name: Kanton Aargau 20cm (AGIS 2025)
   description: This imagery is provided via a proxy operated by https://sosm.ch/,
@@ -549,6 +668,13 @@
   attribution: AGIS OF2025
   min_zoom: 4
   max_zoom: 20
+  i18n:
+    fr:
+      name: Kanton Aargau 20cm (AGIS 2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Kanton
+        Aargau 20cm (AGIS 2025)) : This imagery is provided via a proxy operated
+        by https://sosm.ch/, it is more current than swisstopo imagery but has
+        less resolution"
 - id: ch-eli-aargau-agis-2014-hillshade
   name: Kanton Aargau 50cm DTM/Hillshade
   description: This imagery is provided via a proxy operated by https://sosm.ch/
@@ -572,6 +698,12 @@
   attribution: AGIS 2014 50cm DTM/Hillshade
   min_zoom: 2
   max_zoom: 19
+  i18n:
+    fr:
+      name: Kanton Aargau 50cm DTM/Hillshade
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Kanton
+        Aargau 50cm DTM/Hillshade) : This imagery is provided via a proxy
+        operated by https://sosm.ch/"
 - id: ch-eli-bern-amtlichevermessung
   name: Amtliche Vermessung farbig WMTS, OpenData.swiss, Geoinformation Stadt Bern
   description: Amtliche Vermessung farbig WMTS
@@ -593,6 +725,12 @@
     - ch
   license: https://opendata.swiss/de/dataset/amtliche-vermessung-farbig-wmts
   attribution: Amtliche Vermessung farbig WMTS, OpenData.swiss, Geoinformation Stadt Bern
+  i18n:
+    fr:
+      name: Amtliche Vermessung farbig WMTS, OpenData.swiss, Geoinformation Stadt Bern
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Amtliche Vermessung farbig WMTS, OpenData.swiss, Geoinformation Stadt
+        Bern) : Amtliche Vermessung farbig WMTS"
 - id: ch-eli-zuerich-zh-uebersichtsplan-tms
   name: Stadt Zürich Übersichtsplan
   description: This imagery is provided via a proxy operated by https://sosm.ch/
@@ -616,6 +754,12 @@
   attribution: Stadt Zürich Open Government Data
   min_zoom: 3
   max_zoom: 21
+  i18n:
+    fr:
+      name: Stadt Zürich Übersichtsplan
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Stadt
+        Zürich Übersichtsplan) : This imagery is provided via a proxy operated
+        by https://sosm.ch/"
 - id: ch-eli-swisstopo-swissalti3d
   name: swisstopo SWISSALTI3D
   description: Die Reliefschattierung ist ein Derivat aus dem digitalen
@@ -644,6 +788,18 @@
   license: https://www.swisstopo.admin.ch/en/swisstopo/free-geodata.html
   attribution: Federal Office of Topography swisstopo
   max_zoom: 18
+  i18n:
+    fr:
+      name: swisstopo SWISSALTI3D
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (swisstopo SWISSALTI3D) : Die Reliefschattierung ist ein Derivat aus dem
+        digitalen Höhenmodell swissALTI3D. Es erlaubt die Visualisierung des
+        Reliefs der Schweiz und des Fürstentums Liechtenstein. Die
+        Reliefschattierung ist ein digitales Schummerungsbild bei einem oder
+        mehreren berechneten Lichteinfällen. Für die Darstellung der
+        vorliegenden Reliefschattierung aus swissALTI3D wurden sechs
+        verschiedene Sonnenstände kombiniert. Der mittlere Sonnenstand befindet
+        sich im Nordwesten."
 - id: ch-eli-swisstopo-swisssurface3d
   name: swisstopo swissSURFACE3D
   description: Die Reliefschattierung ist ein Derivat aus dem digitalen
@@ -672,10 +828,22 @@
   license: https://www.swisstopo.admin.ch/en/swisstopo/free-geodata.html
   attribution: Federal Office of Topography swisstopo
   max_zoom: 18
+  i18n:
+    fr:
+      name: swisstopo swissSURFACE3D
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (swisstopo swissSURFACE3D) : Die Reliefschattierung ist ein Derivat aus
+        dem digitalen Höhenmodell swissSURFACE3D Raster. Es erlaubt die
+        Visualisierung des Reliefs der Schweiz und des Fürstentums
+        Liechtenstein. Die Reliefschattierung ist ein digitales Schummerungsbild
+        bei einem oder mehreren berechneten Lichteinfällen. Für die Darstellung
+        der vorliegenden Reliefschattierung aus swissSURFACE3D Raster wurden
+        sechs verschiedene Sonnenstände kombiniert. Der mittlere Sonnenstand
+        befindet sich im Nordwesten."
 - id: de-eli-berlin-2026
   name: Berlin/Geoportal DOP20RGB (2026)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Berlin/Geoportal DOP20RGB (2026)).
+  description: Layer from the OpenStreetMap Editor Layer Index (Berlin/Geoportal
+    DOP20RGB (2026)).
   type: xyz
   category: imagery
   url: https://tiles.codefor.de/berlin/geoportal/luftbilder/2026-dop20rgb/{z}/{x}/{y}.png
@@ -696,10 +864,15 @@
   attribution: Geoportal Berlin/Digitale farbige Orthophotos 2026 (DOP20RGB)
     (codefor.de mirror)
   max_zoom: 20
+  i18n:
+    fr:
+      name: Berlin/Geoportal DOP20RGB (2026)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Berlin/Geoportal DOP20RGB (2026)).
 - id: de-eli-erlangen-2022
   name: Erlangen TrueDOP (2022 20 cm)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Erlangen
-    TrueDOP (2022 20 cm)).
+  description: Layer from the OpenStreetMap Editor Layer Index (Erlangen TrueDOP
+    (2022 20 cm)).
   type: xyz
   category: imagery
   url: https://geodaten.erlangen.de/luftbilder/2022/{z}/{x}/{y}.png
@@ -720,9 +893,14 @@
   attribution: © Stadt Erlangen
   min_zoom: 10
   max_zoom: 20
+  i18n:
+    fr:
+      name: Erlangen TrueDOP (2022 20 cm)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Erlangen
+        TrueDOP (2022 20 cm)).
 - id: de-eli-orka-mv
   name: Offene Regionalkarte Mecklenburg-Vorpommern (ORKa.MV)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Offene
+  description: Layer from the OpenStreetMap Editor Layer Index (Offene
     Regionalkarte Mecklenburg-Vorpommern (ORKa.MV)).
   type: xyz
   category: basemap
@@ -744,6 +922,11 @@
   attribution: ORKa.MV
   min_zoom: 12
   max_zoom: 19
+  i18n:
+    fr:
+      name: Offene Regionalkarte Mecklenburg-Vorpommern (ORKa.MV)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Offene
+        Regionalkarte Mecklenburg-Vorpommern (ORKa.MV)).
 - id: dk-eli-geodanmark-orthophoto-spring-septima
   name: GeoDK Aerial Imagery
   description: GeoDanmark's orthophotos from most recent spring capture, typically
@@ -768,6 +951,13 @@
   license: https://www.geodanmark.dk/home/vejledninger/vilkaar-for-data-anvendelse/
   attribution: (CC BY 4.0) GeoDanmark
   max_zoom: 21
+  i18n:
+    fr:
+      name: GeoDK Aerial Imagery
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (GeoDK
+        Aerial Imagery) : GeoDanmark's orthophotos from most recent spring
+        capture, typically released in fall of capture year (Septima provided
+        TMS cache of official WMS service, see https://osmtools.septima.dk/)"
 - id: es-eli-pnoa-spain-tms
   name: PNOA Spain
   description: "Ortofotos de máxima actualidad del proyecto PNOA (Plan Nacional de
@@ -795,6 +985,16 @@
   license: https://www.ign.es/web/ign/portal/ide-area-nodo-ide-ign
   attribution: PNOA
   max_zoom: 20
+  i18n:
+    fr:
+      name: PNOA Spain
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (PNOA
+        Spain) : Ortofotos de máxima actualidad del proyecto PNOA (Plan Nacional
+        de Ortofotografía Aérea) visibles a partir de una escala aproximada
+        1:70.000. Para escalas menores se visualizan las imágenes de satélite
+        Sentinel2 de 10 metros de resolución. Ortoimagen Melilla: Pléiades Neo ©
+        Airbus DS (2022). La cobertura PNOA está constituida por mosaicos de
+        distinta fecha de adquisición y distinta resolución (50 y 25 cm)."
 - id: es-eli-geoeuskadi-basemap
   name: geoEuskadiren Kartografia
   description: Oinarrizko kartografiaren WMTS zerbitzua / Servicio WMTS de
@@ -817,9 +1017,15 @@
     - es
   license: https://www.euskadi.eus/euskadiko-oinarrizko-mapa-kartografikoaren-wmts-zerbitzua/web01-a2gazter/eu/
   attribution: Eusko Jaurlaritza / Gobierno Vasco. geoEuskadi
+  i18n:
+    fr:
+      name: geoEuskadiren Kartografia
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (geoEuskadiren Kartografia) : Oinarrizko kartografiaren WMTS zerbitzua /
+        Servicio WMTS de Cartografía Básica"
 - id: fr-eli-fr-ign-bdtopo
   name: BD Topo
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (BD Topo).
+  description: Layer from the OpenStreetMap Editor Layer Index (BD Topo).
   type: xyz
   category: basemap
   url: https://a.tile.openstreetmap.fr/bdtopo/{z}/{x}/{y}.png
@@ -840,6 +1046,10 @@
   attribution: Tiles © cquest@Openstreetmap France, data © IGN BD Topo, LO/OL
   min_zoom: 3
   max_zoom: 20
+  i18n:
+    fr:
+      name: BD Topo
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (BD Topo).
 - id: fr-eli-route500hydro
   name: BD Carthage
   description: "Réseau hydrographique: cours et plans d'eau et POI"
@@ -863,6 +1073,11 @@
   attribution: Tiles © cquest@Openstreetmap France, data © Onema - IGN, LO/OL
   min_zoom: 6
   max_zoom: 20
+  i18n:
+    fr:
+      name: BD Carthage
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (BD
+        Carthage) : Réseau hydrographique: cours et plans d'eau et POI"
 - id: fr-eli-fr-ign-bdortho
   name: BD Ortho IGN
   description: Combinaison des meilleures photographies aériennes (de 20 à 15 cm)
@@ -888,6 +1103,13 @@
   attribution: BD Ortho IGN
   min_zoom: 0
   max_zoom: 19
+  i18n:
+    fr:
+      name: BD Ortho IGN
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (BD
+        Ortho IGN) : Combinaison des meilleures photographies aériennes (de 20 à
+        15 cm) et des images satellites à plus grande échelle. Mise à jour
+        progressivement sur 1/3 des départements chaque année."
 - id: fr-eli-cadastre
   name: Cadastre
   description: French land registry
@@ -912,6 +1134,11 @@
     Mise à jour : 2022"
   min_zoom: 2
   max_zoom: 22
+  i18n:
+    fr:
+      name: Cadastre
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Cadastre) : French land registry"
 - id: fr-eli-fr-ign-mnslidarhd
   name: MNS LiDAR HD IGN
   description: Modèle numérique de surface issu de la campagne LiDAR HD de l'IGN.
@@ -935,6 +1162,12 @@
   attribution: IGN MNS LiDAR HD
   min_zoom: 0
   max_zoom: 18
+  i18n:
+    fr:
+      name: MNS LiDAR HD IGN
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (MNS
+        LiDAR HD IGN) : Modèle numérique de surface issu de la campagne LiDAR HD
+        de l'IGN."
 - id: fr-eli-fr-ign-mntlidarhd
   name: MNT LiDAR HD IGN
   description: Modèle numérique de terrain issu de la campagne LiDAR HD de l'IGN.
@@ -958,6 +1191,12 @@
   attribution: MNT LiDAR HD IGN
   min_zoom: 0
   max_zoom: 18
+  i18n:
+    fr:
+      name: MNT LiDAR HD IGN
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (MNT
+        LiDAR HD IGN) : Modèle numérique de terrain issu de la campagne LiDAR HD
+        de l'IGN."
 - id: fr-eli-route500
   name: Route 500
   description: Routes of the classified network (highways, nationals, departmentals)
@@ -981,10 +1220,16 @@
   attribution: Tiles © cquest@Openstreetmap France, data © IGN, LO/OL
   min_zoom: 12
   max_zoom: 20
+  i18n:
+    fr:
+      name: Route 500
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Route
+        500) : Routes of the classified network (highways, nationals,
+        departmentals)"
 - id: fr-eli-toulouse-orthophotoplan-2019
   name: Toulouse - Orthophotoplan 2019
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Toulouse
-    - Orthophotoplan 2019).
+  description: Layer from the OpenStreetMap Editor Layer Index (Toulouse -
+    Orthophotoplan 2019).
   type: xyz
   category: imagery
   url: https://wms.openstreetmap.fr/tms/1.0.0/toulouse_2019/{z}/{x}/{y}
@@ -1005,9 +1250,14 @@
   attribution: Orthophotoplan 2019 - Toulouse Métropole, 2021, Licence Ouverte v2.0 (Etalab)
   min_zoom: 3
   max_zoom: 22
+  i18n:
+    fr:
+      name: Toulouse - Orthophotoplan 2019
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Toulouse
+        - Orthophotoplan 2019).
 - id: fr-eli-osmfr-volta
   name: Volta
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Volta).
+  description: Layer from the OpenStreetMap Editor Layer Index (Volta).
   type: xyz
   category: basemap
   url: https://a.tile.openstreetmap.fr/volta/{z}/{x}/{y}.png
@@ -1028,6 +1278,10 @@
   attribution: Tiles © cquest@Openstreetmap France, data © Agence ORE - RTE France, LO/OL
   min_zoom: 6
   max_zoom: 20
+  i18n:
+    fr:
+      name: Volta
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Volta).
 - id: fr-eli-ign-bl-slope
   name: IGN slope
   description: Slopes of Saint Barthélemy. The yellower the flatter.
@@ -1051,9 +1305,14 @@
   attribution: IGN
   min_zoom: 11
   max_zoom: 16
+  i18n:
+    fr:
+      name: IGN slope
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        slope) : Slopes of Saint Barthélemy. The yellower the flatter."
 - id: gb-eli-os7
   name: 7th Series (OS7)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (7th Series (OS7)).
+  description: Layer from the OpenStreetMap Editor Layer Index (7th Series (OS7)).
   type: xyz
   category: basemap
   url: https://ooc.openstreetmap.org/os7/{z}/{x}/{y}.jpg
@@ -1074,6 +1333,11 @@
   attribution: © 7th Series (OS7)
   min_zoom: 6
   max_zoom: 14
+  i18n:
+    fr:
+      name: 7th Series (OS7)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (7th
+        Series (OS7)).
 - id: gb-eli-localauthorities-rightsofway
   name: Public Rights of Way
   description: Public rights of way data released by local authorities, as
@@ -1099,10 +1363,16 @@
     Government Licence v3.0.
   min_zoom: 7
   max_zoom: 20
+  i18n:
+    fr:
+      name: Public Rights of Way
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Public
+        Rights of Way) : Public rights of way data released by local
+        authorities, as collated at rowmaps.com"
 - id: gb-eli-os-opendata-streetview-2016-04
   name: OS OpenData StreetView (April 2016)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (OS
-    OpenData StreetView (April 2016)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OS OpenData
+    StreetView (April 2016)).
   type: xyz
   category: basemap
   url: https://a.os.openstreetmap.org/layer/gb_os_sv_2016_04/{z}/{x}/{y}.png
@@ -1123,9 +1393,14 @@
   attribution: © OS OpenData StreetView (April 2016)
   min_zoom: 1
   max_zoom: 18
+  i18n:
+    fr:
+      name: OS OpenData StreetView (April 2016)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (OS
+        OpenData StreetView (April 2016)).
 - id: gb-eli-os-openmap-local-latest
   name: OS OpenMap Local
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (OS OpenMap Local).
+  description: Layer from the OpenStreetMap Editor Layer Index (OS OpenMap Local).
   type: xyz
   category: basemap
   url: https://os.openstreetmap.org/om-local/{z}/{x}/{y}.png
@@ -1146,10 +1421,15 @@
   attribution: © OS OpenMap Local
   min_zoom: 1
   max_zoom: 18
+  i18n:
+    fr:
+      name: OS OpenMap Local
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (OS
+        OpenMap Local).
 - id: hr-eli-gis-rijeka-2020
   name: "gis-rijeka: Rijeka 2020 aerial imagery"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (gis-rijeka: Rijeka 2020 aerial imagery)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (gis-rijeka:
+    Rijeka 2020 aerial imagery)."
   type: tms
   category: imagery
   url: https://tms.osm-hr.org/rijeka-2020/{z}/{x}/{-y}.png
@@ -1169,10 +1449,14 @@
   license: https://imamopravoznati.org/request/grad_rijeka_koristenje_podataka#incoming-8517
   attribution: Sadrži podatke Geografskog informacijskog sustava Grada Rijeke
   max_zoom: 21
+  i18n:
+    fr:
+      name: "gis-rijeka: Rijeka 2020 aerial imagery"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (gis-rijeka: Rijeka 2020 aerial imagery)."
 - id: hr-eli-osm-hr-ustopo50
   name: "osm-hr: US Topo 50"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index (osm-hr:
-    US Topo 50)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (osm-hr: US Topo 50)."
   type: xyz
   category: basemap
   url: https://tms.osm-hr.org/ustopo/{z}/{x}/{y}.png
@@ -1192,10 +1476,15 @@
   license: https://legacy.lib.utexas.edu/maps/faq.html#3.html
   attribution: "© osm-hr: US Topo 50"
   max_zoom: 15
+  i18n:
+    fr:
+      name: "osm-hr: US Topo 50"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (osm-hr:
+        US Topo 50)."
 - id: hr-eli-osm-hr-zagreb-2018
   name: "osm-hr: Zagreb 2018 Aerial imagery"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index (osm-hr:
-    Zagreb 2018 Aerial imagery)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (osm-hr: Zagreb
+    2018 Aerial imagery)."
   type: tms
   category: imagery
   url: https://tms.osm-hr.org/zagreb-2018/{z}/{x}/{-y}.png
@@ -1215,6 +1504,11 @@
   license: https://narodne-novine.nn.hr/clanci/sluzbeni/2013_02_25_403.html
   attribution: Grad Zagreb, Gradski ured za strategijsko planiranje i razvoj Grada
   max_zoom: 20
+  i18n:
+    fr:
+      name: "osm-hr: Zagreb 2018 Aerial imagery"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (osm-hr:
+        Zagreb 2018 Aerial imagery)."
 - id: hu-eli-eufar-balaton
   name: EUFAR Balaton orthophotos
   description: 1940 geo-tagged photography from Balaton Limnological Institute.
@@ -1238,10 +1532,15 @@
   attribution: EUFAR Balaton ortofotó 2010
   min_zoom: 12
   max_zoom: 19
+  i18n:
+    fr:
+      name: EUFAR Balaton orthophotos
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (EUFAR
+        Balaton orthophotos) : 1940 geo-tagged photography from Balaton
+        Limnological Institute."
 - id: hu-eli-hu-hillshade
   name: Hillshade Hungary
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Hillshade Hungary).
+  description: Layer from the OpenStreetMap Editor Layer Index (Hillshade Hungary).
   type: xyz
   category: elevation
   url: https://a.map.turistautak.hu/tiles/shading/{z}/{x}/{y}.png
@@ -1261,10 +1560,15 @@
   license: OSM Editor Layer Index License
   attribution: SRTM
   max_zoom: 18
+  i18n:
+    fr:
+      name: Hillshade Hungary
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Hillshade Hungary).
 - id: hu-eli-openstreetmap-turistautak
   name: OpenStreetMap (turistautak)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (turistautak)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (turistautak)).
   type: xyz
   category: basemap
   url: https://a.tile.openstreetmap.hu/tt/{z}/{x}/{y}.png
@@ -1283,6 +1587,11 @@
     - hu
   license: https://www.openstreetmap.hu
   attribution: © OpenStreetMap contributors
+  i18n:
+    fr:
+      name: OpenStreetMap (turistautak)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (turistautak)).
 - id: hu-eli-soskut-pusztazamor-tarnok-diosd-orto-2017
   name: Sóskút, Pusztazámor, Tárnok, Diósd orthophoto 2017
   description: 5 cm resolution leaf-off image of 4 settlement
@@ -1305,6 +1614,12 @@
   license: https://wiki.openstreetmap.org/wiki/Hungary/Ortofot%C3%B3k#S.C3.B3sk.C3.BAt.2C_Pusztaz.C3.A1mor.2C_T.C3.A1rnok.2C_Di.C3.B3sd_ortofot.C3.B3_2017
   attribution: Fototerkep.hu
   max_zoom: 21
+  i18n:
+    fr:
+      name: Sóskút, Pusztazámor, Tárnok, Diósd orthophoto 2017
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Sóskút,
+        Pusztazámor, Tárnok, Diósd orthophoto 2017) : 5 cm resolution leaf-off
+        image of 4 settlement"
 - id: hu-eli-szeged-2011
   name: Szeged orthophoto 2011
   description: Inner part of Szeged
@@ -1328,10 +1643,14 @@
   attribution: SZTE TFGT - University of Szeged
   min_zoom: 10
   max_zoom: 22
+  i18n:
+    fr:
+      name: Szeged orthophoto 2011
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Szeged
+        orthophoto 2011) : Inner part of Szeged"
 - id: it-eli-bologna-orthophoto-2026
   name: Bologna ortofoto 2026
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Bologna
-    ortofoto 2026).
+  description: Layer from the OpenStreetMap Editor Layer Index (Bologna ortofoto 2026).
   type: xyz
   category: imagery
   url: https://sitmappe.comune.bologna.it/tms/tileserver/Ortofoto2026/{z}/{x}/{y}.png
@@ -1351,10 +1670,14 @@
   license: https://opendata.comune.bologna.it/explore/dataset/tile-server-ortofoto-comune-di-bologna/information/
   attribution: © Comune di Bologna ODbL
   max_zoom: 21
+  i18n:
+    fr:
+      name: Bologna ortofoto 2026
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Bologna
+        ortofoto 2026).
 - id: lt-eli-ort10lt
   name: Lithuania - NŽT ORT10LT
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Lithuania - NŽT ORT10LT).
+  description: Layer from the OpenStreetMap Editor Layer Index (Lithuania - NŽT ORT10LT).
   type: xyz
   category: imagery
   url: https://ort10lt.openmap.lt/g16/{z}/{x}/{y}.jpeg
@@ -1375,10 +1698,15 @@
   attribution: NŽT ORT10LT
   min_zoom: 4
   max_zoom: 18
+  i18n:
+    fr:
+      name: Lithuania - NŽT ORT10LT
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Lithuania - NŽT ORT10LT).
 - id: lu-eli-lu-geoportail-opendata-ortho2025
   name: Latest available ortho geoportail.lu
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Latest
-    available ortho geoportail.lu).
+  description: Layer from the OpenStreetMap Editor Layer Index (Latest available
+    ortho geoportail.lu).
   type: xyz
   category: imagery
   url: https://wmts.geoportail.lu/opendata/wmts/ortho_latest/GLOBAL_WEBMERCATOR_4_V3/{z}/{x}/{y}.jpeg
@@ -1399,12 +1727,16 @@
   attribution: Administration du Cadastre et de la Topographie
   min_zoom: 5
   max_zoom: 20
+  i18n:
+    fr:
+      name: Latest available ortho geoportail.lu
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Latest
+        available ortho geoportail.lu).
 - id: lu-eli-lu-openstreetmap-lidar-hillshade-2019-classy
   name: openstreetmap.lu "mapper’s delight" hillshade lidar 2019 with unclassified
     points
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (openstreetmap.lu "mapper’s delight" hillshade lidar 2019 with unclassified
-    points).
+  description: Layer from the OpenStreetMap Editor Layer Index (openstreetmap.lu
+    "mapper’s delight" hillshade lidar 2019 with unclassified points).
   type: xyz
   category: elevation
   url: https://lidar-hillshade-2019.openstreetmap.lu/layer/mappers_delight_lidar_hillshade_2019_withunclassified/{z}/{x}/{y}.png
@@ -1425,6 +1757,13 @@
   attribution: Administration du Cadastre et de la Topographie
   min_zoom: 5
   max_zoom: 22
+  i18n:
+    fr:
+      name: openstreetmap.lu "mapper’s delight" hillshade lidar 2019 with unclassified
+        points
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (openstreetmap.lu "mapper’s delight" hillshade lidar 2019 with
+        unclassified points).
 - id: nl-eli-bgt-standaardvisualisatie-wmts
   name: PDOK BGT standaardvisualisatie
   description: Nationwide data set, Basic registration of large-scale topography,
@@ -1450,6 +1789,15 @@
     - nl
   license: https://community.openstreetmap.org/t/bgt-brt-akkoord-beschikbaarheid-voor-openstreetmap/80051
   attribution: Kadaster, Basisregistratie Grootschalige Topografie (BGT)
+  i18n:
+    fr:
+      name: PDOK BGT standaardvisualisatie
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (PDOK
+        BGT standaardvisualisatie) : Nationwide data set, Basic registration of
+        large-scale topography, will be the detailed large-scale base map
+        (digital map) of the whole of the Netherlands, in which the location of
+        all physical objects such as buildings, roads, water, railway lines and
+        (agricultural) land is registered in an unambiguous manner."
 - id: nl-eli-actueel-orthohr-wmts
   name: PDOK aerial imagery Beeldmateriaal.nl 8cm (WMTS) latest
   description: Nationwide data set 8cm resolution color aerial imagery of the most
@@ -1473,6 +1821,12 @@
   license: https://forum.openstreetmap.org/viewtopic.php?pid=630995#p630995
   attribution: Kadaster / Beeldmateriaal.nl, CC BY 4.0
   max_zoom: 21
+  i18n:
+    fr:
+      name: PDOK aerial imagery Beeldmateriaal.nl 8cm (WMTS) latest
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (PDOK
+        aerial imagery Beeldmateriaal.nl 8cm (WMTS) latest) : Nationwide data
+        set 8cm resolution color aerial imagery of the most recent year."
 - id: no-eli-kartverket-topo
   name: Kartverket topo
   description: Topographic map, equivalent to Norway 1:50.000 map series at zoom 15.
@@ -1496,6 +1850,12 @@
   attribution: © Kartverket
   min_zoom: 3
   max_zoom: 18
+  i18n:
+    fr:
+      name: Kartverket topo
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Kartverket topo) : Topographic map, equivalent to Norway 1:50.000 map
+        series at zoom 15."
 - id: no-eli-kartverket-sjokart
   name: Kartverket Nautical Charts
   description: Norwegian nautical charts (includes Spitsbergen/Svalbard and
@@ -1520,6 +1880,13 @@
   attribution: © Kartverket
   min_zoom: 3
   max_zoom: 18
+  i18n:
+    fr:
+      name: Kartverket Nautical Charts
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Kartverket Nautical Charts) : Norwegian nautical charts (includes
+        Spitsbergen/Svalbard and Antarctica). Raster representation of paper
+        charts. Updated biweekly."
 - id: no-eli-mtbmap-no
   name: MTBmap.no
   description: Norwegian mountain biking map from OSM (max zoom 14-16, varies per region)
@@ -1543,6 +1910,12 @@
   attribution: © MTBmap.no
   min_zoom: 3
   max_zoom: 14
+  i18n:
+    fr:
+      name: MTBmap.no
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (MTBmap.no) : Norwegian mountain biking map from OSM (max zoom 14-16,
+        varies per region)"
 - id: no-eli-npi-janmayen-topo
   name: NPI Jan Mayen topo
   description: Topographic map for Jan Mayen from the Norwegian Polar Institute
@@ -1565,6 +1938,12 @@
   license: https://web.archive.org/web/20240114010212/https://lists.nuug.no/pipermail/kart/2018-February/006371.html
   attribution: © Norwegian Polar Institute
   max_zoom: 16
+  i18n:
+    fr:
+      name: NPI Jan Mayen topo
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NPI Jan
+        Mayen topo) : Topographic map for Jan Mayen from the Norwegian Polar
+        Institute"
 - id: no-eli-npi-svalbard-ortofoto
   name: NPI Svalbard Orthophoto
   description: Orthophoto for Svalbard/Spitsbergen from the Norwegian Polar Institute
@@ -1587,6 +1966,12 @@
   license: https://web.archive.org/web/20240114010212/https://lists.nuug.no/pipermail/kart/2018-February/006371.html
   attribution: © Norwegian Polar Institute
   max_zoom: 17
+  i18n:
+    fr:
+      name: NPI Svalbard Orthophoto
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NPI
+        Svalbard Orthophoto) : Orthophoto for Svalbard/Spitsbergen from the
+        Norwegian Polar Institute"
 - id: no-eli-npi-svalbard-fkb
   name: NPI Svalbard detailed topo
   description: Detailed topographic map for Longyearbyen, Barentsburg and
@@ -1610,6 +1995,12 @@
   license: https://web.archive.org/web/20240114010212/https://lists.nuug.no/pipermail/kart/2018-February/006371.html
   attribution: © Norwegian Polar Institute
   max_zoom: 17
+  i18n:
+    fr:
+      name: NPI Svalbard detailed topo
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NPI
+        Svalbard detailed topo) : Detailed topographic map for Longyearbyen,
+        Barentsburg and Ny-Ålesund from the Norwegian Polar Institute"
 - id: no-eli-npi-svalbard-topo
   name: NPI Svalbard topo
   description: Topographic map for Svalbard from the Norwegian Polar Institute
@@ -1632,6 +2023,12 @@
   license: https://web.archive.org/web/20240523100200/https://lists.nuug.no/pipermail/kart/2018-February/006371.html
   attribution: © Norwegian Polar Institute
   max_zoom: 15
+  i18n:
+    fr:
+      name: NPI Svalbard topo
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NPI
+        Svalbard topo) : Topographic map for Svalbard from the Norwegian Polar
+        Institute"
 - id: pl-eli-geoportal2-pl-aerial-image-wmts
   name: "Geoportal 2: Orthophotomap (latest aerial imagery) (WMTS)"
   description: Usługa przeglądania (Web Map Tile Service,WMTS) umożliwiająca
@@ -1656,6 +2053,14 @@
   license: https://wiki.openstreetmap.org/wiki/Geoportal.gov.pl
   attribution: Główny Urząd Geodezji i Kartografii
   max_zoom: 23
+  i18n:
+    fr:
+      name: "Geoportal 2: Orthophotomap (latest aerial imagery) (WMTS)"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Geoportal 2: Orthophotomap (latest aerial imagery) (WMTS)) : Usługa
+        przeglądania (Web Map Tile Service,WMTS) umożliwiająca przeglądanie
+        ortofotomap dla obszaru Polski. Dane udostępniane za pomocą tej usługi
+        stanowią ortofotomapę wykonaną ze zdjęć lotniczych."
 - id: rs-eli-rs-osm-official-cyr
   name: Official Serbia OSM (cyr)
   description: Official Serbia OSM tile server using cyrillic script
@@ -1679,6 +2084,12 @@
   attribution: openstreetmap.rs
   min_zoom: 8
   max_zoom: 20
+  i18n:
+    fr:
+      name: Official Serbia OSM (cyr)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Official Serbia OSM (cyr)) : Official Serbia OSM tile server using
+        cyrillic script"
 - id: rs-eli-rs-osm-official-lat
   name: Official Serbia OSM (lat)
   description: Official Serbia OSM tile server using latin script
@@ -1702,6 +2113,12 @@
   attribution: openstreetmap.rs
   min_zoom: 8
   max_zoom: 20
+  i18n:
+    fr:
+      name: Official Serbia OSM (lat)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Official Serbia OSM (lat)) : Official Serbia OSM tile server using
+        latin script"
 - id: se-eli-skoterleder
   name: Snowmobile map Sweden
   description: Snowmobile trails
@@ -1725,6 +2142,11 @@
   attribution: © Skoterleder.org
   min_zoom: 5
   max_zoom: 14
+  i18n:
+    fr:
+      name: Snowmobile map Sweden
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Snowmobile map Sweden) : Snowmobile trails"
 - id: se-eli-lantmateriet-topowebb
   name: Lantmäteriet Topographic Map
   description: Topographic map of Sweden 1:50 000
@@ -1748,6 +2170,11 @@
   attribution: © Lantmäteriet, CC0
   min_zoom: 3
   max_zoom: 15
+  i18n:
+    fr:
+      name: Lantmäteriet Topographic Map
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Lantmäteriet Topographic Map) : Topographic map of Sweden 1:50 000"
 - id: si-eli-gurs-dof025
   name: "GURS: Slovenia orthophoto 25cm (DOF025)"
   description: Slovenia orthophoto 25cm/pixel (GURS DOF025), hosted by Level2.si
@@ -1771,9 +2198,15 @@
   attribution: CC-BY Geodetska uprava Republike Slovenije, DOF025, 2020-2022; Level2.si 2023
   min_zoom: 8
   max_zoom: 20
+  i18n:
+    fr:
+      name: "GURS: Slovenia orthophoto 25cm (DOF025)"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (GURS:
+        Slovenia orthophoto 25cm (DOF025)) : Slovenia orthophoto 25cm/pixel
+        (GURS DOF025), hosted by Level2.si"
 - id: sk-eli-dsm1-sk-shading
   name: DSM 1.0 shading
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DSM 1.0 shading).
+  description: Layer from the OpenStreetMap Editor Layer Index (DSM 1.0 shading).
   type: xyz
   category: elevation
   url: https://dmp1-shading.tiles.freemap.sk/{z}/{x}/{y}.jpg
@@ -1793,9 +2226,14 @@
   license: https://wiki.openstreetmap.org/wiki/WikiProject_Slovakia/Sources#%C3%9AGKK_SR_DMR_5.0
   attribution: ÚGKK SR
   max_zoom: 18
+  i18n:
+    fr:
+      name: DSM 1.0 shading
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DSM 1.0
+        shading).
 - id: sk-eli-dtm-sk-shading-light
   name: DTM high-resolution shading
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM
+  description: Layer from the OpenStreetMap Editor Layer Index (DTM
     high-resolution shading).
   type: xyz
   category: elevation
@@ -1816,10 +2254,14 @@
   license: https://wiki.openstreetmap.org/wiki/WikiProject_Slovakia/Sources#%C3%9AGKK_SR_DMR_5.0
   attribution: "LLS: ÚGKK SR"
   max_zoom: 20
+  i18n:
+    fr:
+      name: DTM high-resolution shading
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM
+        high-resolution shading).
 - id: sk-eli-dtm5-sk-shading-light
   name: DTM 5.0 light shading
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM 5.0
-    light shading).
+  description: Layer from the OpenStreetMap Editor Layer Index (DTM 5.0 light shading).
   type: xyz
   category: elevation
   url: https://dmr5-light-shading.tiles.freemap.sk/{z}/{x}/{y}.jpg
@@ -1839,9 +2281,14 @@
   license: https://wiki.openstreetmap.org/wiki/WikiProject_Slovakia/Sources#%C3%9AGKK_SR_DMR_5.0
   attribution: ÚGKK SR
   max_zoom: 18
+  i18n:
+    fr:
+      name: DTM 5.0 light shading
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM 5.0
+        light shading).
 - id: sk-eli-dtm5-sk-shading
   name: DTM 5.0 shading
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM 5.0 shading).
+  description: Layer from the OpenStreetMap Editor Layer Index (DTM 5.0 shading).
   type: xyz
   category: elevation
   url: https://dmr5-shading.tiles.freemap.sk/{z}/{x}/{y}.jpg
@@ -1861,9 +2308,14 @@
   license: https://wiki.openstreetmap.org/wiki/WikiProject_Slovakia/Sources#%C3%9AGKK_SR_DMR_5.0
   attribution: ÚGKK SR
   max_zoom: 18
+  i18n:
+    fr:
+      name: DTM 5.0 shading
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DTM 5.0
+        shading).
 - id: sk-eli-freemap-sk-car
   name: Freemap.sk Car
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Freemap.sk Car).
+  description: Layer from the OpenStreetMap Editor Layer Index (Freemap.sk Car).
   type: xyz
   category: basemap
   url: https://tile.freemap.sk/A/{z}/{x}/{y}.jpeg
@@ -1884,10 +2336,14 @@
   attribution: Map © Freemap Slovakia, data © OpenStreetMap contributors
   min_zoom: 8
   max_zoom: 16
+  i18n:
+    fr:
+      name: Freemap.sk Car
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Freemap.sk Car).
 - id: sk-eli-freemap-sk-cyclo
   name: Freemap.sk Bicycle
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Freemap.sk Bicycle).
+  description: Layer from the OpenStreetMap Editor Layer Index (Freemap.sk Bicycle).
   type: xyz
   category: basemap
   url: https://tile.freemap.sk/C/{z}/{x}/{y}.jpeg
@@ -1908,10 +2364,14 @@
   attribution: Map © Freemap Slovakia, data © OpenStreetMap contributors and SRTM
   min_zoom: 8
   max_zoom: 16
+  i18n:
+    fr:
+      name: Freemap.sk Bicycle
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Freemap.sk Bicycle).
 - id: sk-eli-freemap-sk-hiking
   name: Freemap.sk Hiking
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Freemap.sk Hiking).
+  description: Layer from the OpenStreetMap Editor Layer Index (Freemap.sk Hiking).
   type: xyz
   category: basemap
   url: https://tile.freemap.sk/T/{z}/{x}/{y}.jpeg
@@ -1932,9 +2392,14 @@
   attribution: Map © Freemap Slovakia, data © OpenStreetMap contributors and SRTM
   min_zoom: 8
   max_zoom: 16
+  i18n:
+    fr:
+      name: Freemap.sk Hiking
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Freemap.sk Hiking).
 - id: sk-eli-freemap-sk-ski
   name: Freemap.sk Ski
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Freemap.sk Ski).
+  description: Layer from the OpenStreetMap Editor Layer Index (Freemap.sk Ski).
   type: xyz
   category: basemap
   url: https://tile.freemap.sk/K/{z}/{x}/{y}.jpeg
@@ -1955,10 +2420,14 @@
   attribution: Map © Freemap Slovakia, data © OpenStreetMap contributors and SRTM
   min_zoom: 8
   max_zoom: 16
+  i18n:
+    fr:
+      name: Freemap.sk Ski
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Freemap.sk Ski).
 - id: sk-eli-ortofotomozaika-sr
   name: Ortofotomozaika SR
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (Ortofotomozaika SR).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ortofotomozaika SR).
   type: xyz
   category: imagery
   url: https://ofmozaika.tiles.freemap.sk/{z}/{x}/{y}.jpg
@@ -1978,10 +2447,14 @@
   license: https://wiki.openstreetmap.org/wiki/WikiProject_Slovakia/Sources#Ortofotomozaika_SR_.28orthophoto_by_GK.C3.9A_and_NLC.29
   attribution: © GKÚ, NLC 2021-2023
   max_zoom: 20
+  i18n:
+    fr:
+      name: Ortofotomozaika SR
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Ortofotomozaika SR).
 - id: ua-eli-ukrainecherkasy2021
   name: Ukraine - Cherkasy 2021
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
-    - Cherkasy 2021).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ukraine - Cherkasy 2021).
   type: xyz
   category: imagery
   url: https://mgis.chmr.gov.ua/server/rest/services/base_map/orthophoto_2021/MapServer/tile/{z}/{y}/{x}
@@ -2002,10 +2475,15 @@
   attribution: © Геопортал містобудівного кадастру міста Черкаси
   min_zoom: 14
   max_zoom: 21
+  i18n:
+    fr:
+      name: Ukraine - Cherkasy 2021
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
+        - Cherkasy 2021).
 - id: ua-eli-ukrainedonandriivskaotg2020
   name: Ukraine - Andriivska OTG 2020
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
-    - Andriivska OTG 2020).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ukraine -
+    Andriivska OTG 2020).
   type: xyz
   category: imagery
   url: https://otgportal.com.ua//arcgis/rest/services/don_andriivska/%D0%90%D0%BD%D0%B4%D1%80%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0_%D0%BE%D1%80%D1%82%D0%BE/MapServer/tile/{z}/{y}/{x}
@@ -2026,10 +2504,15 @@
   attribution: Геопортал Андріївської громади
   min_zoom: 11
   max_zoom: 19
+  i18n:
+    fr:
+      name: Ukraine - Andriivska OTG 2020
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
+        - Andriivska OTG 2020).
 - id: ua-eli-ukrainelubetskaotg2020
   name: Ukraine - Lubetska OTG 2020
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
-    - Lubetska OTG 2020).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ukraine - Lubetska
+    OTG 2020).
   type: xyz
   category: imagery
   url: https://otgportal.com.ua/arcgis/rest/services/chern_lubecka/Lubecka_ortho1000_2020/MapServer/WMTS/tile/1.0.0/chern_lubecka_Lubecka_ortho1000_2020/default/GoogleMapsCompatible/{z}/{y}/{x}
@@ -2050,10 +2533,14 @@
   attribution: "Map data: © Геоінформаційна система Любецької громади"
   min_zoom: 11
   max_zoom: 20
+  i18n:
+    fr:
+      name: Ukraine - Lubetska OTG 2020
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
+        - Lubetska OTG 2020).
 - id: ua-eli-ukrainemykolaiv2018
   name: Ukraine - Mykolaiv 2018
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
-    - Mykolaiv 2018).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ukraine - Mykolaiv 2018).
   type: xyz
   category: imagery
   url: http://mbk.mkrada.gov.ua/map/rtile/carto_2013928517078615452/ua/{z}/{x}/{y}.png
@@ -2075,10 +2562,14 @@
     Миколаївської міської ради"
   min_zoom: 11
   max_zoom: 21
+  i18n:
+    fr:
+      name: Ukraine - Mykolaiv 2018
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
+        - Mykolaiv 2018).
 - id: ua-eli-ukrainevinnytsia2020
   name: Ukraine - Vinnytsia 2020
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
-    - Vinnytsia 2020).
+  description: Layer from the OpenStreetMap Editor Layer Index (Ukraine - Vinnytsia 2020).
   type: xyz
   category: imagery
   url: http://maps2.vmr.gov.ua/OpenData/ofp/2020-03/GoogleMapsCompatible/{z}/{y}/{x}.png?ver=01032020
@@ -2099,6 +2590,11 @@
   attribution: © Вінницька міська рада
   min_zoom: 14
   max_zoom: 20
+  i18n:
+    fr:
+      name: Ukraine - Vinnytsia 2020
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Ukraine
+        - Vinnytsia 2020).
 - id: ca-eli-city-of-parksville-2025
   name: City of Parksville Orthoimagery (2025)
   description: Orthoimagery for the City of Parksville from 2025
@@ -2123,6 +2619,12 @@
     City of Parksville
   min_zoom: 10
   max_zoom: 22
+  i18n:
+    fr:
+      name: City of Parksville Orthoimagery (2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (City of
+        Parksville Orthoimagery (2025)) : Orthoimagery for the City of
+        Parksville from 2025"
 - id: ca-eli-coquitlam-2025
   name: City of Coquitlam Aerial Imagery (2025)
   description: Aerial imagery of the City of Coquitlam from 2025
@@ -2145,6 +2647,12 @@
   license: https://www.coquitlam.ca/894/Open-Government-Licence
   attribution: Contains information licensed under the Open Government Licence - Coquitlam
   max_zoom: 20
+  i18n:
+    fr:
+      name: City of Coquitlam Aerial Imagery (2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (City of
+        Coquitlam Aerial Imagery (2025)) : Aerial imagery of the City of
+        Coquitlam from 2025"
 - id: ca-eli-courtenay-2022
   name: City of Courtenay Orthoimagery (2022)
   description: Aerial imagery of the City of Courtenay from March 2022
@@ -2169,6 +2677,12 @@
     City of Courtenay
   min_zoom: 12
   max_zoom: 21
+  i18n:
+    fr:
+      name: City of Courtenay Orthoimagery (2022)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (City of
+        Courtenay Orthoimagery (2022)) : Aerial imagery of the City of Courtenay
+        from March 2022"
 - id: us-eli-us-pr-slope
   name: USGS slope
   description: Slopes of Culebra, Puerto Rico. The yellower the flatter.
@@ -2192,10 +2706,14 @@
   attribution: USGS
   min_zoom: 11
   max_zoom: 16
+  i18n:
+    fr:
+      name: USGS slope
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (USGS
+        slope) : Slopes of Culebra, Puerto Rico. The yellower the flatter."
 - id: us-eli-us-forest-service-roads
   name: U.S. Forest Service roads
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (U.S.
-    Forest Service roads).
+  description: Layer from the OpenStreetMap Editor Layer Index (U.S. Forest Service roads).
   type: xyz
   category: basemap
   url: https://osm.cycle.travel/forest/{z}/{x}/{y}.png
@@ -2215,6 +2733,11 @@
   license: OSM Editor Layer Index License
   attribution: © U.S. Forest Service roads
   max_zoom: 19
+  i18n:
+    fr:
+      name: U.S. Forest Service roads
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (U.S.
+        Forest Service roads).
 - id: us-eli-usgs-the-national-map-topo
   name: The National Map Topographic
   description: The National Map topographic reference from USGS
@@ -2238,10 +2761,15 @@
   attribution: © The National Map Topographic
   min_zoom: 2
   max_zoom: 16
+  i18n:
+    fr:
+      name: The National Map Topographic
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (The
+        National Map Topographic) : The National Map topographic reference from
+        USGS"
 - id: us-eli-usgs-scanned-topographic
   name: USGS Topographic Maps
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (USGS
-    Topographic Maps).
+  description: Layer from the OpenStreetMap Editor Layer Index (USGS Topographic Maps).
   type: xyz
   category: basemap
   url: https://caltopo.s3.amazonaws.com/topo/{z}/{x}/{y}.png
@@ -2261,10 +2789,14 @@
   license: OSM Editor Layer Index License
   attribution: © Caltopo
   max_zoom: 16
+  i18n:
+    fr:
+      name: USGS Topographic Maps
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (USGS
+        Topographic Maps).
 - id: us-eli-fnsb-aerial-2023
   name: FNSB Aerial Imagery (2023)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (FNSB
-    Aerial Imagery (2023)).
+  description: Layer from the OpenStreetMap Editor Layer Index (FNSB Aerial Imagery (2023)).
   type: xyz
   category: imagery
   url: https://gisportal.fnsb.gov/image/rest/services/Imagery_2023_Pict_Fairbanks/MapServer/tile/{z}/{y}/{x}
@@ -2285,10 +2817,14 @@
   attribution: Fairbanks North Star Borough
   min_zoom: 5
   max_zoom: 21
+  i18n:
+    fr:
+      name: FNSB Aerial Imagery (2023)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (FNSB
+        Aerial Imagery (2023)).
 - id: us-eli-moa-aerial-2024
   name: MOA Aerial Imagery (2024)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (MOA
-    Aerial Imagery (2024)).
+  description: Layer from the OpenStreetMap Editor Layer Index (MOA Aerial Imagery (2024)).
   type: xyz
   category: imagery
   url: https://www.ancgis.com/arcgis/rest/services/imagery_public/Photo_2024/MapServer/tile/{z}/{y}/{x}
@@ -2309,6 +2845,11 @@
   attribution: Municipality of Anchorage GIS
   min_zoom: 10
   max_zoom: 21
+  i18n:
+    fr:
+      name: MOA Aerial Imagery (2024)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (MOA
+        Aerial Imagery (2024)).
 - id: us-eli-adop-2023-9in
   name: ADOP Orthoimagery 2023 (9in)
   description: 9-inch pixel resolution digital orthoimagery for selected areas
@@ -2333,10 +2874,15 @@
   attribution: Arkansas GIS Office
   min_zoom: 3
   max_zoom: 19
+  i18n:
+    fr:
+      name: ADOP Orthoimagery 2023 (9in)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (ADOP
+        Orthoimagery 2023 (9in)) : 9-inch pixel resolution digital orthoimagery
+        for selected areas within the state of Arkansas in 2023"
 - id: us-eli-la-county-basemap
   name: LA County Basemap
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LA
-    County Basemap).
+  description: Layer from the OpenStreetMap Editor Layer Index (LA County Basemap).
   type: xyz
   category: basemap
   url: https://cache.gis.lacounty.gov/cache/rest/services/LACounty_Cache/LACounty_StreetMap/MapServer/tile/{z}/{y}/{x}
@@ -2356,6 +2902,11 @@
   license: https://wiki.openstreetmap.org/wiki/California#Publicly_Available_Data
   attribution: Los Angeles County
   max_zoom: 23
+  i18n:
+    fr:
+      name: LA County Basemap
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LA
+        County Basemap).
 - id: us-eli-san-francisco-2025
   name: San Francisco Orthoimagery (2025)
   description: 2025 3-inch resolution imagery for San Francisco in the State of California
@@ -2379,6 +2930,12 @@
   attribution: City and County of San Francisco
   min_zoom: 10
   max_zoom: 20
+  i18n:
+    fr:
+      name: San Francisco Orthoimagery (2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (San
+        Francisco Orthoimagery (2025)) : 2025 3-inch resolution imagery for San
+        Francisco in the State of California"
 - id: us-eli-solano-ca-2025
   name: Solano County Orthoimagery (2025)
   description: 2025 3 inch resolution imagery for Solano County in the State of California
@@ -2401,10 +2958,15 @@
   license: https://wiki.openstreetmap.org/wiki/California#Publicly_Available_Data
   attribution: Solano County
   max_zoom: 21
+  i18n:
+    fr:
+      name: Solano County Orthoimagery (2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Solano
+        County Orthoimagery (2025)) : 2025 3 inch resolution imagery for Solano
+        County in the State of California"
 - id: us-eli-mcgis-county-naip-imagery-2019
   name: Mesa County GIS NAIP 2019
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Mesa
-    County GIS NAIP 2019).
+  description: Layer from the OpenStreetMap Editor Layer Index (Mesa County GIS NAIP 2019).
   type: wmts
   category: imagery
   url: https://mcgis.mesacounty.us/imagery/rest/services/Mosaic_Datasets/MesaCounty_2019/ImageServer/WMTS/1.0.0/WMTSCapabilities.xml
@@ -2424,6 +2986,11 @@
   license: https://osmlab.github.io/editor-layer-index/sources/north-america/us/co/Mesa_County_Data.pdf
   attribution: Mesa County GIS
   max_zoom: 12
+  i18n:
+    fr:
+      name: Mesa County GIS NAIP 2019
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Mesa
+        County GIS NAIP 2019).
 - id: us-eli-ct-eco-ortho-2023-rgb
   name: CT ECO Orthoimagery (2023)
   description: The 2023 6-inch 4-band orthoimagery for the State of Connecticut in
@@ -2447,6 +3014,12 @@
   license: https://osmlab.github.io/editor-layer-index/sources/north-america/us/ct/CTECO.pdf
   attribution: Connecticut Environmental Conditions Online
   max_zoom: 20
+  i18n:
+    fr:
+      name: CT ECO Orthoimagery (2023)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (CT ECO
+        Orthoimagery (2023)) : The 2023 6-inch 4-band orthoimagery for the State
+        of Connecticut in natural color"
 - id: us-eli-delaware-firstmap-2024
   name: Delaware FirstMap 2024
   description: 4-band natural color 6-inch resolution orthoimagery covering the
@@ -2471,10 +3044,15 @@
   attribution: Sanborn Map Company, FirstMap
   min_zoom: 4
   max_zoom: 20
+  i18n:
+    fr:
+      name: Delaware FirstMap 2024
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Delaware FirstMap 2024) : 4-band natural color 6-inch resolution
+        orthoimagery covering the entire State of Delaware in 2024"
 - id: us-eli-saint-johns-basemap
   name: Saint Johns County Basemap
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Saint
-    Johns County Basemap).
+  description: Layer from the OpenStreetMap Editor Layer Index (Saint Johns County Basemap).
   type: xyz
   category: basemap
   url: https://www.gis.sjcfl.us/portal_sjcgis/rest/services/Basemap/MapServer/tile/{z}/{y}/{x}
@@ -2494,6 +3072,11 @@
   license: https://wiki.openstreetmap.org/wiki/Florida#Publicly_Available_Data
   attribution: Saint Johns County GIS
   max_zoom: 23
+  i18n:
+    fr:
+      name: Saint Johns County Basemap
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Saint
+        Johns County Basemap).
 - id: us-eli-maui-2023
   name: Maui County Orthoimagery (2023)
   description: The 2023 orthoimagery for Maui County of the State of Hawaii
@@ -2517,6 +3100,12 @@
   attribution: Maui County GIS
   min_zoom: 2
   max_zoom: 21
+  i18n:
+    fr:
+      name: Maui County Orthoimagery (2023)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Maui
+        County Orthoimagery (2023)) : The 2023 orthoimagery for Maui County of
+        the State of Hawaii"
 - id: us-eli-maui-2025
   name: Maui County Orthoimagery (2025)
   description: The 2025 orthoimagery for Maui County of the State of Hawaii
@@ -2540,6 +3129,12 @@
   attribution: Maui County GIS
   min_zoom: 2
   max_zoom: 21
+  i18n:
+    fr:
+      name: Maui County Orthoimagery (2025)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Maui
+        County Orthoimagery (2025)) : The 2025 orthoimagery for Maui County of
+        the State of Hawaii"
 - id: us-eli-maui-2026
   name: Maui County Orthoimagery (2026)
   description: The 2026 orthoimagery for Maui County of the State of Hawaii
@@ -2563,6 +3158,12 @@
   attribution: Maui County GIS
   min_zoom: 2
   max_zoom: 21
+  i18n:
+    fr:
+      name: Maui County Orthoimagery (2026)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Maui
+        County Orthoimagery (2026)) : The 2026 orthoimagery for Maui County of
+        the State of Hawaii"
 - id: us-eli-kyaped-phase-3
   name: KyFromAbove Aerial Imagery (2022-2024)
   description: 3-inch aerial imagery captured from 2022 to 2024 through the
@@ -2588,10 +3189,18 @@
   attribution: KyFromAbove
   min_zoom: 3
   max_zoom: 20
+  i18n:
+    fr:
+      name: KyFromAbove Aerial Imagery (2022-2024)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (KyFromAbove Aerial Imagery (2022-2024)) : 3-inch aerial imagery
+        captured from 2022 to 2024 through the Kentucky Aerial Photography and
+        Elevation Data Program (KyFromAbove) and published by the Kentucky
+        Division of Geographic Information (DGI)."
 - id: us-eli-massgis-lidar-shaded-relief
   name: MassGIS LIDAR Shaded Relief
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS
-    LIDAR Shaded Relief).
+  description: Layer from the OpenStreetMap Editor Layer Index (MassGIS LIDAR
+    Shaded Relief).
   type: xyz
   category: elevation
   url: https://tiles.arcgis.com/tiles/hGdibHYSPO59RG1h/arcgis/rest/services/LiDAR_ShadedRelief_18Nant_21EC/MapServer/tile/{z}/{y}/{x}
@@ -2612,6 +3221,11 @@
   attribution: MassGIS
   min_zoom: 7
   max_zoom: 19
+  i18n:
+    fr:
+      name: MassGIS LIDAR Shaded Relief
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS
+        LIDAR Shaded Relief).
 - id: us-eli-massgis-lidar-slope
   name: MassGIS LIDAR Slope
   description: Visualizes the variation in elevation (steepness) at each point
@@ -2638,6 +3252,14 @@
   attribution: MassGIS
   min_zoom: 7
   max_zoom: 19
+  i18n:
+    fr:
+      name: MassGIS LIDAR Slope
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS
+        LIDAR Slope) : Visualizes the variation in elevation (steepness) at each
+        point based on LiDAR data. White represents something that is flat, with
+        progressively darker values meaning steeper slope, up through black
+        which represents a completely vertical slope."
 - id: us-eli-massgis-2025-aerial
   name: MassGIS 2025 Aerial Imagery
   description: 15cm Spring 2025 true color aerial imagery for the state of
@@ -2662,9 +3284,15 @@
   attribution: MassGIS
   min_zoom: 7
   max_zoom: 20
+  i18n:
+    fr:
+      name: MassGIS 2025 Aerial Imagery
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS
+        2025 Aerial Imagery) : 15cm Spring 2025 true color aerial imagery for
+        the state of Massachusetts (7.5cm resolution on Cape Cod)"
 - id: us-eli-massgis-basemap
   name: MassGIS Basemap
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS Basemap).
+  description: Layer from the OpenStreetMap Editor Layer Index (MassGIS Basemap).
   type: xyz
   category: basemap
   url: https://tiles.arcgis.com/tiles/hGdibHYSPO59RG1h/arcgis/rest/services/MassGISBasemap/MapServer/tile/{z}/{y}/{x}
@@ -2685,6 +3313,11 @@
   attribution: MassGIS
   min_zoom: 7
   max_zoom: 19
+  i18n:
+    fr:
+      name: MassGIS Basemap
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (MassGIS
+        Basemap).
 - id: us-eli-nc-latest-ortho-natural
   name: NC OneMap Latest Orthoimagery (Natural Color)
   description: The most recent 6-inch resolution natural color orthoimagery for
@@ -2709,6 +3342,12 @@
   attribution: NCCGIA, NC911 Board
   min_zoom: 2
   max_zoom: 20
+  i18n:
+    fr:
+      name: NC OneMap Latest Orthoimagery (Natural Color)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (NC
+        OneMap Latest Orthoimagery (Natural Color)) : The most recent 6-inch
+        resolution natural color orthoimagery for the State of North Carolina"
 - id: us-eli-lorain-oh-2024
   name: Lorain County Orthoimagery (2024)
   description: Spring 2024 orthoimagery for Lorain County in the State of Ohio
@@ -2731,6 +3370,12 @@
   license: https://osmlab.github.io/editor-layer-index/sources/north-america/us/oh/Lorain.pdf
   attribution: Lorain County, State of Ohio
   max_zoom: 21
+  i18n:
+    fr:
+      name: Lorain County Orthoimagery (2024)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (Lorain
+        County Orthoimagery (2024)) : Spring 2024 orthoimagery for Lorain County
+        in the State of Ohio"
 - id: us-eli-odot-tims-road-inventory
   name: ODOT Road Inventory
   description: Ohio Department of Transportation (ODOT) - Transportation
@@ -2755,10 +3400,17 @@
   attribution: Ohio Department of Transportation
   min_zoom: 0
   max_zoom: 19
+  i18n:
+    fr:
+      name: ODOT Road Inventory
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (ODOT
+        Road Inventory) : Ohio Department of Transportation (ODOT) -
+        Transportation Information Mapping System (TIMS) Road Inventory
+        published June 2024."
 - id: us-eli-crook-2026
   name: Crook County Orthoimagery (2026)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Crook
-    County Orthoimagery (2026)).
+  description: Layer from the OpenStreetMap Editor Layer Index (Crook County
+    Orthoimagery (2026)).
   type: xyz
   category: imagery
   url: https://gis.crookcountyor.gov/server/rest/services/Hosted/Crook_County_2026_Imagery/MapServer/tile/{z}/{y}/{x}
@@ -2779,10 +3431,15 @@
   attribution: Crook County GIS
   min_zoom: 11
   max_zoom: 20
+  i18n:
+    fr:
+      name: Crook County Orthoimagery (2026)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Crook
+        County Orthoimagery (2026)).
 - id: us-eli-portlandmaps
   name: PortlandMaps Basemap Color Complete
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (PortlandMaps Basemap Color Complete).
+  description: Layer from the OpenStreetMap Editor Layer Index (PortlandMaps
+    Basemap Color Complete).
   type: xyz
   category: basemap
   url: https://www.portlandmaps.com/arcgis/rest/services/Public/Basemap_Color_Complete/MapServer/tile/{z}/{y}/{x}
@@ -2803,6 +3460,11 @@
   attribution: City of Portland, Oregon
   min_zoom: 6
   max_zoom: 21
+  i18n:
+    fr:
+      name: PortlandMaps Basemap Color Complete
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (PortlandMaps Basemap Color Complete).
 - id: us-eli-philadelphia-ortho-2025-3in
   name: Philadelphia Orthoimagery 2025 (3in)
   description: Digital orthophotography with a ground resolution of 3-inch per
@@ -2827,6 +3489,14 @@
   license: https://opendataphilly.org/organizations/city-of-philadelphia/
   attribution: City of Philadelphia
   max_zoom: 22
+  i18n:
+    fr:
+      name: Philadelphia Orthoimagery 2025 (3in)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Philadelphia Orthoimagery 2025 (3in)) : Digital orthophotography with a
+        ground resolution of 3-inch per pixel, georeferenced to the Pennsylvania
+        State Plane Coordinate System, and delivered as mosaicked raster images
+        for the city of Philadelphia"
 - id: us-eli-vcgi-lidar-dem-hillshade
   name: VCGI LiDAR - DEM Hillshade
   description: Vermont statewide hillshade composite of the bare earth derived
@@ -2851,10 +3521,16 @@
   license: https://maps.vcgi.vermont.gov/opendata/VT_Open_GeoData_Policy_final1.0.pdf
   attribution: Vermont Center for Geographic Information
   max_zoom: 20
+  i18n:
+    fr:
+      name: VCGI LiDAR - DEM Hillshade
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (VCGI
+        LiDAR - DEM Hillshade) : Vermont statewide hillshade composite of the
+        bare earth derived from the digital elevation model. Sun angle
+        orientation is 315° with 45° azimuth"
 - id: au-eli-act202605
   name: ACTmapi Imagery Mar 2026
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (ACTmapi
-    Imagery Mar 2026).
+  description: Layer from the OpenStreetMap Editor Layer Index (ACTmapi Imagery Mar 2026).
   type: xyz
   category: imagery
   url: https://act-imagery.openstreetmap.org/layer/act_aerial_imagery_202605/{z}/{x}/{y}.jpeg
@@ -2875,9 +3551,14 @@
   attribution: Aerial Imagery from ACTmapi © ACT Government and Aerometrex
   min_zoom: 10
   max_zoom: 22
+  i18n:
+    fr:
+      name: ACTmapi Imagery Mar 2026
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (ACTmapi
+        Imagery Mar 2026).
 - id: au-eli-nsw-lpi-basemap
   name: DCS NSW Base Map
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DCS NSW Base Map).
+  description: Layer from the OpenStreetMap Editor Layer Index (DCS NSW Base Map).
   type: xyz
   category: basemap
   url: https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Base_Map/MapServer/tile/{z}/{y}/{x}
@@ -2899,10 +3580,14 @@
     the Department of Customer Service NSW). For current information go to
     spatial.nsw.gov.au.
   max_zoom: 19
+  i18n:
+    fr:
+      name: DCS NSW Base Map
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DCS NSW
+        Base Map).
 - id: au-eli-nsw-lpi-topographicmap
   name: DCS NSW Topographic Map
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (DCS NSW
-    Topographic Map).
+  description: Layer from the OpenStreetMap Editor Layer Index (DCS NSW Topographic Map).
   type: xyz
   category: basemap
   url: https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Topo_Map/MapServer/tile/{z}/{y}/{x}
@@ -2925,9 +3610,14 @@
     spatial.nsw.gov.au.
   min_zoom: 1
   max_zoom: 16
+  i18n:
+    fr:
+      name: DCS NSW Topographic Map
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (DCS NSW
+        Topographic Map).
 - id: au-eli-qld-lite
   name: QLD Lite
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (QLD Lite).
+  description: Layer from the OpenStreetMap Editor Layer Index (QLD Lite).
   type: xyz
   category: basemap
   url: https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Basemaps/QldMap_Lite/MapServer/WMTS/tile/1.0.0/Basemaps_QldMap_Lite/default/GoogleMapsCompatible/{z}/{y}/{x}.png
@@ -2948,9 +3638,13 @@
   attribution: © State of Queensland (Department of Resources) 2024
   min_zoom: 4
   max_zoom: 18
+  i18n:
+    fr:
+      name: QLD Lite
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (QLD Lite).
 - id: au-eli-qld-topo
   name: QLD Topo
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (QLD Topo).
+  description: Layer from the OpenStreetMap Editor Layer Index (QLD Topo).
   type: xyz
   category: basemap
   url: https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Basemaps/QldMap_Topo/MapServer/WMTS/tile/1.0.0/Basemaps_QldMap_Lite/default/GoogleMapsCompatible/{z}/{y}/{x}.png
@@ -2971,10 +3665,13 @@
   attribution: © State of Queensland (Department of Resources) 2024
   min_zoom: 4
   max_zoom: 18
+  i18n:
+    fr:
+      name: QLD Topo
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (QLD Topo).
 - id: au-eli-ara-bushfires-2020
   name: ARA Bushfires 2020
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (ARA
-    Bushfires 2020).
+  description: Layer from the OpenStreetMap Editor Layer Index (ARA Bushfires 2020).
   type: xyz
   category: imagery
   url: https://cogeoxyz.b-cdn.net/46b53084a82973a36c0f57a1d5446c605d00ed851f11a6f5ca7c75db/{z}/{x}/{y}.jpg
@@ -2995,9 +3692,14 @@
   attribution: ARA - Airborne Research Australia
   min_zoom: 12
   max_zoom: 22
+  i18n:
+    fr:
+      name: ARA Bushfires 2020
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (ARA
+        Bushfires 2020).
 - id: au-eli-list-topographic
   name: LIST Topographic
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LIST Topographic).
+  description: Layer from the OpenStreetMap Editor Layer Index (LIST Topographic).
   type: xyz
   category: basemap
   url: https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/MapServer/tile/{z}/{y}/{x}
@@ -3018,10 +3720,14 @@
   attribution: the LIST © State of Tasmania
   min_zoom: 0
   max_zoom: 18
+  i18n:
+    fr:
+      name: LIST Topographic
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LIST
+        Topographic).
 - id: au-eli-city-of-melbourne-may-2020
   name: City of Melbourne May 2020
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (City of
-    Melbourne May 2020).
+  description: Layer from the OpenStreetMap Editor Layer Index (City of Melbourne May 2020).
   type: xyz
   category: imagery
   url: https://au-vic-melbourne-imagery.openstreetmap.org/layer/melbourne-2020/{z}/{x}/{y}.webp
@@ -3042,10 +3748,14 @@
   attribution: City of Melbourne
   min_zoom: 7
   max_zoom: 23
+  i18n:
+    fr:
+      name: City of Melbourne May 2020
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (City of
+        Melbourne May 2020).
 - id: nz-eli-linz-nz-aerial-imagery
   name: LINZ NZ Aerial Imagery
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
-    Aerial Imagery).
+  description: Layer from the OpenStreetMap Editor Layer Index (LINZ NZ Aerial Imagery).
   type: xyz
   category: imagery
   url: https://basemaps.linz.govt.nz/v1/tiles/aerial/WebMercatorQuad/{z}/{x}/{y}.webp?api=d01egend5f8dv4zcbfj6z2t7rs3
@@ -3065,10 +3775,14 @@
   license: https://wiki.openstreetmap.org/wiki/Contributors#New_Zealand
   attribution: Sourced from LINZ CC-BY 4.0
   max_zoom: 21
+  i18n:
+    fr:
+      name: LINZ NZ Aerial Imagery
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
+        Aerial Imagery).
 - id: nz-eli-linz-auckland-2023
   name: LINZ Auckland 2023
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ
-    Auckland 2023).
+  description: Layer from the OpenStreetMap Editor Layer Index (LINZ Auckland 2023).
   type: xyz
   category: imagery
   url: https://basemaps.linz.govt.nz/v1/tiles/auckland-central-2023-0.06m/EPSG:3857/{z}/{x}/{y}.jpg?api=d01egend5f8dv4zcbfj6z2t7rs3
@@ -3088,10 +3802,14 @@
   license: https://wiki.openstreetmap.org/wiki/Contributors#New_Zealand
   attribution: Sourced from LINZ CC-BY 4.0
   max_zoom: 21
+  i18n:
+    fr:
+      name: LINZ Auckland 2023
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ
+        Auckland 2023).
 - id: nz-eli-linz-nz-dsm-hillshade
   name: LINZ NZ DSM Hillshade
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
-    DSM Hillshade).
+  description: Layer from the OpenStreetMap Editor Layer Index (LINZ NZ DSM Hillshade).
   type: xyz
   category: elevation
   url: https://basemaps.linz.govt.nz/v1/tiles/hillshade-dsm/WebMercatorQuad/{z}/{x}/{y}.webp?api=d01egend5f8dv4zcbfj6z2t7rs3
@@ -3111,10 +3829,14 @@
   license: https://wiki.openstreetmap.org/wiki/Contributors#New_Zealand
   attribution: Sourced from LINZ CC-BY 4.0
   max_zoom: 21
+  i18n:
+    fr:
+      name: LINZ NZ DSM Hillshade
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
+        DSM Hillshade).
 - id: nz-eli-linz-nz-hillshade
   name: LINZ NZ Hillshade
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
-    Hillshade).
+  description: Layer from the OpenStreetMap Editor Layer Index (LINZ NZ Hillshade).
   type: xyz
   category: elevation
   url: https://basemaps.linz.govt.nz/v1/tiles/hillshade/WebMercatorQuad/{z}/{x}/{y}.webp?api=d01egend5f8dv4zcbfj6z2t7rs3
@@ -3134,10 +3856,15 @@
   license: https://wiki.openstreetmap.org/wiki/Contributors#New_Zealand
   attribution: Sourced from LINZ CC-BY 4.0
   max_zoom: 21
+  i18n:
+    fr:
+      name: LINZ NZ Hillshade
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
+        Hillshade).
 - id: nz-eli-linz-nz-topo50-gridless-maps
   name: LINZ NZ Topo50 Gridless Maps
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
-    Topo50 Gridless Maps).
+  description: Layer from the OpenStreetMap Editor Layer Index (LINZ NZ Topo50
+    Gridless Maps).
   type: xyz
   category: basemap
   url: https://basemaps.linz.govt.nz/v1/tiles/topo-raster/WebMercatorQuad/{z}/{x}/{y}.webp?api=d01egend5f8dv4zcbfj6z2t7rs3
@@ -3158,6 +3885,11 @@
   attribution: CC BY 4.0 Land Information New Zealand
   min_zoom: 6
   max_zoom: 21
+  i18n:
+    fr:
+      name: LINZ NZ Topo50 Gridless Maps
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (LINZ NZ
+        Topo50 Gridless Maps).
 - id: ar-eli-ign-argenmap-gray
   name: IGN Argenmap gris
   description: Mapa base gris del Instituto Geográfico Nacional de la República Argentina
@@ -3180,6 +3912,12 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 21
+  i18n:
+    fr:
+      name: IGN Argenmap gris
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        Argenmap gris) : Mapa base gris del Instituto Geográfico Nacional de la
+        República Argentina"
 - id: ar-eli-ign-argenmap
   name: IGN Argenmap
   description: Mapa base del Instituto Geográfico Nacional de la República Argentina
@@ -3202,6 +3940,12 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 21
+  i18n:
+    fr:
+      name: IGN Argenmap
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        Argenmap) : Mapa base del Instituto Geográfico Nacional de la República
+        Argentina"
 - id: ar-eli-ign-atlas-argentina-500k
   name: IGN Atlas Argentina 500k
   description: Atlas Argentina escala 1:500.000
@@ -3224,6 +3968,11 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 12
+  i18n:
+    fr:
+      name: IGN Atlas Argentina 500k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        Atlas Argentina 500k) : Atlas Argentina escala 1:500.000"
 - id: ar-eli-ign-atlas-tucuman-100k
   name: IGN Atlas Tucumán 100k
   description: Atlas Tucumán escala 1:100.000
@@ -3246,6 +3995,11 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 13
+  i18n:
+    fr:
+      name: IGN Atlas Tucumán 100k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        Atlas Tucumán 100k) : Atlas Tucumán escala 1:100.000"
 - id: ar-eli-ign-cartas-100k
   name: IGN cartas topográficas 100k
   description: Mosaico de cartas topográficas escala 1:100.000
@@ -3268,6 +4022,12 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 14
+  i18n:
+    fr:
+      name: IGN cartas topográficas 100k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        cartas topográficas 100k) : Mosaico de cartas topográficas escala
+        1:100.000"
 - id: ar-eli-ign-cartas-250k
   name: IGN cartas topográficas 250k
   description: Mosaico de cartas topográficas escala 1:250.000
@@ -3290,6 +4050,12 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 12
+  i18n:
+    fr:
+      name: IGN cartas topográficas 250k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        cartas topográficas 250k) : Mosaico de cartas topográficas escala
+        1:250.000"
 - id: ar-eli-ign-cartas-500k
   name: IGN cartas topográficas 500k
   description: Mosaico de cartas topográficas escala 1:500.000
@@ -3312,6 +4078,12 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 11
+  i18n:
+    fr:
+      name: IGN cartas topográficas 500k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        cartas topográficas 500k) : Mosaico de cartas topográficas escala
+        1:500.000"
 - id: ar-eli-ign-cartas-50k
   name: IGN cartas topográficas 50k
   description: Mosaico de cartas topográficas escala 1:50.000
@@ -3334,10 +4106,15 @@
   license: https://datos.gob.ar/acerca/seccion/Marco%20legal
   attribution: Instituto Geográfico Nacional de la República Argentina
   max_zoom: 15
+  i18n:
+    fr:
+      name: IGN cartas topográficas 50k
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index (IGN
+        cartas topográficas 50k) : Mosaico de cartas topográficas escala
+        1:50.000"
 - id: br-eli-curitiba-ortofoto-2019
   name: Curitiba Ortofoto 2019
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Curitiba
-    Ortofoto 2019).
+  description: Layer from the OpenStreetMap Editor Layer Index (Curitiba Ortofoto 2019).
   type: xyz
   category: imagery
   url: https://geocuritiba.ippuc.org.br/server/rest/services/Hosted/Ortofotos2019/MapServer/tile/{z}/{y}/{x}
@@ -3356,6 +4133,11 @@
     - br
   license: https://wiki.openstreetmap.org/w/index.php?title=File:Autorizacao_IPPUC.pdf
   attribution: Instituto de Pesquisa e Planejamento Urbano de Curitiba
+  i18n:
+    fr:
+      name: Curitiba Ortofoto 2019
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Curitiba
+        Ortofoto 2019).
 - id: global-eli-cyclosm
   name: CyclOSM
   description: CyclOSM is a map style designed with cycling in mind. It leverages
@@ -3379,10 +4161,16 @@
   attribution: "Rendering: CyclOSM (hosted by OpenStreetMap France) © Map data
     OpenStreetMap contributors"
   max_zoom: 20
+  i18n:
+    fr:
+      name: CyclOSM
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (CyclOSM) : CyclOSM is a map style designed with cycling in mind. It
+        leverages OpenStreetMap data to create a beautiful and practical cycling
+        map!"
 - id: global-eli-openpt-map
   name: OpenPT Map (overlay)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenPT
-    Map (overlay)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenPT Map (overlay)).
   type: xyz
   category: basemap
   url: http://openptmap.de/tiles/{z}/{x}/{y}.png
@@ -3402,6 +4190,11 @@
   attribution: © OpenStreetMap contributors, CC-BY-SA
   min_zoom: 4
   max_zoom: 17
+  i18n:
+    fr:
+      name: OpenPT Map (overlay)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenPT
+        Map (overlay)).
 - id: global-eli-openrailwaymap
   name: OpenRailwayMap
   description: Overlay imagery showing railway infrastructure based on OpenStreetMap data
@@ -3423,6 +4216,12 @@
   license: OSM Editor Layer Index License
   attribution: "Rendering: OpenRailwayMap, © Map data OpenStreetMap contributors"
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenRailwayMap
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenRailwayMap) : Overlay imagery showing railway infrastructure based
+        on OpenStreetMap data"
 - id: global-eli-openrailwaymap-maxspeeds
   name: OpenRailwayMap Maxspeeds
   description: Overlay imagery showing railway speed limits based on OpenStreetMap data
@@ -3444,6 +4243,12 @@
   license: OSM Editor Layer Index License
   attribution: "Rendering: OpenRailwayMap, © Map data OpenStreetMap contributors"
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenRailwayMap Maxspeeds
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenRailwayMap Maxspeeds) : Overlay imagery showing railway speed
+        limits based on OpenStreetMap data"
 - id: global-eli-openrailwaymap-signalling
   name: OpenRailwayMap Signalling
   description: Overlay imagery showing railway signals based on OpenStreetMap data
@@ -3465,9 +4270,15 @@
   license: OSM Editor Layer Index License
   attribution: "Rendering: OpenRailwayMap, © Map data OpenStreetMap contributors"
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenRailwayMap Signalling
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenRailwayMap Signalling) : Overlay imagery showing railway signals
+        based on OpenStreetMap data"
 - id: global-eli-openseamap
   name: OpenSeaMap
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenSeaMap).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenSeaMap).
   type: xyz
   category: basemap
   url: https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png
@@ -3486,6 +4297,10 @@
   license: OSM Editor Layer Index License
   attribution: © OpenStreetMap contributors, CC-BY-SA
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenSeaMap
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenSeaMap).
 - id: global-eli-opensnowmap-overlay
   name: OpenSnowMap overlay
   description: Overlay imagery for piste mapping in OSM. Updated daily.
@@ -3507,10 +4322,16 @@
   license: OSM Editor Layer Index License
   attribution: © OpenSnowMap.org
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenSnowMap overlay
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenSnowMap overlay) : Overlay imagery for piste mapping in OSM.
+        Updated daily."
 - id: global-eli-osm-mapnik-no-labels
   name: OpenStreetMap (Mapnik, no labels)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Mapnik, no labels)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Mapnik, no labels)).
   type: xyz
   category: basemap
   url: https://tiles.wmflabs.org/osm-no-labels/{z}/{x}/{y}.png
@@ -3529,10 +4350,15 @@
   license: OSM Editor Layer Index License
   attribution: © OpenStreetMap contributors, CC-BY-SA
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenStreetMap (Mapnik, no labels)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Mapnik, no labels)).
 - id: fr-eli-osmfr-basque
   name: OpenStreetMap (Basque Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Basque Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Basque Style)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.bzh/eu/{z}/{x}/{y}.png
@@ -3547,10 +4373,15 @@
   license: OSM Editor Layer Index License
   attribution: Tiles © OpenStreetMap France, data © OpenStreetMap contributors, ODbL
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenStreetMap (Basque Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Basque Style)).
 - id: fr-eli-osmfr-breton
   name: OpenStreetMap (Breton Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Breton Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Breton Style)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png
@@ -3565,10 +4396,15 @@
   license: OSM Editor Layer Index License
   attribution: Tiles © OpenStreetMap France, data © OpenStreetMap contributors, ODbL
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenStreetMap (Breton Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Breton Style)).
 - id: global-eli-osmfr
   name: OpenStreetMap (French Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (French Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (French Style)).
   type: xyz
   category: basemap
   url: https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png
@@ -3587,10 +4423,15 @@
   license: OSM Editor Layer Index License
   attribution: Tiles © cquest@Openstreetmap France, data © OpenStreetMap contributors, ODBL
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenStreetMap (French Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (French Style)).
 - id: global-eli-osm-mapnik-german-style
   name: OpenStreetMap (German Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (German Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (German Style)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png
@@ -3609,10 +4450,14 @@
   license: OSM Editor Layer Index License
   attribution: © OpenStreetMap contributors, CC-BY-SA
   max_zoom: 18
+  i18n:
+    fr:
+      name: OpenStreetMap (German Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (German Style)).
 - id: global-eli-hdm-hot
   name: OpenStreetMap (HOT Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (HOT Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap (HOT Style)).
   type: xyz
   category: basemap
   url: https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
@@ -3632,6 +4477,11 @@
   attribution: © OpenStreetMap contributors, tiles courtesy of Humanitarian
     OpenStreetMap Team
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenStreetMap (HOT Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (HOT Style)).
 - id: global-eli-mapnik
   name: OpenStreetMap (Standard)
   description: The default OpenStreetMap layer.
@@ -3653,10 +4503,15 @@
   license: https://wiki.osmfoundation.org/wiki/Terms_of_Use
   attribution: © OpenStreetMap contributors, ODbL 1.0
   max_zoom: 19
+  i18n:
+    fr:
+      name: OpenStreetMap (Standard)
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Standard)) : The default OpenStreetMap layer."
 - id: fr-eli-osmfr-occitan
   name: OpenStreetMap (Occitan Style)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index
-    (OpenStreetMap (Occitan Style)).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenStreetMap
+    (Occitan Style)).
   type: xyz
   category: basemap
   url: https://tile.openstreetmap.bzh/oc/{z}/{x}/{y}.png
@@ -3671,9 +4526,14 @@
   license: OSM Editor Layer Index License
   attribution: Tiles © OpenStreetMap France, data © OpenStreetMap contributors, ODbL
   max_zoom: 20
+  i18n:
+    fr:
+      name: OpenStreetMap (Occitan Style)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (OpenStreetMap (Occitan Style)).
 - id: global-eli-opentopomap
   name: OpenTopoMap
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenTopoMap).
+  description: Layer from the OpenStreetMap Editor Layer Index (OpenTopoMap).
   type: xyz
   category: basemap
   url: https://a.tile.opentopomap.org/{z}/{x}/{y}.png
@@ -3694,10 +4554,13 @@
     Kartendarstellung: © OpenTopoMap (CC-BY-SA)"
   min_zoom: 3
   max_zoom: 17
+  i18n:
+    fr:
+      name: OpenTopoMap
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (OpenTopoMap).
 - id: global-eli-public-transport-oepnv
   name: Public Transport (ÖPNV)
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Public
-    Transport (ÖPNV)).
+  description: Layer from the OpenStreetMap Editor Layer Index (Public Transport (ÖPNV)).
   type: xyz
   category: basemap
   url: https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png
@@ -3716,9 +4579,14 @@
   license: OSM Editor Layer Index License
   attribution: © OpenStreetMap contributors, CC-BY-SA
   max_zoom: 18
+  i18n:
+    fr:
+      name: Public Transport (ÖPNV)
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Public
+        Transport (ÖPNV)).
 - id: global-eli-skobbler
   name: skobbler
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (skobbler).
+  description: Layer from the OpenStreetMap Editor Layer Index (skobbler).
   type: xyz
   category: basemap
   url: https://tiles1-4001b3692e229e3215c9b7a73e528198.skobblermaps.com/TileService/tiles/2.0/00021210101/0/{z}/{x}/{y}.png
@@ -3738,9 +4606,13 @@
   attribution: "© Tiles: skobbler Map data: OpenStreetMap contributors"
   min_zoom: 1
   max_zoom: 18
+  i18n:
+    fr:
+      name: skobbler
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (skobbler).
 - id: global-eli-stamen-terrain-background
   name: Stamen Terrain
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Stamen Terrain).
+  description: Layer from the OpenStreetMap Editor Layer Index (Stamen Terrain).
   type: xyz
   category: elevation
   url: https://stamen-tiles-a.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.jpg
@@ -3761,10 +4633,15 @@
     under ODbL
   min_zoom: 4
   max_zoom: 18
+  i18n:
+    fr:
+      name: Stamen Terrain
+      description: Couche issue du registre OpenStreetMap Editor Layer Index (Stamen
+        Terrain).
 - id: global-eli-waymarked-trails-cycling
   name: "Waymarked Trails: Cycling"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: Cycling)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails:
+    Cycling)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png
@@ -3783,10 +4660,14 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: Cycling"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: Cycling)."
 - id: global-eli-waymarked-trails-hiking
   name: "Waymarked Trails: Hiking"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: Hiking)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails: Hiking)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png
@@ -3805,10 +4686,15 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: Hiking"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: Hiking)."
 - id: global-eli-waymarked-trails-horse-riding
   name: "Waymarked Trails: Horse Riding"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: Horse Riding)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails:
+    Horse Riding)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/riding/{z}/{x}/{y}.png
@@ -3827,10 +4713,14 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: Horse Riding"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: Horse Riding)."
 - id: global-eli-waymarked-trails-mtb
   name: "Waymarked Trails: MTB"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: MTB)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails: MTB)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/mtb/{z}/{x}/{y}.png
@@ -3849,10 +4739,15 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: MTB"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: MTB)."
 - id: global-eli-waymarked-trails-skating
   name: "Waymarked Trails: Skating"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: Skating)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails:
+    Skating)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/skating/{z}/{x}/{y}.png
@@ -3871,10 +4766,15 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: Skating"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: Skating)."
 - id: global-eli-waymarked-trails-winter-sports
   name: "Waymarked Trails: Winter Sports"
-  description: "Couche issue du registre OpenStreetMap Editor Layer Index
-    (Waymarked Trails: Winter Sports)."
+  description: "Layer from the OpenStreetMap Editor Layer Index (Waymarked Trails:
+    Winter Sports)."
   type: xyz
   category: basemap
   url: https://tile.waymarkedtrails.org/slopes/{z}/{x}/{y}.png
@@ -3893,9 +4793,14 @@
   license: OSM Editor Layer Index License
   attribution: © waymarkedtrails.org, OpenStreetMap contributors, CC by-SA 3.0
   max_zoom: 17
+  i18n:
+    fr:
+      name: "Waymarked Trails: Winter Sports"
+      description: "Couche issue du registre OpenStreetMap Editor Layer Index
+        (Waymarked Trails: Winter Sports)."
 - id: global-eli-wikimedia-map
   name: Wikimedia Map
-  description: Couche issue du registre OpenStreetMap Editor Layer Index (Wikimedia Map).
+  description: Layer from the OpenStreetMap Editor Layer Index (Wikimedia Map).
   type: xyz
   category: basemap
   url: https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png
@@ -3914,3 +4819,8 @@
   license: OSM Editor Layer Index License
   attribution: © OpenStreetMap contributors, CC-BY-SA
   max_zoom: 18
+  i18n:
+    fr:
+      name: Wikimedia Map
+      description: Couche issue du registre OpenStreetMap Editor Layer Index
+        (Wikimedia Map).

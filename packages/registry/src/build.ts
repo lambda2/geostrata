@@ -39,6 +39,7 @@ interface CompiledCatalogRow {
 	id: string
 	name: string
 	description: string
+	i18n_json: string
 	type: string
 	category: SourceCategory
 	url: string
@@ -201,10 +202,24 @@ function compileCatalogEntry(
 
 	const enrichedTags = buildEnrichedTags(entry, synonyms)
 	const countryNames = buildCountryNames(entry.country_iso, synonyms)
+	const i18nParts: Array<string> = []
+	if (entry.i18n) {
+		for (const loc of Object.values(entry.i18n)) {
+			if (loc.name) {
+				i18nParts.push(loc.name)
+			}
+			if (loc.description) {
+				i18nParts.push(loc.description)
+			}
+		}
+	}
+	const combinedEnrichedTags = [enrichedTags, ...i18nParts].join(' ').trim()
+
 	const rawSearchable = [
 		entry.id,
 		entry.name,
 		entry.description ? entry.description : '',
+		...i18nParts,
 		entry.category,
 		entry.type,
 		enrichedTags,
@@ -216,6 +231,7 @@ function compileCatalogEntry(
 		id: entry.id,
 		name: entry.name,
 		description: entry.description ? entry.description : '',
+		i18n_json: JSON.stringify(entry.i18n ? entry.i18n : {}),
 		type: entry.type,
 		category: entry.category,
 		url: entry.url.trim(),
@@ -228,7 +244,7 @@ function compileCatalogEntry(
 		area_deg2: areaDeg2,
 		geom_wkt: resolvedWkt,
 		tags_json: JSON.stringify(entry.tags),
-		enriched_tags: enrichedTags,
+		enriched_tags: combinedEnrichedTags,
 		country_names: countryNames,
 		search_text: searchText,
 		license: entry.license,
@@ -303,6 +319,7 @@ export function buildCatalog(): void {
 			id TEXT NOT NULL UNIQUE,
 			name TEXT NOT NULL,
 			description TEXT,
+			i18n_json TEXT NOT NULL DEFAULT '{}',
 			type TEXT NOT NULL,
 			category TEXT NOT NULL,
 			url TEXT NOT NULL,
@@ -343,12 +360,12 @@ export function buildCatalog(): void {
 
 	const insertSourceStmt = db.prepare(`
 		INSERT INTO sources (
-			id, name, description, type, category, url, crs, country_iso,
+			id, name, description, i18n_json, type, category, url, crs, country_iso,
 			min_x, min_y, max_x, max_y, area_deg2, geom_wkt, tags_json, search_text,
 			license, attribution, style_qml, min_zoom, max_zoom,
 			archive_target, health_status
 		) VALUES (
-			@id, @name, @description, @type, @category, @url, @crs, @country_iso,
+			@id, @name, @description, @i18n_json, @type, @category, @url, @crs, @country_iso,
 			@min_x, @min_y, @max_x, @max_y, @area_deg2, @geom_wkt, @tags_json, @search_text,
 			@license, @attribution, @style_qml, @min_zoom, @max_zoom,
 			@archive_target, @health_status
@@ -415,6 +432,10 @@ export function buildCatalog(): void {
 			id: row.id,
 			name: row.name,
 			description: row.description,
+			i18n: JSON.parse(row.i18n_json) as Record<
+				string,
+				{ name?: string; description?: string }
+			>,
 			type: row.type,
 			category: row.category,
 			url: row.url,

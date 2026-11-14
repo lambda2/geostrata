@@ -317,14 +317,16 @@ class GeostrataDockWidget(QDockWidget):
 
         for entry in filtered:
             scope = entry.country_iso if entry.country_iso else "Global"
-            label = f"[{entry.type.upper()} · {scope}] {entry.name}"
+            title_str = entry.localized_name()
+            desc_str = entry.localized_description()
+            label = f"[{entry.type.upper()} · {scope}] {title_str}"
             item = QListWidgetItem(label)
             icon = _resolve_entry_icon(entry)
             if icon is not None:
                 item.setIcon(icon)
             tooltip = (
-                f"<b>{entry.name}</b><br>"
-                f"<i>{entry.description}</i><br>"
+                f"<b>{title_str}</b><br>"
+                f"<i>{desc_str}</i><br>"
                 f"<b>Type :</b> {entry.type.upper()} | <b>Catégorie :</b> {entry.category}<br>"
                 f"<b>CRS :</b> {entry.crs} | <b>Licence :</b> {entry.license}<br>"
                 f"<b>Attribution :</b> {entry.attribution}"
@@ -387,6 +389,7 @@ class GeostrataDockWidget(QDockWidget):
             bbox_4326[3] - bbox_4326[1]
         )
 
+        title_str = entry.localized_name()
         layer, spec = create_qgis_layer(entry, bbox_4326)
         if layer is not None and layer.isValid():
             if is_dense_wfs and canvas_area > 0.25:
@@ -398,7 +401,7 @@ class GeostrataDockWidget(QDockWidget):
                 if self._iface is not None and self._iface.messageBar() is not None:
                     self._iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Couche WFS dense ajoutée ({entry.name}) : zoomez à 1:50 000 pour afficher les entités.",
+                        f"Couche WFS dense ajoutée ({title_str}) : zoomez à 1:50 000 pour afficher les entités.",
                         level=Qgis.MessageLevel.Info,
                         duration=6,
                     )
@@ -406,14 +409,14 @@ class GeostrataDockWidget(QDockWidget):
                 if self._iface is not None and self._iface.messageBar() is not None:
                     self._iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Couche chargée : {entry.name}",
+                        f"Couche chargée : {title_str}",
                         level=Qgis.MessageLevel.Success,
                         duration=4,
                     )
             QgsProject.instance().addMapLayer(layer)
         else:
             err_msg = (
-                f"Impossible de charger '{entry.name}' "
+                f"Impossible de charger '{title_str}' "
                 f"(provider={spec.provider}, uri={spec.uri})"
             )
             QgsMessageLog.logMessage(

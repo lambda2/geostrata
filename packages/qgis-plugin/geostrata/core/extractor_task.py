@@ -66,7 +66,7 @@ def launch_offline_extraction_task(
 
         def __init__(self) -> None:
             super().__init__(
-                f"Geostrata : Extraction locale ({entry.name})",
+                f"Geostrata : Extraction locale ({entry.localized_name()})",
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_path
@@ -142,7 +142,7 @@ def launch_offline_extraction_task(
                     )
                 return
 
-            layer_title = f"{entry.name} [Local]"
+            layer_title = f"{entry.localized_name()} [Local]"
             if is_raster:
                 local_layer = QgsRasterLayer(
                     str(self.output_file), layer_title, "gdal"

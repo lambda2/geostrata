@@ -1,6 +1,7 @@
 - id: fr-ign-plan-ign
-  name: IGN Géoplateforme - Plan IGN v2
-  description: Carte topographique multi-échelles de la France produite par l'Institut national de l'information géographique et forestière (Géoplateforme).
+  name: IGN Géoplateforme - Plan IGN v2 (Topographic Map)
+  description: Multi-scale national topographic map of France produced by IGN
+    (Géoplateforme).
   type: wmts
   category: basemap
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png
@@ -16,11 +17,17 @@
     - carte topographique
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (data.geopf.fr)"
-
+  attribution: © IGN - Géoplateforme (data.geopf.fr)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Plan IGN v2
+      description: Carte topographique multi-échelles de la France produite par
+        l'Institut national de l'information géographique et forestière
+        (Géoplateforme).
 - id: fr-ign-orthophotos
-  name: IGN Géoplateforme - BD ORTHO (Orthophotographies 20 cm)
-  description: Mosaïque nationale d'orthophotographies aériennes haute résolution (20 cm) sur la France entière via l'IGN Géoplateforme.
+  name: IGN Géoplateforme - BD ORTHO (20 cm Aerial Orthoimagery)
+  description: High-resolution (20 cm) national aerial orthoimagery mosaic
+    covering all of France via IGN Géoplateforme.
   type: wmts
   category: imagery
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg
@@ -36,11 +43,16 @@
     - photo aerienne
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (data.geopf.fr)"
-
+  attribution: © IGN - Géoplateforme (data.geopf.fr)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD ORTHO (Orthophotographies 20 cm)
+      description: Mosaïque nationale d'orthophotographies aériennes haute résolution
+        (20 cm) sur la France entière via l'IGN Géoplateforme.
 - id: fr-ign-ortho-irc
-  name: IGN Géoplateforme - BD ORTHO Infrarouge Couleur (IRC)
-  description: Orthophotographies aériennes en proche infrarouge (IRC) pour l'étude de la végétation, des forêts et des zones humides.
+  name: IGN Géoplateforme - BD ORTHO Color Infrared (CIR)
+  description: Near-infrared (CIR) aerial orthoimagery for vegetation, forestry,
+    and wetland analysis across France.
   type: wmts
   category: imagery
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=ORTHOIMAGERY.ORTHOPHOTOS.IRC&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg
@@ -57,11 +69,16 @@
     - vegetation
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (data.geopf.fr)"
-
+  attribution: © IGN - Géoplateforme (data.geopf.fr)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD ORTHO Infrarouge Couleur (IRC)
+      description: Orthophotographies aériennes en proche infrarouge (IRC) pour
+        l'étude de la végétation, des forêts et des zones humides.
 - id: fr-ign-ortho-historique-1950
-  name: IGN Géoplateforme - Orthophotos Historiques (1950-1965)
-  description: Photographies aériennes historiques de la France des années 1950-1965 (Remonter le temps IGN).
+  name: IGN Géoplateforme - Historical Orthoimagery (1950-1965)
+  description: Historical aerial photographs of France from the 1950s–1965s (IGN
+    Remonter le temps).
   type: wmts
   category: imagery
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=ORTHOIMAGERY.ORTHOPHOTOS.1950-1965&STYLE=BDORTHOHISTO&TILEMATRIXSET=PM&FORMAT=image/png
@@ -77,11 +94,16 @@
     - remonter le temps
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (data.geopf.fr)"
-
+  attribution: © IGN - Géoplateforme (data.geopf.fr)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Orthophotos Historiques (1950-1965)
+      description: Photographies aériennes historiques de la France des années
+        1950-1965 (Remonter le temps IGN).
 - id: fr-ign-cadastre-wmts
-  name: IGN Géoplateforme - Plan Cadastral (Parcellaire Express PCI)
-  description: Affichage tuilé rapide des parcelles cadastrales, numéros de parcelles et bâti cadastral sur la France entière.
+  name: IGN Géoplateforme - Cadastral Parcels (Parcellaire Express PCI)
+  description: Fast tiled rendering of cadastral parcels, parcel numbers, and
+    cadastral buildings across France.
   type: wmts
   category: admin
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=CADASTRALPARCELS.PARCELLAIRE_EXPRESS&STYLE=PCI%20vecteur&TILEMATRIXSET=PM&FORMAT=image/png
@@ -99,11 +121,16 @@
     - ign
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© DGFiP / IGN - Géoplateforme"
-
+  attribution: © DGFiP / IGN - Géoplateforme
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Plan Cadastral (Parcellaire Express PCI)
+      description: Affichage tuilé rapide des parcelles cadastrales, numéros de
+        parcelles et bâti cadastral sur la France entière.
 - id: fr-ign-rge-alti-hillshade
-  name: IGN Géoplateforme - Estompage du Relief RGE ALTI (MNT 1m)
-  description: Ombrage analytique haute résolution issu du Modèle Numérique de Terrain RGE ALTI / LiDAR HD de l'IGN.
+  name: IGN Géoplateforme - RGE ALTI Hillshade (1m DTM)
+  description: High-resolution analytical hillshade derived from the IGN RGE ALTI
+    / LiDAR HD Digital Terrain Model.
   type: wmts
   category: elevation
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW&STYLE=estompage_grayscale&TILEMATRIXSET=PM&FORMAT=image/png
@@ -123,11 +150,17 @@
     - altitude
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (RGE ALTI)"
-
+  attribution: © IGN - Géoplateforme (RGE ALTI)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Estompage du Relief RGE ALTI (MNT 1m)
+      description: Ombrage analytique haute résolution issu du Modèle Numérique de
+        Terrain RGE ALTI / LiDAR HD de l'IGN.
 - id: fr-ign-rge-alti-mnt-geotiff
-  name: IGN Géoplateforme - RGE ALTI MNT 1m (Valeurs d'altitude brutes Float32)
-  description: Modèle Numérique de Terrain (MNT) national de l'IGN diffusé en GeoTIFF 32-bits (vraies valeurs d'altitude en mètres pour calculs de pentes, profils et bassins versants).
+  name: IGN Géoplateforme - RGE ALTI 1m DTM (Raw Float32 Elevation)
+  description: National 1m Digital Terrain Model (DTM) served as 32-bit float
+    GeoTIFF (true elevation values in meters for slope, profile, and watershed
+    analysis).
   type: wms
   category: elevation
   url: https://data.geopf.fr/wms-r/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES&FORMAT=image/geotiff
@@ -146,11 +179,17 @@
     - relief
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (RGE ALTI MNT)"
-
+  attribution: © IGN - Géoplateforme (RGE ALTI MNT)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - RGE ALTI MNT 1m (Valeurs d'altitude brutes Float32)
+      description: Modèle Numérique de Terrain (MNT) national de l'IGN diffusé en
+        GeoTIFF 32-bits (vraies valeurs d'altitude en mètres pour calculs de
+        pentes, profils et bassins versants).
 - id: fr-ign-lidar-hd-mnt-geotiff
-  name: IGN Géoplateforme - LiDAR HD MNT 50cm (Valeurs d'altitude brutes Float32)
-  description: Modèle Numérique de Terrain (MNT) très haute résolution (50 cm) issu du programme national LiDAR HD en GeoTIFF 32-bits.
+  name: IGN Géoplateforme - LiDAR HD 50cm DTM (Raw Float32 Elevation)
+  description: Very high-resolution (50 cm) Digital Terrain Model (DTM) from the
+    French national LiDAR HD program in 32-bit float GeoTIFF.
   type: wms
   category: elevation
   url: https://data.geopf.fr/wms-r/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=IGNF_LIDAR-HD_MNT_ELEVATION.ELEVATIONGRIDCOVERAGE.WGS84G&FORMAT=image/geotiff
@@ -167,11 +206,16 @@
     - relief
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Programme National LiDAR HD"
-
+  attribution: © IGN - Programme National LiDAR HD
+  i18n:
+    fr:
+      name: IGN Géoplateforme - LiDAR HD MNT 50cm (Valeurs d'altitude brutes Float32)
+      description: Modèle Numérique de Terrain (MNT) très haute résolution (50 cm)
+        issu du programme national LiDAR HD en GeoTIFF 32-bits.
 - id: fr-ign-lidar-hd-mns-geotiff
-  name: IGN Géoplateforme - LiDAR HD MNS 50cm (Modèle Numérique de Surface Float32)
-  description: Modèle Numérique de Surface (MNS incluant bâti et canopée forestière) à 50 cm de résolution issu du programme national LiDAR HD.
+  name: IGN Géoplateforme - LiDAR HD 50cm DSM (Float32 Surface Model)
+  description: 50 cm Digital Surface Model (DSM including buildings and forest
+    canopy) from the French national LiDAR HD program.
   type: wms
   category: elevation
   url: https://data.geopf.fr/wms-r/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=IGNF_LIDAR-HD_MNS_ELEVATION.ELEVATIONGRIDCOVERAGE.WGS84G&FORMAT=image/geotiff
@@ -189,11 +233,17 @@
     - altitude
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Programme National LiDAR HD"
-
+  attribution: © IGN - Programme National LiDAR HD
+  i18n:
+    fr:
+      name: IGN Géoplateforme - LiDAR HD MNS 50cm (Modèle Numérique de Surface
+        Float32)
+      description: Modèle Numérique de Surface (MNS incluant bâti et canopée
+        forestière) à 50 cm de résolution issu du programme national LiDAR HD.
 - id: fr-ign-plan-ign-vectortile
-  name: IGN Géoplateforme - Plan IGN (Tuiles Vectorielles PBF)
-  description: Flux de tuiles vectorielles officiel Plan IGN diffusé par la Géoplateforme (rendu vectoriel net à toutes les échelles).
+  name: IGN Géoplateforme - Plan IGN (PBF Vector Tiles)
+  description: Official Plan IGN vector tile stream served by IGN Géoplateforme
+    for crisp multi-scale rendering.
   type: vectortile
   category: basemap
   url: https://data.geopf.fr/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf
@@ -210,11 +260,16 @@
     - fond de carte
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (Tuiles Vectorielles)"
-
+  attribution: © IGN - Géoplateforme (Tuiles Vectorielles)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Plan IGN (Tuiles Vectorielles PBF)
+      description: Flux de tuiles vectorielles officiel Plan IGN diffusé par la
+        Géoplateforme (rendu vectoriel net à toutes les échelles).
 - id: fr-georisques-zones-inondables
-  name: Géorisques - Zones Inondables (Aléa débordement de cours d'eau)
-  description: Cartographie nationale des surfaces inondables par débordement de cours d'eau (Directive Inondation / TRI - Géorisques BRGM).
+  name: Géorisques - Flood Hazard Zones (River Overflow)
+  description: National mapping of flood-prone areas from river overflow (EU
+    Floods Directive / BRGM Géorisques).
   type: wms
   category: crisis
   url: https://georisques.gouv.fr/services?SERVICE=WMS&VERSION=1.3.0&LAYERS=ALEA_SYNT_01_02MOY_FXX&FORMAT=image/png
@@ -230,11 +285,15 @@
     - risque naturel
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© Ministère de la Transition écologique / BRGM Géorisques"
-
+  attribution: © Ministère de la Transition écologique / BRGM Géorisques
+  i18n:
+    fr:
+      name: Géorisques - Zones Inondables (Aléa débordement de cours d'eau)
+      description: Cartographie nationale des surfaces inondables par débordement de
+        cours d'eau (Directive Inondation / TRI - Géorisques BRGM).
 - id: fr-ign-courbes-niveau
-  name: IGN Géoplateforme - Courbes de Niveau (Altimétrie)
-  description: Isolignes d'altitude (courbes de niveau) sur l'ensemble du territoire français.
+  name: IGN Géoplateforme - Contour Lines (Elevation Isolines)
+  description: Elevation contour lines across the entire French territory.
   type: wmts
   category: elevation
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=ELEVATION.CONTOUR.LINE&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png
@@ -251,11 +310,16 @@
     - topographie
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme"
-
+  attribution: © IGN - Géoplateforme
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Courbes de Niveau (Altimétrie)
+      description: Isolignes d'altitude (courbes de niveau) sur l'ensemble du
+        territoire français.
 - id: fr-ign-rpg-wmts
-  name: IGN Géoplateforme - Registre Parcellaire Graphique (RPG Agriculture)
-  description: Îlots et parcelles agricoles déclarés à la PAC par type de culture sur la France entière.
+  name: IGN Géoplateforme - Agricultural Parcel Register (RPG CAP)
+  description: Agricultural blocks and crop parcels declared under the Common
+    Agricultural Policy (CAP) across France.
   type: wmts
   category: landuse
   url: https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&LAYER=LANDUSE.AGRICULTURE.LATEST&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png
@@ -272,11 +336,16 @@
     - ign
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© ASP / IGN - Géoplateforme"
-
+  attribution: © ASP / IGN - Géoplateforme
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Registre Parcellaire Graphique (RPG Agriculture)
+      description: Îlots et parcelles agricoles déclarés à la PAC par type de culture
+        sur la France entière.
 - id: fr-brgm-geologie-50k
-  name: BRGM InfoTerre - Carte Géologique de la France (1/50 000)
-  description: Carte géologique nationale harmonisée au 1/50 000 diffusée par le Bureau de Recherches Géologiques et Minières (BRGM).
+  name: BRGM InfoTerre - Geological Map of France (1:50,000)
+  description: Harmonized 1:50,000 national geological map published by the French
+    Geological Survey (BRGM).
   type: wms
   category: landuse
   url: https://geoservices.brgm.fr/geologie?SERVICE=WMS&VERSION=1.3.0&LAYERS=GEOLOGIE&FORMAT=image/png
@@ -291,11 +360,16 @@
     - infoterre
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© BRGM - InfoTerre"
-
+  attribution: © BRGM - InfoTerre
+  i18n:
+    fr:
+      name: BRGM InfoTerre - Carte Géologique de la France (1/50 000)
+      description: Carte géologique nationale harmonisée au 1/50 000 diffusée par le
+        Bureau de Recherches Géologiques et Minières (BRGM).
 - id: fr-ign-bdtopo-communes
-  name: IGN Géoplateforme - BD TOPO (Communes de France)
-  description: Limites administratives vectorielles des communes françaises issues de la BD TOPO IGN diffusées en WFS.
+  name: IGN Géoplateforme - BD TOPO (French Municipalities / Communes)
+  description: Vector administrative boundaries of French municipalities
+    (communes) from IGN BD TOPO via WFS.
   type: wfs
   category: admin
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:commune
@@ -312,11 +386,15 @@
     - limites administratives
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Communes de France)
+      description: Limites administratives vectorielles des communes françaises issues
+        de la BD TOPO IGN diffusées en WFS.
 - id: fr-ign-bdtopo-departements
-  name: IGN Géoplateforme - BD TOPO (Départements de France)
-  description: Limites administratives vectorielles des départements français issues de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (French Departments)
+  description: Vector administrative boundaries of French departments from IGN BD TOPO.
   type: wfs
   category: admin
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:departement
@@ -331,11 +409,15 @@
     - limites administratives
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Départements de France)
+      description: Limites administratives vectorielles des départements français
+        issues de la BD TOPO IGN.
 - id: fr-ign-bdtopo-regions
-  name: IGN Géoplateforme - BD TOPO (Régions de France)
-  description: Limites administratives vectorielles des régions françaises issues de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (French Regions)
+  description: Vector administrative boundaries of French regions from IGN BD TOPO.
   type: wfs
   category: admin
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:region
@@ -350,11 +432,16 @@
     - limites administratives
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Régions de France)
+      description: Limites administratives vectorielles des régions françaises issues
+        de la BD TOPO IGN.
 - id: fr-ign-bdtopo-epci
-  name: IGN Géoplateforme - BD TOPO (Intercommunalités / EPCI)
-  description: Périmètres des Établissements Publics de Coopération Intercommunale (métropoles, communautés de communes, agglomérations).
+  name: IGN Géoplateforme - BD TOPO (Intercommunal Authorities / EPCI)
+  description: Boundaries of French intercommunal authorities (metropolises, urban
+    and municipal communities).
   type: wfs
   category: admin
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:epci
@@ -370,11 +457,15 @@
     - agglomeration
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Intercommunalités / EPCI)
+      description: Périmètres des Établissements Publics de Coopération Intercommunale
+        (métropoles, communautés de communes, agglomérations).
 - id: fr-ign-bdtopo-batiments
-  name: IGN Géoplateforme - BD TOPO (Bâtiments 3D / Empreintes au sol)
-  description: Empreintes vectorielles des bâtiments avec hauteur et usage issues de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (Building Footprints & Heights)
+  description: Vector building footprints with height and usage attributes from IGN BD TOPO.
   type: wfs
   category: buildings
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:batiment
@@ -390,11 +481,16 @@
     - construction
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Bâtiments 3D / Empreintes au sol)
+      description: Empreintes vectorielles des bâtiments avec hauteur et usage issues
+        de la BD TOPO IGN.
 - id: fr-ign-bdtopo-cours-eau
-  name: IGN Géoplateforme - BD TOPO (Cours d'eau et réseau hydrographique)
-  description: Axes des cours d'eau permanents et intermittents de la BD TOPO IGN sur la France entière.
+  name: IGN Géoplateforme - BD TOPO (Rivers & Hydrographic Network)
+  description: Centerlines of permanent and intermittent watercourses from IGN BD
+    TOPO across France.
   type: wfs
   category: hydrography
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:cours_d_eau
@@ -411,11 +507,16 @@
     - hydrographie
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Cours d'eau et réseau hydrographique)
+      description: Axes des cours d'eau permanents et intermittents de la BD TOPO IGN
+        sur la France entière.
 - id: fr-ign-bdtopo-plans-eau
-  name: IGN Géoplateforme - BD TOPO (Plans d'eau, lacs et retenues)
-  description: Surfaces d'eau (lacs, étangs, retenues de barrage, marais) issues de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (Waterbodies, Lakes & Reservoirs)
+  description: Surface water polygons (lakes, ponds, dam reservoirs, marshes) from
+    IGN BD TOPO.
   type: wfs
   category: hydrography
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:plan_d_eau
@@ -432,11 +533,16 @@
     - eau
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Plans d'eau, lacs et retenues)
+      description: Surfaces d'eau (lacs, étangs, retenues de barrage, marais) issues
+        de la BD TOPO IGN.
 - id: fr-ign-bdtopo-routes
-  name: IGN Géoplateforme - BD TOPO (Tronçons de routes et voirie)
-  description: Réseau routier national, départemental et communal (BD TOPO IGN) avec classement, largeur et sens de circulation.
+  name: IGN Géoplateforme - BD TOPO (Road Network & Streets)
+  description: National, departmental, and municipal road network (IGN BD TOPO)
+    with classification, width, and traffic direction.
   type: wfs
   category: transport
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:troncon_de_route
@@ -453,11 +559,16 @@
     - transport
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Tronçons de routes et voirie)
+      description: Réseau routier national, départemental et communal (BD TOPO IGN)
+        avec classement, largeur et sens de circulation.
 - id: fr-ign-bdtopo-voies-ferrees
-  name: IGN Géoplateforme - BD TOPO (Voies ferrées nationales)
-  description: Tronçons de voies ferrées (LGV, lignes principales, voies de service) issus de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (National Railway Tracks)
+  description: Railway track segments (high-speed lines, main lines, sidings) from
+    IGN BD TOPO.
   type: wfs
   category: transport
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:troncon_de_voie_ferree
@@ -474,11 +585,16 @@
     - sncf
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Voies ferrées nationales)
+      description: Tronçons de voies ferrées (LGV, lignes principales, voies de
+        service) issus de la BD TOPO IGN.
 - id: fr-ign-bdtopo-lignes-electriques
-  name: IGN Géoplateforme - BD TOPO (Lignes électriques HTB/HTA)
-  description: Réseau aérien de transport d'électricité haute et très haute tension avec voltage issu de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (High-Voltage Power Lines)
+  description: Overhead high and extra-high voltage electricity transmission
+    network with voltage ratings from IGN BD TOPO.
   type: wfs
   category: utilities
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:ligne_electrique
@@ -495,11 +611,16 @@
     - reseaux
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Lignes électriques HTB/HTA)
+      description: Réseau aérien de transport d'électricité haute et très haute
+        tension avec voltage issu de la BD TOPO IGN.
 - id: fr-ign-bdtopo-vegetation
-  name: IGN Géoplateforme - BD TOPO (Zones de végétation et forêts)
-  description: Bois, forêts de feuillus/conifères, haies et landes issus de la BD TOPO IGN.
+  name: IGN Géoplateforme - BD TOPO (Forests & Vegetation Zones)
+  description: Woodlands, deciduous/coniferous forests, hedgerows, and heathlands
+    from IGN BD TOPO.
   type: wfs
   category: landuse
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=BDTOPO_V3:zone_de_vegetation
@@ -516,11 +637,16 @@
     - occupation du sol
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© IGN - Géoplateforme (BD TOPO)"
-
+  attribution: © IGN - Géoplateforme (BD TOPO)
+  i18n:
+    fr:
+      name: IGN Géoplateforme - BD TOPO (Zones de végétation et forêts)
+      description: Bois, forêts de feuillus/conifères, haies et landes issus de la BD
+        TOPO IGN.
 - id: fr-ign-cadastre-parcelles-wfs
-  name: IGN Géoplateforme - Parcellaire Express (Parcelles Cadastrales Vecteur)
-  description: Polygones vectoriels des parcelles cadastrales (DGFiP / IGN Parcellaire Express) interrogeables sur l'emprise courante.
+  name: IGN Géoplateforme - Parcellaire Express (Vector Cadastral Parcels)
+  description: Queryable vector polygons of French cadastral parcels (DGFiP / IGN
+    Parcellaire Express) within the active extent.
   type: wfs
   category: admin
   url: https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=CADASTRALPARCELS.PARCELLAIRE_EXPRESS:parcelle
@@ -536,17 +662,26 @@
     - ign
     - france
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© DGFiP / IGN - Géoplateforme"
-
+  attribution: © DGFiP / IGN - Géoplateforme
+  i18n:
+    fr:
+      name: IGN Géoplateforme - Parcellaire Express (Parcelles Cadastrales Vecteur)
+      description: Polygones vectoriels des parcelles cadastrales (DGFiP / IGN
+        Parcellaire Express) interrogeables sur l'emprise courante.
 - id: fr-grandlyon-bornes-fontaines
-  name: Métropole de Lyon (Grand Lyon) - Bornes fontaines et points d'eau
-  description: Localisation des bornes fontaines et points d'eau potable gérés par la Métropole de Lyon sur le territoire du Grand Lyon.
+  name: Greater Lyon Metropolis - Drinking Water Fountains
+  description: Locations of public drinking water fountains and water points
+    managed by the Greater Lyon Metropolis.
   type: wfs
   category: hydrography
   url: https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=metropole-de-lyon:adr_voie_lieu.adrbornefontaine_latest
   crs: EPSG:2154
   country_iso: FR
-  bbox: [4.69, 45.55, 5.09, 45.92]
+  bbox:
+    - 4.69
+    - 45.55
+    - 5.09
+    - 45.92
   style_file: hydrography.qml
   tags:
     - eau
@@ -557,17 +692,26 @@
     - grand lyon
     - metropole de lyon
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© Métropole de Lyon - Data Grand Lyon"
-
+  attribution: © Métropole de Lyon - Data Grand Lyon
+  i18n:
+    fr:
+      name: Métropole de Lyon (Grand Lyon) - Bornes fontaines et points d'eau
+      description: Localisation des bornes fontaines et points d'eau potable gérés par
+        la Métropole de Lyon sur le territoire du Grand Lyon.
 - id: fr-grandlyon-pistes-cyclables
-  name: Métropole de Lyon (Grand Lyon) - Aménagements cyclables et Voies Lyonnaises
-  description: Réseau des pistes cyclables, bandes cyclables et Voies Lyonnaises de la Métropole de Lyon.
+  name: Greater Lyon Metropolis - Cycling Infrastructure & Voies Lyonnaises
+  description: Network of cycle tracks, bike lanes, and Voies Lyonnaises express
+    bikeways in Greater Lyon.
   type: wfs
   category: transport
   url: https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=metropole-de-lyon:pvo_patrimoine_voirie.pvoamenagementcyclable
   crs: EPSG:2154
   country_iso: FR
-  bbox: [4.69, 45.55, 5.09, 45.92]
+  bbox:
+    - 4.69
+    - 45.55
+    - 5.09
+    - 45.92
   style_file: transport.qml
   tags:
     - velo
@@ -577,17 +721,27 @@
     - lyon
     - grand lyon
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© Métropole de Lyon - Data Grand Lyon"
-
+  attribution: © Métropole de Lyon - Data Grand Lyon
+  i18n:
+    fr:
+      name: Métropole de Lyon (Grand Lyon) - Aménagements cyclables et Voies
+        Lyonnaises
+      description: Réseau des pistes cyclables, bandes cyclables et Voies Lyonnaises
+        de la Métropole de Lyon.
 - id: fr-grandlyon-stations-velov
-  name: Métropole de Lyon (Grand Lyon) - Stations Vélo'v
-  description: Emplacement et capacité des stations de vélos en libre-service Vélo'v sur la Métropole de Lyon.
+  name: Greater Lyon Metropolis - Vélo'v Bike-Share Stations
+  description: Locations and dock capacities of Vélo'v self-service bicycle
+    stations across Greater Lyon.
   type: wfs
   category: transport
   url: https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=metropole-de-lyon:pvo_patrimoine_voirie.pvostationvelov
   crs: EPSG:2154
   country_iso: FR
-  bbox: [4.69, 45.55, 5.09, 45.92]
+  bbox:
+    - 4.69
+    - 45.55
+    - 5.09
+    - 45.92
   style_file: transport-point.qml
   tags:
     - velov
@@ -597,17 +751,25 @@
     - lyon
     - grand lyon
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© Métropole de Lyon - Data Grand Lyon"
-
+  attribution: © Métropole de Lyon - Data Grand Lyon
+  i18n:
+    fr:
+      name: Métropole de Lyon (Grand Lyon) - Stations Vélo'v
+      description: Emplacement et capacité des stations de vélos en libre-service
+        Vélo'v sur la Métropole de Lyon.
 - id: fr-grandlyon-communes
-  name: Métropole de Lyon (Grand Lyon) - Communes de la Métropole
-  description: Limites communales des 58 communes composant la Métropole de Lyon.
+  name: Greater Lyon Metropolis - Metropolitan Municipalities
+  description: Municipal boundaries of the 58 communes forming the Greater Lyon Metropolis.
   type: wfs
   category: admin
   url: https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=metropole-de-lyon:adr_voie_lieu.adrcommune
   crs: EPSG:2154
   country_iso: FR
-  bbox: [4.69, 45.55, 5.09, 45.92]
+  bbox:
+    - 4.69
+    - 45.55
+    - 5.09
+    - 45.92
   style_file: admin.qml
   tags:
     - communes
@@ -616,4 +778,8 @@
     - lyon
     - grand lyon
   license: Licence Ouverte / Etalab 2.0
-  attribution: "© Métropole de Lyon - Data Grand Lyon"
+  attribution: © Métropole de Lyon - Data Grand Lyon
+  i18n:
+    fr:
+      name: Métropole de Lyon (Grand Lyon) - Communes de la Métropole
+      description: Limites communales des 58 communes composant la Métropole de Lyon.

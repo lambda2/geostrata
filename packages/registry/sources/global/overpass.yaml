@@ -1,11 +1,17 @@
 - id: global-overpass-drinking-water
-  name: OSM Overpass - Points d'eau potable, sources et puits
-  description: Extraction dynamique OpenStreetMap des bornes d'eau potable (amenity=drinking_water), sources naturelles (natural=spring) et puits (man_made=water_well).
+  name: OSM Overpass - Drinking Water Points, Springs & Wells
+  description: Live OpenStreetMap extraction of drinking water taps
+    (amenity=drinking_water), natural springs (natural=spring), and water wells
+    (man_made=water_well).
   type: overpass
   category: hydrography
   url: amenity=drinking_water|natural=spring|man_made=water_well
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: hydrography.qml
   tags:
     - eau
@@ -18,16 +24,26 @@
     - water_well
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Points d'eau potable, sources et puits
+      description: Extraction dynamique OpenStreetMap des bornes d'eau potable
+        (amenity=drinking_water), sources naturelles (natural=spring) et puits
+        (man_made=water_well).
 - id: global-overpass-waterways
-  name: OSM Overpass - Cours d'eau, rivières, ruisseaux et canaux
-  description: Extraction dynamique linéaire des rivières (waterway=river), ruisseaux (waterway=stream) et canaux (waterway=canal).
+  name: OSM Overpass - Rivers, Streams & Canals
+  description: Live linear OpenStreetMap extraction of rivers (waterway=river),
+    streams (waterway=stream), and canals (waterway=canal).
   type: overpass
   category: hydrography
   url: waterway=river|waterway=stream|waterway=canal
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: hydrography-line.qml
   tags:
     - eau
@@ -40,16 +56,25 @@
     - waterway
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Cours d'eau, rivières, ruisseaux et canaux
+      description: Extraction dynamique linéaire des rivières (waterway=river),
+        ruisseaux (waterway=stream) et canaux (waterway=canal).
 - id: global-overpass-healthcare
-  name: OSM Overpass - Infrastructures de santé (Hôpitaux & Cliniques)
-  description: Extraction dynamique OpenStreetMap des hôpitaux (amenity=hospital) et cliniques (amenity=clinic) sur l'emprise actuelle.
+  name: OSM Overpass - Healthcare Facilities (Hospitals & Clinics)
+  description: Live OpenStreetMap extraction of hospitals (amenity=hospital) and
+    medical clinics (amenity=clinic) within the active extent.
   type: overpass
   category: crisis
   url: amenity=hospital|amenity=clinic
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - hopital
@@ -62,16 +87,25 @@
     - medical
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Infrastructures de santé (Hôpitaux & Cliniques)
+      description: Extraction dynamique OpenStreetMap des hôpitaux (amenity=hospital)
+        et cliniques (amenity=clinic) sur l'emprise actuelle.
 - id: global-overpass-pharmacies
-  name: OSM Overpass - Pharmacies et dispensaires médicaux
-  description: Localisation des pharmacies (amenity=pharmacy) et cabinets médicaux (amenity=doctors) dans OpenStreetMap.
+  name: OSM Overpass - Pharmacies & Medical Offices
+  description: Locations of pharmacies (amenity=pharmacy) and medical practices
+    (amenity=doctors) in OpenStreetMap.
   type: overpass
   category: crisis
   url: amenity=pharmacy|amenity=doctors
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - pharmacie
@@ -82,16 +116,25 @@
     - pharmacy
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Pharmacies et dispensaires médicaux
+      description: Localisation des pharmacies (amenity=pharmacy) et cabinets médicaux
+        (amenity=doctors) dans OpenStreetMap.
 - id: global-overpass-fire-stations
-  name: OSM Overpass - Casernes de sapeurs-pompiers et centres de secours
-  description: Localisation des casernes de pompiers (amenity=fire_station) et postes de secours (emergency=ambulance_station).
+  name: OSM Overpass - Fire Stations & Rescue Centers
+  description: Locations of fire stations (amenity=fire_station) and ambulance
+    rescue stations (emergency=ambulance_station).
   type: overpass
   category: crisis
   url: amenity=fire_station|emergency=ambulance_station
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - pompier
@@ -104,16 +147,25 @@
     - fire_station
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Casernes de sapeurs-pompiers et centres de secours
+      description: Localisation des casernes de pompiers (amenity=fire_station) et
+        postes de secours (emergency=ambulance_station).
 - id: global-overpass-police
-  name: OSM Overpass - Commissariats de police et gendarmeries
-  description: Localisation des postes de police et gendarmeries (amenity=police) dans OpenStreetMap.
+  name: OSM Overpass - Police Stations & Law Enforcement
+  description: Locations of police stations and law enforcement offices
+    (amenity=police) in OpenStreetMap.
   type: overpass
   category: crisis
   url: amenity=police
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - police
@@ -122,16 +174,25 @@
     - securite
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Commissariats de police et gendarmeries
+      description: Localisation des postes de police et gendarmeries (amenity=police)
+        dans OpenStreetMap.
 - id: global-overpass-shelters
-  name: OSM Overpass - Abris d'urgence, refuges et centres d'hébergement
-  description: Localisation des abris (amenity=shelter), refuges et centres d'accueil humanitaires (social_facility=shelter).
+  name: OSM Overpass - Emergency Shelters & Assembly Points
+  description: Locations of emergency shelters (amenity=shelter), humanitarian
+    relief shelters (social_facility=shelter), and assembly points.
   type: overpass
   category: crisis
   url: amenity=shelter|social_facility=shelter|emergency=assembly_point
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - abri
@@ -143,16 +204,25 @@
     - humanitaire
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Abris d'urgence, refuges et centres d'hébergement
+      description: Localisation des abris (amenity=shelter), refuges et centres
+        d'accueil humanitaires (social_facility=shelter).
 - id: global-overpass-helipads
-  name: OSM Overpass - Hélistations et aires d'atterrissage hélicoptères
-  description: Localisation des hélistations hospitalières et civiles (aeroway=helipad) pour la logistique d'urgence.
+  name: OSM Overpass - Helipads & Emergency Landing Zones
+  description: Locations of hospital and civil helipads (aeroway=helipad) for
+    emergency logistics.
   type: overpass
   category: crisis
   url: aeroway=helipad
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - helistation
@@ -163,16 +233,25 @@
     - aeroway
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Hélistations et aires d'atterrissage hélicoptères
+      description: Localisation des hélistations hospitalières et civiles
+        (aeroway=helipad) pour la logistique d'urgence.
 - id: global-overpass-defibrillators
-  name: OSM Overpass - Défibrillateurs automatisés externes (DAE / AED)
-  description: Localisation des défibrillateurs cardiaques accessibles au public (emergency=defibrillator).
+  name: OSM Overpass - Automated External Defibrillators (AED)
+  description: Locations of publicly accessible cardiac defibrillators
+    (emergency=defibrillator).
   type: overpass
   category: crisis
   url: emergency=defibrillator
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: crisis.qml
   tags:
     - defibrillateur
@@ -183,16 +262,25 @@
     - urgence
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Défibrillateurs automatisés externes (DAE / AED)
+      description: Localisation des défibrillateurs cardiaques accessibles au public
+        (emergency=defibrillator).
 - id: global-overpass-schools
-  name: OSM Overpass - Écoles, collèges, lycées et universités
-  description: Établissements d'enseignement scolaire et supérieur (amenity=school, college, university, kindergarten).
+  name: OSM Overpass - Schools, Colleges & Universities
+  description: Educational institutions including schools, colleges, universities,
+    and kindergartens (amenity=school, college, university, kindergarten).
   type: overpass
   category: buildings
   url: amenity=school|amenity=university|amenity=college|amenity=kindergarten
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - ecole
@@ -205,16 +293,25 @@
     - school
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Écoles, collèges, lycées et universités
+      description: Établissements d'enseignement scolaire et supérieur
+        (amenity=school, college, university, kindergarten).
 - id: global-overpass-railway-stations
-  name: OSM Overpass - Gares ferroviaires, stations de métro et tramway
-  description: Gares de train (railway=station), haltes ferroviaires (railway=halt) et stations de tramway (railway=tram_stop).
+  name: OSM Overpass - Railway, Subway & Tram Stations
+  description: Train stations (railway=station), railway halts (railway=halt), and
+    tram stops (railway=tram_stop).
   type: overpass
   category: transport
   url: railway=station|railway=halt|railway=tram_stop
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - gare
@@ -227,16 +324,25 @@
     - station
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Gares ferroviaires, stations de métro et tramway
+      description: Gares de train (railway=station), haltes ferroviaires
+        (railway=halt) et stations de tramway (railway=tram_stop).
 - id: global-overpass-railways
-  name: OSM Overpass - Voies ferrées (Train, Tramway, Métro)
-  description: Tracé linéaire des voies ferrées principales (railway=rail), lignes de tramway (railway=tram) et métro (railway=subway).
+  name: OSM Overpass - Railway Tracks (Train, Tram, Light Rail)
+  description: Linear geometry of main railway lines (railway=rail), tramways
+    (railway=tram), and light rail lines (railway=light_rail).
   type: overpass
   category: transport
   url: railway=rail|railway=tram|railway=light_rail
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport.qml
   tags:
     - voie ferree
@@ -248,16 +354,24 @@
     - railway
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Voies ferrées (Train, Tramway, Métro)
+      description: Tracé linéaire des voies ferrées principales (railway=rail), lignes
+        de tramway (railway=tram) et métro (railway=subway).
 - id: global-overpass-cycleways
-  name: OSM Overpass - Pistes cyclables et voies vertes
-  description: Tracé linéaire des pistes cyclables dédiées (highway=cycleway) dans OpenStreetMap.
+  name: OSM Overpass - Dedicated Cycleways & Greenways
+  description: Linear geometry of dedicated cycleways (highway=cycleway) in OpenStreetMap.
   type: overpass
   category: transport
   url: highway=cycleway
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport.qml
   tags:
     - piste cyclable
@@ -268,16 +382,24 @@
     - cycleway
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Pistes cyclables et voies vertes
+      description: Tracé linéaire des pistes cyclables dédiées (highway=cycleway) dans
+        OpenStreetMap.
 - id: global-overpass-charging-stations
-  name: OSM Overpass - Bornes de recharge électrique (IRVE)
-  description: Localisation des stations et bornes de recharge pour véhicules électriques (amenity=charging_station).
+  name: OSM Overpass - Electric Vehicle Charging Stations (EV)
+  description: Locations of electric vehicle charging stations (amenity=charging_station).
   type: overpass
   category: transport
   url: amenity=charging_station
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - borne de recharge
@@ -287,16 +409,24 @@
     - charging_station
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Bornes de recharge électrique (IRVE)
+      description: Localisation des stations et bornes de recharge pour véhicules
+        électriques (amenity=charging_station).
 - id: global-overpass-fuel-stations
-  name: OSM Overpass - Stations-service et distribution de carburant
-  description: Localisation des stations-service (amenity=fuel) dans OpenStreetMap.
+  name: OSM Overpass - Fuel & Gas Stations
+  description: Locations of fuel and gas stations (amenity=fuel) in OpenStreetMap.
   type: overpass
   category: transport
   url: amenity=fuel
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - station service
@@ -306,16 +436,24 @@
     - fuel
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Stations-service et distribution de carburant
+      description: Localisation des stations-service (amenity=fuel) dans OpenStreetMap.
 - id: global-overpass-power-lines
-  name: OSM Overpass - Lignes électriques haute et moyenne tension
-  description: Tracé linéaire des lignes électriques aériennes haute tension (power=line) et moyenne/basse tension (power=minor_line).
+  name: OSM Overpass - High & Medium Voltage Power Lines
+  description: Linear geometry of overhead high-voltage power lines (power=line)
+    and minor distribution lines (power=minor_line).
   type: overpass
   category: utilities
   url: power=line|power=minor_line
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: utilities.qml
   tags:
     - ligne electrique
@@ -327,16 +465,25 @@
     - power
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Lignes électriques haute et moyenne tension
+      description: Tracé linéaire des lignes électriques aériennes haute tension
+        (power=line) et moyenne/basse tension (power=minor_line).
 - id: global-overpass-power-substations
-  name: OSM Overpass - Postes électriques et centrales de production
-  description: Localisation des postes de transformation électrique (power=substation) et centrales de production (power=plant).
+  name: OSM Overpass - Electrical Substations & Power Plants
+  description: Locations of electrical substations (power=substation) and power
+    generation plants (power=plant).
   type: overpass
   category: utilities
   url: power=substation|power=plant
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - poste electrique
@@ -347,16 +494,25 @@
     - substation
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Postes électriques et centrales de production
+      description: Localisation des postes de transformation électrique
+        (power=substation) et centrales de production (power=plant).
 - id: global-overpass-telecom-masts
-  name: OSM Overpass - Antennes relais et tours de télécommunications
-  description: Localisation des pylônes, mâts et tours radio/télécom (man_made=mast, man_made=communications_tower).
+  name: OSM Overpass - Telecom Masts & Communication Towers
+  description: Locations of radio/telecom masts and communication towers
+    (man_made=mast, man_made=communications_tower).
   type: overpass
   category: utilities
   url: man_made=mast|man_made=communications_tower|tower:type=communication
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: transport-point.qml
   tags:
     - antenne
@@ -369,16 +525,25 @@
     - tour de communication
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
-
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Antennes relais et tours de télécommunications
+      description: Localisation des pylônes, mâts et tours radio/télécom
+        (man_made=mast, man_made=communications_tower).
 - id: global-overpass-water-towers
-  name: OSM Overpass - Châteaux d'eau et stations de traitement des eaux
-  description: Localisation des châteaux d'eau (man_made=water_tower), réservoirs et stations d'épuration (man_made=wastewater_plant).
+  name: OSM Overpass - Water Towers & Wastewater Treatment Plants
+  description: Locations of water towers (man_made=water_tower), reservoirs, and
+    wastewater treatment plants (man_made=wastewater_plant).
   type: overpass
   category: utilities
   url: man_made=water_tower|man_made=wastewater_plant|man_made=water_works
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: hydrography.qml
   tags:
     - chateau d eau
@@ -389,4 +554,9 @@
     - water_tower
     - overpass
   license: ODbL-1.0
-  attribution: "© OpenStreetMap contributors (via Overpass API)"
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Châteaux d'eau et stations de traitement des eaux
+      description: Localisation des châteaux d'eau (man_made=water_tower), réservoirs
+        et stations d'épuration (man_made=wastewater_plant).

@@ -17,8 +17,12 @@ Toutes les sources se trouvent dans `packages/registry/sources/` :
 
 ```yaml
 id: fr-grandlyon-bornes-fontaines
-name: Métropole de Lyon - Bornes fontaines et points d'eau
-description: Réseau des bornes fontaines d'eau potable sur le territoire du Grand Lyon.
+name: Grand Lyon - Drinking Water Fountains
+description: Public drinking water fountains across the Greater Lyon metropolitan area.
+i18n:
+  fr:
+    name: Métropole de Lyon - Bornes-fontaines d'eau potable
+    description: Réseau des bornes-fontaines d'eau potable sur le territoire de la Métropole de Lyon (Data Grand Lyon).
 type: wfs
 category: hydrography
 url: https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=metropole-de-lyon:adr_voie_lieu.adrbornefontaine_latest

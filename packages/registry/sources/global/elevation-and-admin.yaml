@@ -1,11 +1,16 @@
 - id: global-copernicus-dem-glo30
   name: Copernicus DEM GLO-30 (30m)
-  description: Modèle Numérique de Surface (MNS / DEM) mondial à 30 mètres de résolution issu de la mission TanDEM-X (Copernicus).
+  description: Global 30-meter resolution Digital Surface Model (DSM / DEM)
+    derived from the TanDEM-X mission (Copernicus).
   type: vrt
   category: elevation
   url: /vsicurl/https://raw.githubusercontent.com/lambda2/geostrata/main/packages/registry/assets/vrt/copernicus-dem-glo30.vrt
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: elevation.qml
   tags:
     - copernicus
@@ -17,16 +22,26 @@
     - altitude
     - relief
   license: Copernicus DEM License (Free & Open)
-  attribution: © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA
-
+  attribution: © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018
+    provided under COPERNICUS by the European Union and ESA
+  i18n:
+    fr:
+      name: Copernicus DEM GLO-30 (30m)
+      description: Modèle Numérique de Surface (MNS / DEM) mondial à 30 mètres de
+        résolution issu de la mission TanDEM-X (Copernicus).
 - id: global-fieldmaps-adm0
-  name: GeoBoundaries / FieldMaps - Limites Administratives Mondiales (ADM0)
-  description: Frontières internationales et polygones des pays (niveau administratif ADM0) au format Cloud-Native FlatGeobuf.
+  name: GeoBoundaries / FieldMaps - Global Administrative Boundaries (ADM0)
+  description: International borders and country polygons (administrative level
+    ADM0) in cloud-native FlatGeobuf format.
   type: fgb
   category: admin
   url: /vsicurl/https://data.fieldmaps.io/adm0/osm/intl/adm0_polygons.fgb
   crs: EPSG:4326
-  bbox: [-180, -90, 180, 90]
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
   style_file: admin.qml
   tags:
     - adm0
@@ -37,3 +52,8 @@
     - limites administratives
   license: CC-BY-4.0 / ODbL-1.0
   attribution: © FieldMaps / geoBoundaries / OpenStreetMap contributors
+  i18n:
+    fr:
+      name: GeoBoundaries / FieldMaps - Limites Administratives Mondiales (ADM0)
+      description: Frontières internationales et polygones des pays (niveau
+        administratif ADM0) au format Cloud-Native FlatGeobuf.

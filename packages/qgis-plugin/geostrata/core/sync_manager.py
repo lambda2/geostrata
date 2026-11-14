@@ -16,10 +16,25 @@ from ..i18n import tr
 
 from .net import build_direct_opener
 
-DEFAULT_MANIFEST_URL = (
+# Published by the GitHub Pages workflow next to catalog.sqlite.gz.
+DEFAULT_MANIFEST_URL = "https://lambda2.github.io/geostrata/manifest.json"
+
+# Default of versions up to 1.1.2: it pointed into the git-ignored build folder of
+# the repository and never existed, so those installs could not refresh the catalog.
+_RETIRED_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/lambda2/geostrata/"
-    "main/packages/registry/dist/manifest.json"
+    "main/packages/registry/dist/manifest.json",
 )
+
+
+def _replace_retired_urls(urls: Sequence[str]) -> List[str]:
+    """Swap a retired default manifest URL for the current one, keeping order and uniqueness."""
+    migrated: List[str] = []
+    for url in urls:
+        current = DEFAULT_MANIFEST_URL if url in _RETIRED_MANIFEST_URLS else url
+        if current not in migrated:
+            migrated.append(current)
+    return migrated
 SETTINGS_MANIFEST_URLS_KEY = "geostrata/manifest_urls"
 
 
@@ -80,11 +95,15 @@ class SyncManager:
             settings = QgsSettings()
             raw_value = settings.value(SETTINGS_MANIFEST_URLS_KEY, None)
             if isinstance(raw_value, list) and raw_value:
-                return [str(u).strip() for u in raw_value if str(u).strip()]
+                return _replace_retired_urls(
+                    [str(u).strip() for u in raw_value if str(u).strip()]
+                )
             if isinstance(raw_value, str) and raw_value.strip():
                 parsed = json.loads(raw_value)
                 if isinstance(parsed, list) and parsed:
-                    return [str(u).strip() for u in parsed if str(u).strip()]
+                    return _replace_retired_urls(
+                        [str(u).strip() for u in parsed if str(u).strip()]
+                    )
         except Exception as error:
             note_ignored(error)
         return [DEFAULT_MANIFEST_URL]

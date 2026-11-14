@@ -3,6 +3,9 @@ name: Publish Catalog & QGIS Plugin Repository to GitHub Pages
 on:
   push:
     branches: [main]
+  # Weekly refresh so installed plugins get new generated layers and current link statuses without a commit.
+  schedule:
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:

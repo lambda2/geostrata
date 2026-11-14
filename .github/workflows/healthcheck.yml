@@ -51,6 +51,20 @@ jobs:
           grep -vE '^\[OK\]' "$RUNNER_TEMP/healthcheck.log" || true
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
 
+      - name: Check that the published catalog can be downloaded by the plugin
+        working-directory: .
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, re, urllib.parse, urllib.request
+          source = open("packages/qgis-plugin/geostrata/core/sync_manager.py", encoding="utf-8").read()
+          manifest_url = re.search(r'DEFAULT_MANIFEST_URL = "([^"]+)"', source).group(1)
+          manifest = json.load(urllib.request.urlopen(manifest_url, timeout=60))
+          gzip_url = urllib.parse.urljoin(manifest_url, manifest["gzip_file"])
+          payload = urllib.request.urlopen(gzip_url, timeout=120).read()
+          assert hashlib.sha256(payload).hexdigest() == manifest["gzip_sha256"], "published catalog does not match its manifest"
+          print(f"{manifest_url}: {manifest['source_count']} sources, built {manifest['generated_at']}, {len(payload)} bytes")
+          PY
+
       - name: Healthcheck summary
         run: |
           python3 .github/workflows/scripts/health-summary.py \

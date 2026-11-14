@@ -7,8 +7,11 @@ description=Spatial catalog search engine in the QGIS Locator Bar (Ctrl+K) for l
 description[fr]=Moteur de recherche spatialisé (Ctrl+K) de couches géographiques locales et mondiales (WFS, WMTS, COG, VRT, FlatGeobuf, Overpass, XYZ).
 about=Geostrata integrates a static spatial catalog (SQLite R-Tree + FTS5) directly into the QGIS Universal Locator Bar (Ctrl+K, prefix gst). Type a keyword (e.g. water, dem, hospital, orthophoto) to find local, national, and global layers intersecting the active map canvas, stream them directly (Enter), or clip and extract them offline to GeoPackage/GeoTIFF (Shift + Enter).
 about[fr]=Geostrata intègre un catalogue spatial statique (SQLite R-Tree + FTS5) directement dans la barre de recherche universelle de QGIS (Ctrl+K, préfixe gst). Tapez un mot-clé (ex: eau, dem, hopital, orthophoto) pour trouver les couches locales et mondiales qui intersectent l'emprise actuelle du canevas, les charger en streaming (Entrée) ou les extraire hors-ligne en GeoPackage/GeoTIFF (Maj + Entrée).
-version=1.1.1
-changelog=1.1.1
+version=1.1.2
+changelog=1.1.2
+    - Security scan of plugins.qgis.org: catalog queries are constant SQL with bound parameters, downloads accept http(s) URLs only, ignored errors are traced instead of silently dropped, the bundled manifest no longer carries checksums.
+    - Qt6: fully scoped enums (QgsTask.Flag.CanCancel, QgsWkbTypes.GeometryType.PolygonGeometry).
+    1.1.1
     - WFS layers whose features carry Z values (IGN BD TOPO) no longer raise "Received feature geometry has Z values but the layer type does not" on QGIS 4.
     - Message bar: identical warnings are grouped into one item with a counter and network errors disappear after a few seconds (can be turned off in the settings).
     1.1.0

@@ -50,6 +50,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
+from ..diagnostics import note_ignored
 from ..i18n import tr
 
 from .net import build_direct_opener
@@ -134,8 +135,8 @@ def default_cache_dir() -> Path:
         )
         if base:
             return Path(base) / "geostrata" / "files"
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return Path.home() / ".cache" / "geostrata" / "files"
 
 
@@ -147,8 +148,8 @@ def configured_cache_dir() -> Path:
         raw = str(QgsSettings().value(SETTINGS_CACHE_DIR_KEY, "") or "").strip()
         if raw:
             return Path(raw)
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return default_cache_dir()
 
 
@@ -161,8 +162,8 @@ def configured_max_bytes() -> int:
         gigabytes = float(
             QgsSettings().value(SETTINGS_CACHE_MAX_GB_KEY, DEFAULT_MAX_CACHE_GB)
         )
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return int(max(1.0, gigabytes) * BYTES_PER_GB)
 
 
@@ -205,8 +206,8 @@ def _dir_size(path: Path) -> int:
         for name in files:
             try:
                 total += os.path.getsize(os.path.join(root, name))
-            except OSError:
-                pass
+            except OSError as error:
+                note_ignored(error)
     return total
 
 
@@ -456,8 +457,8 @@ def _remove_part(part_path: Path) -> None:
     for path in (part_path, part_path.with_name(part_path.name + ".json")):
         try:
             path.unlink()
-        except OSError:
-            pass
+        except OSError as error:
+            note_ignored(error)
 
 
 def _zip_members_for_target(
@@ -773,8 +774,8 @@ class FileCache:
         meta["last_used"] = time.time()
         try:
             _write_json(entry_dir / META_NAME, meta)
-        except OSError:
-            pass
+        except OSError as error:
+            note_ignored(error)
         return self._copy_from_meta(entry_dir, meta, True, stale_reason=stale_reason)
 
     @staticmethod

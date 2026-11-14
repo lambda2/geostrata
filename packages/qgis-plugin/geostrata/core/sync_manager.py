@@ -11,9 +11,10 @@ import urllib.request
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence
 
+from ..diagnostics import note_ignored
 from ..i18n import tr
 
-from .net import https_context
+from .net import build_direct_opener
 
 DEFAULT_MANIFEST_URL = (
     "https://raw.githubusercontent.com/lambda2/geostrata/"
@@ -84,8 +85,8 @@ class SyncManager:
                 parsed = json.loads(raw_value)
                 if isinstance(parsed, list) and parsed:
                     return [str(u).strip() for u in parsed if str(u).strip()]
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
         return [DEFAULT_MANIFEST_URL]
 
     def set_manifest_urls(self, urls: Sequence[str]) -> None:
@@ -98,8 +99,8 @@ class SyncManager:
 
             settings = QgsSettings()
             settings.setValue(SETTINGS_MANIFEST_URLS_KEY, json.dumps(cleaned))
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
     def ensure_bundled_fallback(self) -> None:
         """Seed or update the cache with bundled catalog.sqlite if newer or missing."""
@@ -166,8 +167,11 @@ class SyncManager:
                     info["source_count"] = str(manifest_data.get("source_count", "-"))
                     info["generated_at"] = str(manifest_data.get("generated_at", "-"))
                     info["sha256"] = str(manifest_data.get("sha256", "-"))[:16]
-                except Exception:
-                    pass
+                    if info["sha256"] == "-" and sqlite_path.is_file():
+                        # The manifest bundled with the plugin carries no checksum.
+                        info["sha256"] = compute_sha256_file(sqlite_path)[:16]
+                except Exception as error:
+                    note_ignored(error)
             statuses.append(info)
         return statuses
 
@@ -186,7 +190,7 @@ class SyncManager:
             manifest_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=timeout_sec, context=https_context()) as response:
+        with build_direct_opener().open(req, timeout=timeout_sec) as response:
             manifest_bytes = response.read()
 
         manifest_data = json.loads(manifest_bytes.decode("utf-8"))
@@ -207,7 +211,7 @@ class SyncManager:
             gzip_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(gz_req, timeout=timeout_sec, context=https_context()) as gz_response:
+        with build_direct_opener().open(gz_req, timeout=timeout_sec) as gz_response:
             compressed_bytes = gz_response.read()
 
         remote_gzip_sha256 = str(manifest_data.get("gzip_sha256", ""))
@@ -252,7 +256,7 @@ class SyncManager:
             def __init__(self) -> None:
                 super().__init__(
                     tr("Geostrata: catalog synchronization"),
-                    QgsTask.CanCancel,
+                    QgsTask.Flag.CanCancel,
                 )
                 self.synced_paths: List[Path] = []
                 self.errors: List[str] = []

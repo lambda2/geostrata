@@ -14,6 +14,7 @@ from qgis.gui import QgsRubberBand
 from qgis.PyQt.QtCore import QObject, QTimer
 from qgis.PyQt.QtGui import QColor
 
+from ..diagnostics import note_ignored
 from ..core.db_client import CatalogSourceRecord
 
 try:  # QGIS >= 3.30
@@ -23,7 +24,7 @@ try:  # QGIS >= 3.30
 except Exception:  # QGIS 3.28
     from qgis.core import QgsWkbTypes
 
-    _POLYGON_GEOMETRY = QgsWkbTypes.PolygonGeometry
+    _POLYGON_GEOMETRY = QgsWkbTypes.GeometryType.PolygonGeometry
 
 PREVIEW_SHOWN = "shown"
 PREVIEW_WORLDWIDE = "worldwide"
@@ -134,5 +135,5 @@ class CoveragePreview(QObject):
             canvas = self._canvas()
             if canvas is not None and canvas.scene() is not None:
                 canvas.scene().removeItem(band)
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)

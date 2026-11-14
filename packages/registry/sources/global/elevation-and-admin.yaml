@@ -29,13 +29,14 @@
       name: Copernicus DEM GLO-30 (30m)
       description: Modèle Numérique de Surface (MNS / DEM) mondial à 30 mètres de
         résolution issu de la mission TanDEM-X (Copernicus).
-- id: global-fieldmaps-adm0
-  name: GeoBoundaries / FieldMaps - Global Administrative Boundaries (ADM0)
-  description: International borders and country polygons (administrative level
-    ADM0) in cloud-native FlatGeobuf format.
-  type: fgb
+- id: global-naturalearth-adm0
+  name: Natural Earth - World Countries (ADM0, 1:10m)
+  description: Country polygons (administrative level ADM0) from Natural Earth at
+    1:10 million scale. De facto boundaries, suited to overview and regional
+    maps rather than large-scale work.
+  type: geojson
   category: admin
-  url: /vsicurl/https://data.fieldmaps.io/adm0/osm/intl/adm0_polygons.fgb
+  url: /vsicurl/https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson
   crs: EPSG:4326
   bbox:
     - -180
@@ -45,15 +46,49 @@
   style_file: admin.qml
   tags:
     - adm0
+    - countries
+    - borders
     - pays
     - frontieres
-    - geoboundaries
-    - fieldmaps
+    - natural earth
     - limites administratives
-  license: CC-BY-4.0 / ODbL-1.0
-  attribution: © FieldMaps / geoBoundaries / OpenStreetMap contributors
+  license: Public Domain
+  attribution: Made with Natural Earth
   i18n:
     fr:
-      name: GeoBoundaries / FieldMaps - Limites Administratives Mondiales (ADM0)
-      description: Frontières internationales et polygones des pays (niveau
-        administratif ADM0) au format Cloud-Native FlatGeobuf.
+      name: Natural Earth - Pays du monde (ADM0, 1:10m)
+      description: Polygones des pays (niveau administratif ADM0) de Natural Earth
+        au 1:10 000 000. Frontières de facto, adaptées aux cartes d'ensemble et
+        régionales plutôt qu'aux grandes échelles.
+- id: global-naturalearth-adm1
+  name: Natural Earth - World States & Provinces (ADM1, 1:10m)
+  description: Polygons of states, regions and provinces (administrative level
+    ADM1) for the whole world from Natural Earth at 1:10 million scale. A 40 MB
+    file, expect a few seconds of loading. For a single country, prefer its
+    geoBoundaries layer.
+  type: geojson
+  category: admin
+  url: /vsicurl/https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_1_states_provinces.geojson
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: admin.qml
+  tags:
+    - adm1
+    - regions
+    - provinces
+    - states
+    - natural earth
+    - limites administratives
+  license: Public Domain
+  attribution: Made with Natural Earth
+  i18n:
+    fr:
+      name: Natural Earth - États et provinces du monde (ADM1, 1:10m)
+      description: Polygones des États, régions et provinces (niveau administratif
+        ADM1) du monde entier, de Natural Earth au 1:10 000 000. Fichier de
+        40 Mo, comptez quelques secondes de chargement. Pour un seul pays,
+        préférez sa couche geoBoundaries.

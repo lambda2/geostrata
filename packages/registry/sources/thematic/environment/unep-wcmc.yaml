@@ -1,0 +1,55 @@
+defaults:
+  license: WDPA terms of use - no commercial use without prior written permission of UNEP-WCMC, no redistribution or sub-licensing of the data (https://www.protectedplanet.net/en/legal)
+  attribution: "UNEP-WCMC and IUCN (2026), Protected Planet: The World Database on Protected and Conserved Areas (WDPCA), www.protectedplanet.net"
+  tags:
+    - wdpa
+    - wdpca
+    - protected planet
+    - unep-wcmc
+    - iucn
+    - uicn
+sources:
+  - id: global-wdpa-protected-areas
+    name: WDPA - World Database on Protected Areas (Protected Planet)
+    description: >-
+      Terrestrial and marine protected areas of the world as
+      reported by governments to UNEP-WCMC and IUCN (national parks, nature
+      reserves, Ramsar and World Heritage sites and others), drawn as green
+      (land) and blue (marine) areas. Pre-rendered picture only, down to about
+      1:150,000 (zoom 12); attributes cannot be queried. Restricted terms -
+      no commercial use without permission from UNEP-WCMC and no
+      redistribution of the data.
+    type: xyz
+    category: landuse
+    url: https://data-gis.unep-wcmc.org/server/rest/services/ProtectedSites/The_World_Database_of_Protected_Areas/MapServer/tile/{z}/{y}/{x}
+    crs: EPSG:3857
+    bbox: [-180, -85.05, 180, 85.05]
+    min_zoom: 0
+    max_zoom: 12
+    data_date: updated monthly
+    tags:
+      - protected areas
+      - aires protegees
+      - national park
+      - parc national
+      - nature reserve
+      - reserve naturelle
+      - conservation
+      - biodiversity
+      - biodiversite
+      - ramsar
+      - marine protected area
+      - aire marine protegee
+      - environment
+      - environnement
+    i18n:
+      fr:
+        name: WDPA - Base de données mondiale des aires protégées (Protected Planet)
+        description: >-
+          Aires protégées terrestres et marines du monde déclarées
+          par les États au UNEP-WCMC et à l'UICN (parcs nationaux, réserves
+          naturelles, sites Ramsar et du patrimoine mondial, etc.), dessinées
+          en vert (terre) et bleu (mer). Image pré-rendue uniquement, jusqu'à
+          environ 1:150 000 (zoom 12) ; les attributs ne sont pas
+          interrogeables. Conditions restrictives - pas d'usage commercial
+          sans autorisation du UNEP-WCMC ni de redistribution des données.

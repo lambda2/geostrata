@@ -52,6 +52,10 @@ body:
         - imagery
         - utilities
         - crisis
+        - population
+        - health
+        - hazard
+        - weather
     validations:
       required: true
 

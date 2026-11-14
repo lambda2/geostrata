@@ -1,0 +1,641 @@
+# HydroSHEDS vector products (WWF / McGill University), one zipped shapefile per continental region.
+# Region codes used by HydroSHEDS: af ar as au eu gr na sa si.
+# The shapefiles carry no spatial index, so GDAL reads a whole file through /vsizip//vsicurl/
+# before drawing: the sizes quoted in the descriptions translate directly into waiting time.
+defaults:
+  type: archive
+  category: hydrography
+  crs: EPSG:4326
+  license: HydroSHEDS license agreement - free for scientific, educational and commercial use, attribution required (see the HydroSHEDS Technical Documentation for redistribution terms)
+  attribution: HydroSHEDS (www.hydrosheds.org) - Lehner, B. and Grill, G. (2013), Hydrological Processes 27(15)
+  data_date: v1.0 (2013-2019), derived from SRTM 2000
+  tags:
+    - hydrosheds
+    - wwf
+    - hydrology
+    - hydrologie
+    - hydrography
+    - hydrographie
+    - srtm
+sources:
+  - id: africa-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Africa"
+    description: "Vector river network of the HydroSHEDS Africa region derived from the 15 arc-second (about 500 m) SRTM hydrography: 1.5 million river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 108 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_af_shp.zip
+    archive_target: HydroRIVERS_v10_af_shp/HydroRIVERS_v10_af.shp
+    bbox: [-18, -35, 54.5, 37.5]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - africa
+      - afrique
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Afrique"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Afrique », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 1,5 million tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 108 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: africa-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Africa"
+    description: "Watershed polygons of the HydroSHEDS Africa region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_af_lev01-12_v1c.zip
+    archive_target: hybas_af_lev04_v1c.shp
+    bbox: [-18, -35, 54.5, 37.5]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - africa
+      - afrique
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Afrique"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Afrique » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: africa-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Africa"
+    description: "Watershed polygons of the HydroSHEDS Africa region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_af_lev01-12_v1c.zip
+    archive_target: hybas_af_lev06_v1c.shp
+    bbox: [-18, -35, 54.5, 37.5]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - africa
+      - afrique
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Afrique"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Afrique » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: arctic-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - North American Arctic"
+    description: "Vector river network of the HydroSHEDS North American Arctic region derived from the 15 arc-second (about 500 m) SRTM hydrography: 324,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 22 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_ar_shp.zip
+    archive_target: HydroRIVERS_v10_ar_shp/HydroRIVERS_v10_ar.shp
+    bbox: [-180, 51, -61, 83.5]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - north american arctic
+      - arctique nord-americain
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Arctique nord-américain"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Arctique nord-américain », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 324 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 22 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: arctic-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - North American Arctic"
+    description: "Watershed polygons of the HydroSHEDS North American Arctic region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_ar_lev01-12_v1c.zip
+    archive_target: hybas_ar_lev04_v1c.shp
+    bbox: [-180, 51, -61, 83.5]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - north american arctic
+      - arctique nord-americain
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Arctique nord-américain"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Arctique nord-américain » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: arctic-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - North American Arctic"
+    description: "Watershed polygons of the HydroSHEDS North American Arctic region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_ar_lev01-12_v1c.zip
+    archive_target: hybas_ar_lev06_v1c.shp
+    bbox: [-180, 51, -61, 83.5]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - north american arctic
+      - arctique nord-americain
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Arctique nord-américain"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Arctique nord-américain » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: asia-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Asia"
+    description: "Vector river network of the HydroSHEDS Asia region derived from the 15 arc-second (about 500 m) SRTM hydrography: 1.4 million river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 91 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_as_shp.zip
+    archive_target: HydroRIVERS_v10_as_shp/HydroRIVERS_v10_as.shp
+    bbox: [57.5, 1, 150.5, 56]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - asia
+      - asie
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Asie"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Asie », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 1,4 million tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 91 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: asia-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Asia"
+    description: "Watershed polygons of the HydroSHEDS Asia region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_as_lev01-12_v1c.zip
+    archive_target: hybas_as_lev04_v1c.shp
+    bbox: [57.5, 1, 150.5, 56]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - asia
+      - asie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Asie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Asie » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: asia-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Asia"
+    description: "Watershed polygons of the HydroSHEDS Asia region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_as_lev01-12_v1c.zip
+    archive_target: hybas_as_lev06_v1c.shp
+    bbox: [57.5, 1, 150.5, 56]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - asia
+      - asie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Asie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Asie » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: australasia-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Australasia"
+    description: "Vector river network of the HydroSHEDS Australasia region derived from the 15 arc-second (about 500 m) SRTM hydrography: 836,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 49 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_au_shp.zip
+    archive_target: HydroRIVERS_v10_au_shp/HydroRIVERS_v10_au.shp
+    bbox: [95, -55, 180, 21]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - australasia
+      - australasie
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Australasie"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Australasie », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 836 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 49 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: australasia-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Australasia"
+    description: "Watershed polygons of the HydroSHEDS Australasia region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_au_lev01-12_v1c.zip
+    archive_target: hybas_au_lev04_v1c.shp
+    bbox: [95, -55, 180, 21]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - australasia
+      - australasie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Australasie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Australasie » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: australasia-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Australasia"
+    description: "Watershed polygons of the HydroSHEDS Australasia region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_au_lev01-12_v1c.zip
+    archive_target: hybas_au_lev06_v1c.shp
+    bbox: [95, -55, 180, 21]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - australasia
+      - australasie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Australasie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Australasie » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: europe-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Europe and Middle East"
+    description: "Vector river network of the HydroSHEDS Europe and Middle East region derived from the 15 arc-second (about 500 m) SRTM hydrography: 939,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 68 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_eu_shp.zip
+    archive_target: HydroRIVERS_v10_eu_shp/HydroRIVERS_v10_eu.shp
+    bbox: [-24.5, 12.5, 69.6, 82]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - europe and middle east
+      - europe et moyen-orient
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Europe et Moyen-Orient"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Europe et Moyen-Orient », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 939 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 68 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: europe-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Europe and Middle East"
+    description: "Watershed polygons of the HydroSHEDS Europe and Middle East region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_eu_lev01-12_v1c.zip
+    archive_target: hybas_eu_lev04_v1c.shp
+    bbox: [-24.5, 12.5, 69.6, 82]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - europe and middle east
+      - europe et moyen-orient
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Europe et Moyen-Orient"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Europe et Moyen-Orient » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: europe-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Europe and Middle East"
+    description: "Watershed polygons of the HydroSHEDS Europe and Middle East region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_eu_lev01-12_v1c.zip
+    archive_target: hybas_eu_lev06_v1c.shp
+    bbox: [-24.5, 12.5, 69.6, 82]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - europe and middle east
+      - europe et moyen-orient
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Europe et Moyen-Orient"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Europe et Moyen-Orient » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: greenland-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Greenland"
+    description: "Vector river network of the HydroSHEDS Greenland region derived from the 15 arc-second (about 500 m) SRTM hydrography: 137,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 9 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_gr_shp.zip
+    archive_target: HydroRIVERS_v10_gr_shp/HydroRIVERS_v10_gr.shp
+    bbox: [-73, 59.7, -12, 83.7]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - greenland
+      - groenland
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Groenland"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Groenland », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 137 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 9 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: greenland-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Greenland"
+    description: "Watershed polygons of the HydroSHEDS Greenland region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_gr_lev01-12_v1c.zip
+    archive_target: hybas_gr_lev04_v1c.shp
+    bbox: [-73, 59.7, -12, 83.7]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - greenland
+      - groenland
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Groenland"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Groenland » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: greenland-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Greenland"
+    description: "Watershed polygons of the HydroSHEDS Greenland region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_gr_lev01-12_v1c.zip
+    archive_target: hybas_gr_lev06_v1c.shp
+    bbox: [-73, 59.7, -12, 83.7]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - greenland
+      - groenland
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Groenland"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Groenland » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: northamerica-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - North America and Caribbean"
+    description: "Vector river network of the HydroSHEDS North America and Caribbean region derived from the 15 arc-second (about 500 m) SRTM hydrography: 986,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 66 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_na_shp.zip
+    archive_target: HydroRIVERS_v10_na_shp/HydroRIVERS_v10_na.shp
+    bbox: [-138, 5.5, -52.5, 62.7]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - north america and caribbean
+      - amerique du nord et caraïbes
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Amérique du Nord et Caraïbes"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Amérique du Nord et Caraïbes », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 986 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 66 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: northamerica-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - North America and Caribbean"
+    description: "Watershed polygons of the HydroSHEDS North America and Caribbean region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_na_lev01-12_v1c.zip
+    archive_target: hybas_na_lev04_v1c.shp
+    bbox: [-138, 5.5, -52.5, 62.7]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - north america and caribbean
+      - amerique du nord et caraïbes
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Amérique du Nord et Caraïbes"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Amérique du Nord et Caraïbes » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: northamerica-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - North America and Caribbean"
+    description: "Watershed polygons of the HydroSHEDS North America and Caribbean region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_na_lev01-12_v1c.zip
+    archive_target: hybas_na_lev06_v1c.shp
+    bbox: [-138, 5.5, -52.5, 62.7]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - north america and caribbean
+      - amerique du nord et caraïbes
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Amérique du Nord et Caraïbes"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Amérique du Nord et Caraïbes » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: southamerica-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - South America"
+    description: "Vector river network of the HydroSHEDS South America region derived from the 15 arc-second (about 500 m) SRTM hydrography: 1.6 million river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 95 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_sa_shp.zip
+    archive_target: HydroRIVERS_v10_sa_shp/HydroRIVERS_v10_sa.shp
+    bbox: [-92, -56, -34.7, 15]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - south america
+      - amerique du sud
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Amérique du Sud"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Amérique du Sud », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 1,6 million tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 95 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: southamerica-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - South America"
+    description: "Watershed polygons of the HydroSHEDS South America region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_sa_lev01-12_v1c.zip
+    archive_target: hybas_sa_lev04_v1c.shp
+    bbox: [-92, -56, -34.7, 15]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - south america
+      - amerique du sud
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Amérique du Sud"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Amérique du Sud » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: southamerica-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - South America"
+    description: "Watershed polygons of the HydroSHEDS South America region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_sa_lev01-12_v1c.zip
+    archive_target: hybas_sa_lev06_v1c.shp
+    bbox: [-92, -56, -34.7, 15]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - south america
+      - amerique du sud
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Amérique du Sud"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Amérique du Sud » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: siberia-hydrosheds-rivers
+    name: "HydroRIVERS - River Network - Siberia"
+    description: "Vector river network of the HydroSHEDS Siberia region derived from the 15 arc-second (about 500 m) SRTM hydrography: 678,000 river reaches draining at least 10 km2 or carrying 0.1 m3/s, each with length, upstream area, Strahler order and modelled average discharge. Lines follow the terrain model, not surveyed banks, so expect offsets of a few hundred metres. 47 MB zipped shapefile without spatial index, read in full on every redraw: slow first load (a minute or more), download it for sustained work."
+    url: https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_si_shp.zip
+    archive_target: HydroRIVERS_v10_si_shp/HydroRIVERS_v10_si.shp
+    bbox: [59, 45.5, 180, 81.2]
+    tags:
+      - hydrorivers
+      - rivers
+      - river network
+      - rivieres
+      - fleuves
+      - cours d'eau
+      - reseau hydrographique
+      - discharge
+      - debit
+      - strahler
+      - siberia
+      - siberie
+    i18n:
+      fr:
+        name: "HydroRIVERS - Réseau hydrographique - Sibérie"
+        description: "Réseau hydrographique vectoriel de la région HydroSHEDS « Sibérie », dérivé de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m) : 678 000 tronçons drainant au moins 10 km2 ou débitant 0,1 m3/s, avec longueur, surface amont, ordre de Strahler et débit moyen modélisé. Les lignes suivent le modèle de terrain et non les berges levées : décalages de quelques centaines de mètres possibles. Shapefile zippé de 47 Mo sans index spatial, relu en entier à chaque rafraîchissement : premier chargement lent (une minute ou plus), à télécharger pour un travail prolongé."
+  - id: siberia-hydrosheds-basins-l4
+    name: "HydroBASINS - Watersheds Level 4 - Siberia"
+    description: "Watershed polygons of the HydroSHEDS Siberia region at Pfafstetter level 4 of 12: large river basins and their main sub-basins. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 4 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_si_lev01-12_v1c.zip
+    archive_target: hybas_si_lev04_v1c.shp
+    bbox: [59, 45.5, 180, 81.2]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 4
+      - niveau 4
+      - siberia
+      - siberie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 4 - Sibérie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Sibérie » au niveau Pfafstetter 4 sur 12 : grands bassins fluviaux et leurs principaux sous-bassins. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 4 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."
+  - id: siberia-hydrosheds-basins-l6
+    name: "HydroBASINS - Watersheds Level 6 - Siberia"
+    description: "Watershed polygons of the HydroSHEDS Siberia region at Pfafstetter level 6 of 12: medium sub-basins, a practical unit for district-level flood and water analysis. Delineated from the 15 arc-second (about 500 m) SRTM hydrography, each polygon carries its Pfafstetter code, area, upstream area and the id of the next basin downstream. Level 6 is read from inside a zip that holds all 12 levels; the shapefile has no spatial index and is read in full, so allow some seconds to a minute on first load."
+    url: https://data.hydrosheds.org/file/hydrobasins/standard/hybas_si_lev01-12_v1c.zip
+    archive_target: hybas_si_lev06_v1c.shp
+    bbox: [59, 45.5, 180, 81.2]
+    tags:
+      - hydrobasins
+      - basins
+      - watersheds
+      - catchments
+      - bassins versants
+      - bassin versant
+      - sous-bassins
+      - pfafstetter
+      - level 6
+      - niveau 6
+      - siberia
+      - siberie
+    i18n:
+      fr:
+        name: "HydroBASINS - Bassins versants niveau 6 - Sibérie"
+        description: "Polygones de bassins versants de la région HydroSHEDS « Sibérie » au niveau Pfafstetter 6 sur 12 : sous-bassins de taille moyenne, unité pratique pour l'analyse des crues et de l'eau à l'échelle d'un district. Délimités à partir de l'hydrographie SRTM à 15 secondes d'arc (environ 500 m), chaque polygone porte son code Pfafstetter, sa surface, sa surface amont et l'identifiant du bassin aval. Le niveau 6 est lu dans un zip contenant les 12 niveaux ; le shapefile n'a pas d'index spatial et est lu en entier : compter de quelques secondes à une minute au premier chargement."

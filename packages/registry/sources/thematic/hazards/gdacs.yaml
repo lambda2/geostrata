@@ -1,0 +1,78 @@
+defaults:
+  category: hazard
+  license: GDACS Terms of Use (March 2025) - no named open licence; automatic,
+    indicative information provided "as is", not to be used for decision making
+    without confirmation; credit GDACS
+  attribution: GDACS - Global Disaster Alert and Coordination System (European Commission JRC, UN OCHA, UNOSAT)
+  tags:
+    - gdacs
+    - alert
+    - alerte
+    - disaster
+    - catastrophe
+    - emergency
+    - urgence
+    - live
+    - temps reel
+sources:
+  - id: global-gdacs-events
+    name: GDACS - Current Disaster Events (All Alert Levels)
+    description: Live point feed of the 100 most recent disaster events followed
+      by GDACS (earthquakes, tropical cyclones, floods, volcanoes, droughts,
+      wildfires) with alert level (green, orange, red), severity and affected
+      country. One point per event at its centroid, not the impact footprint.
+      Automatic alerts, not reviewed by an expert.
+    type: geojson
+    url: https://www.gdacs.org/gdacsapi/api/events/geteventlist/EVENTS4APP
+    priority: 3
+    data_date: live feed, updated within minutes of a new event
+    tags:
+      - earthquake
+      - seisme
+      - cyclone
+      - flood
+      - inondation
+      - volcano
+      - volcan
+      - drought
+      - secheresse
+      - wildfire
+      - feu de foret
+    i18n:
+      fr:
+        name: GDACS - Catastrophes en cours (tous niveaux d'alerte)
+        description: Flux ponctuel en direct des 100 événements les plus récents
+          suivis par GDACS (séismes, cyclones tropicaux, inondations, volcans,
+          sécheresses, feux de forêt) avec niveau d'alerte (vert, orange, rouge),
+          sévérité et pays touché. Un point par événement, placé à son centroïde
+          et non sur l'emprise des dégâts. Alertes automatiques, non validées par
+          un expert.
+  - id: global-gdacs-alerts-orange-red
+    name: GDACS - Orange and Red Alerts
+    description: Point feed limited to GDACS orange and red alerts, the events
+      likely to need international assistance. Without a date filter the service
+      returns several years of such events (82 back to 2022 when tested), so
+      filter on the fromdate/todate fields to keep ongoing ones. One point per
+      event at its centroid.
+    type: geojson
+    url: https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?alertlevel=orange;red
+    priority: 2
+    data_date: live feed, history back to about 4 years
+    tags:
+      - orange
+      - red
+      - rouge
+      - earthquake
+      - seisme
+      - cyclone
+      - flood
+      - inondation
+    i18n:
+      fr:
+        name: GDACS - Alertes orange et rouges
+        description: Flux ponctuel limité aux alertes GDACS orange et rouges,
+          c'est-à-dire aux événements susceptibles de nécessiter une aide
+          internationale. Sans filtre de date, le service renvoie plusieurs années
+          d'alertes (82 depuis 2022 lors du test), filtrer sur les champs
+          fromdate/todate pour ne garder que les événements en cours. Un point
+          par événement, placé à son centroïde.

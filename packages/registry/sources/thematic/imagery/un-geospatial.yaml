@@ -1,0 +1,53 @@
+defaults:
+  attribution: Produced by United Nations Geospatial
+  tags:
+    - un
+    - onu
+    - united nations
+    - nations unies
+    - clearmap
+    - clear map
+sources:
+  - id: global-un-clearmap-webtopo
+    name: UN Clear Map - WebTopo (UN boundary depiction)
+    description: >-
+      Background reference map of the United Nations with countries,
+      capitals, major cities and relief, drawing international boundaries,
+      disputed areas and names as the UN Secretariat does. World to country
+      scale only (tiles stop at zoom 7). Produced for the UN Secretariat and
+      community; no open licence is published, UN offices must seek clearance
+      from UN Geospatial before issuing maps on it, and the UN boundary
+      disclaimer applies.
+    type: xyz
+    category: basemap
+    url: https://geoservices.un.org/arcgis/rest/services/ClearMap_WebTopo/MapServer/tile/{z}/{y}/{x}
+    crs: EPSG:3857
+    bbox: [-180, -85.05, 180, 85.05]
+    min_zoom: 0
+    max_zoom: 7
+    license: No open licence published - produced for the United Nations Secretariat and community; UN boundary disclaimer applies, clearance from UN Geospatial required for UN publications
+    data_date: maintained by UN Geospatial
+    tags:
+      - basemap
+      - fond de carte
+      - boundaries
+      - frontieres
+      - disputed
+      - litige
+      - countries
+      - pays
+      - humanitarian
+      - humanitaire
+    i18n:
+      fr:
+        name: UN Clear Map - WebTopo (frontières selon l'ONU)
+        description: >-
+          Fond de carte de référence des Nations unies avec pays,
+          capitales, grandes villes et relief, représentant les frontières
+          internationales, les zones contestées et les noms comme le fait le
+          Secrétariat de l'ONU. Échelles du monde au pays uniquement (tuiles
+          jusqu'au zoom 7). Produit pour le Secrétariat et la communauté des
+          Nations unies ; aucune licence ouverte n'est publiée, les bureaux de
+          l'ONU doivent obtenir l'accord de UN Geospatial avant de publier une
+          carte sur ce fond, et l'avertissement de l'ONU sur les frontières
+          s'applique.

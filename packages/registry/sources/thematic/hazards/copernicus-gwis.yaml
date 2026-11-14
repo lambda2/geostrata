@@ -1,0 +1,57 @@
+defaults:
+  category: hazard
+  type: wms
+  license: Copernicus Emergency Management Service information - free, full
+    and open access under Regulation (EU) 2021/696, source must be credited
+  attribution: © European Union, Copernicus Emergency Management Service - Global Wildfire Information System (GWIS)
+  tags:
+    - copernicus
+    - gwis
+    - effis
+    - fire
+    - feu
+    - incendie
+    - wildfire
+    - feu de foret
+    - hotspot
+    - point chaud
+    - active fire
+    - feux actifs
+sources:
+  - id: global-gwis-active-fires-viirs
+    name: Copernicus GWIS - Active Fire Hotspots, VIIRS
+    description: Pre-rendered map of recent active fire hotspots detected by
+      VIIRS (375 m), as published in the Global Wildfire Information System
+      viewer. The service picks its own recent time window when no TIME is
+      given. Image only, no attributes; use the FIRMS layers for point data.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=viirs.hs&STYLES=default&FORMAT=image/png
+    data_date: near real time, updated several times a day
+    tags:
+      - viirs
+    i18n:
+      fr:
+        name: Copernicus GWIS - Points chauds de feux actifs, VIIRS
+        description: Carte pré-rendue des points chauds de feux actifs récents
+          détectés par VIIRS (375 m), telle que publiée dans le visualiseur du
+          Global Wildfire Information System. Le service choisit lui-même sa
+          fenêtre temporelle récente si aucun paramètre TIME n'est fourni. Image
+          seule, sans attributs, utiliser les couches FIRMS pour des données
+          ponctuelles.
+  - id: global-gwis-active-fires-modis
+    name: Copernicus GWIS - Active Fire Hotspots, MODIS
+    description: Pre-rendered map of recent active fire hotspots detected by
+      MODIS (1 km), as published in the Global Wildfire Information System
+      viewer. The service picks its own recent time window when no TIME is
+      given. Image only, no attributes.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=modis.hs&STYLES=default&FORMAT=image/png
+    data_date: near real time, updated several times a day
+    tags:
+      - modis
+    i18n:
+      fr:
+        name: Copernicus GWIS - Points chauds de feux actifs, MODIS
+        description: Carte pré-rendue des points chauds de feux actifs récents
+          détectés par MODIS (1 km), telle que publiée dans le visualiseur du
+          Global Wildfire Information System. Le service choisit lui-même sa
+          fenêtre temporelle récente si aucun paramètre TIME n'est fourni. Image
+          seule, sans attributs.

@@ -1,0 +1,45 @@
+# NASA SEDAC / CIESIN population layers served as pre-rendered tiles by NASA GIBS.
+defaults:
+  category: population
+  license: Open data without restriction (NASA EOSDIS data use guidance), citation requested
+  attribution: CIESIN - Columbia University, Gridded Population of the World v4.11, NASA SEDAC; tiles by NASA EOSDIS GIBS
+  tags:
+    - nasa
+    - sedac
+    - ciesin
+    - gibs
+    - gpw
+    - population
+    - demographie
+sources:
+  - id: global-gibs-gpw-population-density-2020
+    name: NASA SEDAC GPWv4 - Population Density 2020 (map tiles)
+    description: Pre-coloured map of population density in 2020 (people per square
+      kilometre) from the Gridded Population of the World v4.11, which spreads census
+      counts evenly inside each census unit (about 1 km grid, coarser where census
+      units are large). Picture tiles only - pixel values cannot be queried or
+      restyled. Quick background for overview maps; tiles stop at zoom 7 (about
+      1:4,000,000).
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GPW_Population_Density_2020/default/default/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    min_zoom: 0
+    max_zoom: 7
+    data_date: "2020 (UN-adjusted estimate, revision 11 of 2018)"
+    tags:
+      - population density
+      - densite de population
+      - habitants
+      - tiles
+      - tuiles
+      - overview
+    i18n:
+      fr:
+        name: NASA SEDAC GPWv4 - Densité de population 2020 (tuiles)
+        description: Carte précolorée de la densité de population en 2020 (habitants
+          par kilomètre carré) issue du Gridded Population of the World v4.11, qui
+          répartit uniformément les chiffres de recensement dans chaque unité de
+          recensement (grille d'environ 1 km, plus grossière là où les unités sont
+          vastes). Tuiles image uniquement - les valeurs ne peuvent être ni interrogées
+          ni restylées. Fond rapide pour des cartes de synthèse ; les tuiles s'arrêtent
+          au zoom 7 (environ 1:4 000 000).

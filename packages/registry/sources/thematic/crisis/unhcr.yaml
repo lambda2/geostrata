@@ -1,0 +1,66 @@
+defaults:
+  category: crisis
+  type: geojson
+  license: © UNHCR - no licence is stated on the map service itself; UNHCR
+    operational data is published under CC-BY-4.0 except where otherwise
+    indicated; confirm with UNHCR before redistributing
+  attribution: © UNHCR, The UN Refugee Agency
+  tags:
+    - unhcr
+    - hcr
+    - refugee
+    - refugie
+    - refugies
+    - displacement
+    - deplacement
+    - idp
+    - deplaces internes
+    - camp
+    - settlement
+    - site
+sources:
+  - id: global-unhcr-poc-locations
+    name: UNHCR - Locations of People of Concern (Camps, Settlements, Centres)
+    description: Reference points of the places where UNHCR records refugees,
+      asylum seekers, internally displaced people and returnees - planned
+      camps, settlements, collective and reception centres, and urban or
+      dispersed locations - with site name, type, country and UNHCR P-code.
+      About 14,500 points worldwide, a few seconds to load; population figures
+      are not included.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_prp_p_unhcr_PoC/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson
+    priority: 2
+    data_date: updated continuously by UNHCR operations
+    tags:
+      - reception centre
+      - centre d accueil
+      - asylum
+      - asile
+    i18n:
+      fr:
+        name: UNHCR - Lieux d'accueil des personnes relevant du HCR (camps, sites, centres)
+        description: Points de référence des lieux où le HCR recense réfugiés,
+          demandeurs d'asile, déplacés internes et rapatriés, camps planifiés,
+          sites d'installation, centres collectifs et d'accueil, lieux urbains ou
+          dispersés, avec nom du site, type, pays et P-code HCR. Environ 14 500
+          points dans le monde, quelques secondes de chargement, les effectifs de
+          population ne sont pas inclus.
+  - id: global-unhcr-poc-polygons
+    name: UNHCR - Camp and Settlement Outlines
+    description: Outline polygons of refugee and IDP camps and settlements
+      mapped by UNHCR, with site name and P-code. Only a few hundred sites have
+      an outline (about 350, in Africa, the Middle East and Asia); use the
+      point layer for the complete list.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_prp_a_unhcr/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson
+    data_date: updated continuously by UNHCR operations
+    tags:
+      - outline
+      - perimetre
+      - emprise
+    i18n:
+      fr:
+        name: UNHCR - Emprises des camps et sites d'installation
+        description: Polygones d'emprise des camps et sites de réfugiés et de
+          déplacés internes cartographiés par le HCR, avec nom du site et P-code.
+          Seuls quelques centaines de sites ont une emprise (environ 350, en
+          Afrique, au Moyen-Orient et en Asie), utiliser la couche de points pour la
+          liste complète.

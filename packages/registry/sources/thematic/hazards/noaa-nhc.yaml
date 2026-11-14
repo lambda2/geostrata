@@ -1,0 +1,58 @@
+defaults:
+  category: hazard
+  type: wms
+  license: Public domain (U.S. Government work, NOAA / National Weather Service)
+  attribution: NOAA National Hurricane Center and Central Pacific Hurricane Center
+  bbox:
+    - -180
+    - 0
+    - -10
+    - 60
+  tags:
+    - noaa
+    - nhc
+    - hurricane
+    - ouragan
+    - cyclone
+    - tropical storm
+    - tempete tropicale
+    - atlantic
+    - atlantique
+    - pacific
+    - pacifique
+    - outlook
+    - forecast
+    - prevision
+sources:
+  - id: global-nhc-outlook-7day-areas
+    name: NOAA NHC - Tropical Weather Outlook, 7-Day Development Areas
+    description: Areas where a tropical cyclone may form within 7 days, shaded
+      by probability (low, medium, high), from the National Hurricane Center
+      outlook. North Atlantic, eastern and central North Pacific only. Empty
+      outside the hurricane season or when no disturbance is being watched.
+    url: https://mapservices.weather.noaa.gov/tropical/services/tropical/NHC_tropical_weather/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&LAYERS=396&STYLES=default&FORMAT=image/png
+    data_date: updated every 6 hours during the hurricane season
+    i18n:
+      fr:
+        name: NOAA NHC - Perspectives tropicales, zones de développement à 7 jours
+        description: Zones où un cyclone tropical peut se former sous 7 jours,
+          colorées selon la probabilité (faible, moyenne, forte), d'après les
+          perspectives du National Hurricane Center. Atlantique Nord et Pacifique
+          Nord oriental et central uniquement. Vide hors saison cyclonique ou
+          quand aucune perturbation n'est surveillée.
+  - id: global-nhc-outlook-7day-locations
+    name: NOAA NHC - Tropical Weather Outlook, Current Disturbance Locations
+    description: Current position of the disturbances followed in the National
+      Hurricane Center 7-day outlook, as X marks coloured by formation
+      probability. North Atlantic, eastern and central North Pacific only.
+      Empty when no disturbance is being watched.
+    url: https://mapservices.weather.noaa.gov/tropical/services/tropical/NHC_tropical_weather/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&LAYERS=398&STYLES=default&FORMAT=image/png
+    data_date: updated every 6 hours during the hurricane season
+    i18n:
+      fr:
+        name: NOAA NHC - Perspectives tropicales, position des perturbations
+        description: Position actuelle des perturbations suivies dans les
+          perspectives à 7 jours du National Hurricane Center, en croix colorées
+          selon la probabilité de formation. Atlantique Nord et Pacifique Nord
+          oriental et central uniquement. Vide quand aucune perturbation n'est
+          surveillée.

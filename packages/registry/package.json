@@ -10,6 +10,7 @@
 		"deploy:qgis": "tsx src/ingest/run-ingest.ts && tsx src/build.ts && python3 ../qgis-plugin/scripts/deploy_qgis.py",
 		"healthcheck": "tsx src/healthcheck.ts",
 		"ingest": "tsx src/ingest/run-ingest.ts",
+		"refresh:countries": "tsx src/ingest/country-index.ts",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

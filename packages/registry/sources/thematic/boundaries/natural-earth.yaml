@@ -1,0 +1,105 @@
+# Natural Earth 1:10m cultural themes not already in sources/global/elevation-and-admin.yaml
+# (which holds the ADM0 countries and ADM1 states/provinces).
+defaults:
+  type: archive
+  category: admin
+  crs: EPSG:4326
+  bbox: [-180, -90, 180, 90]
+  license: Public domain
+  attribution: Made with Natural Earth
+  data_date: Natural Earth 5.x
+  tags:
+    - natural earth
+    - naturalearth
+    - small scale
+    - petite echelle
+sources:
+  - id: global-naturalearth-disputed-areas
+    name: Natural Earth - Disputed Areas and Breakaway Regions (1:10m)
+    description: >-
+      Polygons of territories whose sovereignty is contested or
+      that are administered apart from the claiming state (Kashmir, Western
+      Sahara, Abyei, Crimea and others), with the parties involved in the
+      attributes. Reflects Natural Earth's de facto editorial policy, not a
+      legal position. Tiny file (0.2 MB) at 1:10 million scale.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_disputed_areas.zip
+    archive_target: ne_10m_admin_0_disputed_areas.shp
+    tags:
+      - disputed
+      - disputed areas
+      - zones contestees
+      - territoires disputes
+      - litige
+      - boundaries
+      - frontieres
+      - sovereignty
+      - souverainete
+    i18n:
+      fr:
+        name: Natural Earth - Zones contestées et régions séparatistes (1:10m)
+        description: >-
+          Polygones des territoires dont la souveraineté est
+          contestée ou qui sont administrés séparément de l'État qui les
+          revendique (Cachemire, Sahara occidental, Abyei, Crimée, etc.), avec
+          les parties concernées en attributs. Reflète la ligne éditoriale
+          « de facto » de Natural Earth et non une position juridique. Très
+          petit fichier (0,2 Mo) à l'échelle 1:10 millions.
+  - id: global-naturalearth-populated-places
+    name: Natural Earth - Populated Places (1:10m)
+    description: >-
+      About 7,300 cities and towns of the world as points -
+      national and regional capitals, major cities and significant towns -
+      with names in many languages, population estimates and a scale rank for
+      label filtering. Small file (3 MB); a quick label layer for overview
+      maps, not a complete gazetteer of settlements.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip
+    archive_target: ne_10m_populated_places.shp
+    tags:
+      - populated places
+      - cities
+      - towns
+      - capitals
+      - villes
+      - capitales
+      - localites
+      - toponymes
+      - place names
+      - labels
+    i18n:
+      fr:
+        name: Natural Earth - Lieux habités (1:10m)
+        description: >-
+          Environ 7 300 villes du monde en points - capitales
+          nationales et régionales, grandes villes et villes notables - avec
+          noms dans de nombreuses langues, estimations de population et rang
+          d'échelle pour filtrer les étiquettes. Petit fichier (3 Mo) ; couche
+          d'étiquettes rapide pour les cartes d'ensemble, pas un répertoire
+          complet des localités.
+  - id: global-naturalearth-urban-areas
+    name: Natural Earth - Urban Areas (1:10m)
+    description: >-
+      Polygons of densely built-up areas of the world derived from
+      2002-2003 MODIS satellite data at 1 km resolution. Gives the footprint
+      of large cities on overview maps; dated and coarse, so recent urban
+      growth and small towns are missing. 13 MB file.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_urban_areas.zip
+    archive_target: ne_10m_urban_areas.shp
+    data_date: 2002-2003 (MODIS)
+    tags:
+      - urban areas
+      - urban
+      - built-up
+      - zones urbaines
+      - taches urbaines
+      - agglomerations
+      - cities
+      - villes
+    i18n:
+      fr:
+        name: Natural Earth - Zones urbaines (1:10m)
+        description: >-
+          Polygones des zones densément bâties du monde, dérivés
+          des données satellite MODIS de 2002-2003 à 1 km de résolution. Donne
+          l'emprise des grandes villes sur les cartes d'ensemble ; ancien et
+          grossier, la croissance urbaine récente et les petites villes
+          manquent. Fichier de 13 Mo.

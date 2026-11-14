@@ -5,6 +5,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 packages/registry/dist/
+# Written by `npm run ingest` (OSM Editor Layer Index, geoBoundaries), rebuilt in CI
+packages/registry/sources/_generated/
 
 # Python & PyQGIS
 __pycache__/

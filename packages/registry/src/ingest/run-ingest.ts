@@ -2,40 +2,31 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { stringify as stringifyYaml } from 'yaml'
+import { type CountryIndex } from '../expand.js'
 import { type CatalogEntry } from '../schema.js'
 import {
 	type EliGeoJsonCollection,
 	convertEliFeatureToCatalogEntry,
 } from './eli.js'
 import {
-	type FieldMapsLayerDescriptor,
-	buildFieldMapsCatalogEntry,
-} from './fieldmaps.js'
+	type CountryReference,
+	type GeoBoundariesApiRecord,
+	type GeoBoundariesRelease,
+	buildGeoBoundariesCatalogEntry,
+} from './geoboundaries.js'
 
 const ELI_GEOJSON_URL =
 	'https://osmlab.github.io/editor-layer-index/imagery.geojson'
 
-const HUMANITARIAN_COUNTRIES: Array<FieldMapsLayerDescriptor> = [
-	{ admLevel: 1, iso2: 'TR', iso3: 'TUR', countryNameEn: 'Turkey', countryNameFr: 'Turquie' },
-	{ admLevel: 2, iso2: 'TR', iso3: 'TUR', countryNameEn: 'Turkey', countryNameFr: 'Turquie' },
-	{ admLevel: 1, iso2: 'UA', iso3: 'UKR', countryNameEn: 'Ukraine', countryNameFr: 'Ukraine' },
-	{ admLevel: 2, iso2: 'UA', iso3: 'UKR', countryNameEn: 'Ukraine', countryNameFr: 'Ukraine' },
-	{ admLevel: 1, iso2: 'MA', iso3: 'MAR', countryNameEn: 'Morocco', countryNameFr: 'Maroc' },
-	{ admLevel: 1, iso2: 'SN', iso3: 'SEN', countryNameEn: 'Senegal', countryNameFr: 'Sénégal' },
-	{ admLevel: 1, iso2: 'CI', iso3: 'CIV', countryNameEn: 'Ivory Coast', countryNameFr: 'Côte d Ivoire' },
-	{ admLevel: 1, iso2: 'CD', iso3: 'COD', countryNameEn: 'DR Congo', countryNameFr: 'RD Congo' },
-	{ admLevel: 2, iso2: 'CD', iso3: 'COD', countryNameEn: 'DR Congo', countryNameFr: 'RD Congo' },
-	{ admLevel: 1, iso2: 'LR', iso3: 'LBR', countryNameEn: 'Liberia', countryNameFr: 'Liberia' },
-	{ admLevel: 2, iso2: 'LR', iso3: 'LBR', countryNameEn: 'Liberia', countryNameFr: 'Liberia' },
-	{ admLevel: 1, iso2: 'HT', iso3: 'HTI', countryNameEn: 'Haiti', countryNameFr: 'Haïti' },
-	{ admLevel: 2, iso2: 'HT', iso3: 'HTI', countryNameEn: 'Haiti', countryNameFr: 'Haïti' },
-	{ admLevel: 1, iso2: 'LB', iso3: 'LBN', countryNameEn: 'Lebanon', countryNameFr: 'Liban' },
-	{ admLevel: 2, iso2: 'LB', iso3: 'LBN', countryNameEn: 'Lebanon', countryNameFr: 'Liban' },
-	{ admLevel: 1, iso2: 'SY', iso3: 'SYR', countryNameEn: 'Syria', countryNameFr: 'Syrie' },
-	{ admLevel: 2, iso2: 'SY', iso3: 'SYR', countryNameEn: 'Syria', countryNameFr: 'Syrie' },
-	{ admLevel: 1, iso2: 'MG', iso3: 'MDG', countryNameEn: 'Madagascar', countryNameFr: 'Madagascar' },
-	{ admLevel: 2, iso2: 'MG', iso3: 'MDG', countryNameEn: 'Madagascar', countryNameFr: 'Madagascar' },
-]
+const GEOBOUNDARIES_API_URL = 'https://www.geoboundaries.org/api/current'
+
+const ADMIN_LEVELS: Array<string> = ['ADM1', 'ADM2']
+
+/**
+ * Every country published in the gbHumanitarian release (UN OCHA COD-AB) is ingested.
+ * Countries listed here are also ingested from gbOpen when they have no COD-AB release.
+ */
+const ALWAYS_INGESTED_ISO3: Array<string> = ['TUR', 'LBN']
 
 function getPackageRootDir(): string {
 	const currentFilePath = fileURLToPath(import.meta.url)
@@ -43,8 +34,8 @@ function getPackageRootDir(): string {
 	return path.resolve(ingestDir, '..', '..')
 }
 
-async function ingestEditorLayerIndex(thematicDir: string): Promise<number> {
-	const outputPath = path.join(thematicDir, 'eli-imagery.yaml')
+async function ingestEditorLayerIndex(generatedDir: string): Promise<number> {
+	const outputPath = path.join(generatedDir, 'eli-imagery.yaml')
 	try {
 		const response = await fetch(ELI_GEOJSON_URL, {
 			headers: { 'User-Agent': 'Geostrata-Ingest/1.0' },
@@ -92,24 +83,122 @@ async function ingestEditorLayerIndex(thematicDir: string): Promise<number> {
 	}
 }
 
+async function fetchJson<T>(url: string): Promise<T> {
+	const response = await fetch(url, {
+		headers: { 'User-Agent': 'Geostrata-Ingest/1.0' },
+	})
+	if (!response.ok) {
+		throw new Error(`HTTP ${response.status} from ${url}`)
+	}
+	return (await response.json()) as T
+}
+
+function loadCountryReferences(packageRoot: string): Map<string, CountryReference> {
+	const indexPath = path.join(
+		packageRoot,
+		'assets',
+		'polygons',
+		'country-index.json',
+	)
+	const countryIndex = JSON.parse(fs.readFileSync(indexPath, 'utf-8')) as CountryIndex
+	const references = new Map<string, CountryReference>()
+	for (const [iso3, country] of Object.entries(countryIndex)) {
+		references.set(iso3, {
+			iso2: country.iso2,
+			nameEn: country.name_en,
+			nameFr: country.name_fr,
+			bbox: country.bbox,
+		})
+	}
+	return references
+}
+
+function loadCuratedCountryCodes(packageRoot: string): Set<string> {
+	const polygonsPath = path.join(
+		packageRoot,
+		'assets',
+		'polygons',
+		'countries.json',
+	)
+	return fs.existsSync(polygonsPath)
+		? new Set(Object.keys(JSON.parse(fs.readFileSync(polygonsPath, 'utf-8'))))
+		: new Set()
+}
+
+async function ingestGeoBoundaries(
+	packageRoot: string,
+	generatedDir: string,
+): Promise<number> {
+	const outputPath = path.join(generatedDir, 'geoboundaries-adm.yaml')
+	try {
+		const countries = loadCountryReferences(packageRoot)
+		const curatedCodes = loadCuratedCountryCodes(packageRoot)
+		const entries: Array<CatalogEntry> = []
+
+		for (const level of ADMIN_LEVELS) {
+			const byIso3 = new Map<
+				string,
+				{ record: GeoBoundariesApiRecord; release: GeoBoundariesRelease }
+			>()
+			const openRecords = await fetchJson<Array<GeoBoundariesApiRecord>>(
+				`${GEOBOUNDARIES_API_URL}/gbOpen/ALL/${level}/`,
+			)
+			for (const record of openRecords) {
+				if (ALWAYS_INGESTED_ISO3.includes(record.boundaryISO)) {
+					byIso3.set(record.boundaryISO, { record, release: 'gbOpen' })
+				}
+			}
+			const codRecords = await fetchJson<Array<GeoBoundariesApiRecord>>(
+				`${GEOBOUNDARIES_API_URL}/gbHumanitarian/ALL/${level}/`,
+			)
+			for (const record of codRecords) {
+				byIso3.set(record.boundaryISO, { record, release: 'gbHumanitarian' })
+			}
+
+			for (const [iso3, { record, release }] of byIso3) {
+				const country = countries.get(iso3)
+				if (!country || !record.gjDownloadURL) {
+					continue
+				}
+				entries.push(
+					buildGeoBoundariesCatalogEntry(
+						record,
+						release,
+						country,
+						curatedCodes.has(country.iso2),
+					),
+				)
+			}
+		}
+
+		if (entries.length === 0) {
+			throw new Error('geoBoundaries API returned no usable record')
+		}
+
+		entries.sort(function compareIds(a, b) {
+			return a.id.localeCompare(b.id)
+		})
+		fs.writeFileSync(outputPath, stringifyYaml(entries), 'utf-8')
+		console.log(
+			`Generated ${entries.length} geoBoundaries entries in ${outputPath}`,
+		)
+		return entries.length
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error)
+		console.warn(
+			`geoBoundaries remote fetch skipped, keeping the previous file if any (${message}).`,
+		)
+		return 0
+	}
+}
+
 export async function runIngest(): Promise<void> {
 	const packageRoot = getPackageRootDir()
-	const thematicDir = path.join(packageRoot, 'sources', 'thematic')
-	fs.mkdirSync(thematicDir, { recursive: true })
+	const generatedDir = path.join(packageRoot, 'sources', '_generated')
+	fs.mkdirSync(generatedDir, { recursive: true })
 
-	const entries: Array<CatalogEntry> = []
-	for (const descriptor of HUMANITARIAN_COUNTRIES) {
-		entries.push(buildFieldMapsCatalogEntry(descriptor))
-	}
-
-	const outputPath = path.join(thematicDir, 'fieldmaps-cod.yaml')
-	const yamlContent = stringifyYaml(entries)
-	fs.writeFileSync(outputPath, yamlContent, 'utf-8')
-	console.log(
-		`Generated ${entries.length} ingested FieldMaps/HDX entries in ${outputPath}`,
-	)
-
-	await ingestEditorLayerIndex(thematicDir)
+	await ingestGeoBoundaries(packageRoot, generatedDir)
+	await ingestEditorLayerIndex(generatedDir)
 }
 
 runIngest()

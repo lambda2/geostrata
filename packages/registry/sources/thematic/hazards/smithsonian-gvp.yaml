@@ -1,0 +1,51 @@
+defaults:
+  category: hazard
+  type: wfs
+  license: Smithsonian Institution Terms of Use - personal, educational and
+    other non-commercial use only; commercial use needs prior written
+    permission; citation required
+  attribution: Global Volcanism Program, Smithsonian Institution - Volcanoes of the World
+  tags:
+    - smithsonian
+    - gvp
+    - volcano
+    - volcan
+    - volcanoes
+    - volcans
+    - eruption
+sources:
+  - id: global-gvp-holocene-volcanoes
+    name: Smithsonian GVP - Holocene Volcanoes
+    description: The roughly 1200 volcanoes known or thought to have erupted in
+      the last 12,000 years, from the Volcanoes of the World database, with
+      name, country, type, summit elevation, last known eruption and tectonic
+      setting. One point per volcano. Non-commercial use only.
+    url: https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=GVP-VOTW:Smithsonian_VOTW_Holocene_Volcanoes
+    data_date: updated with each Volcanoes of the World release
+    tags:
+      - holocene
+    i18n:
+      fr:
+        name: Smithsonian GVP - Volcans de l'Holocène
+        description: Les quelque 1200 volcans ayant connu ou probablement connu
+          une éruption au cours des 12 000 dernières années, d'après la base
+          Volcanoes of the World, avec nom, pays, type, altitude du sommet,
+          dernière éruption connue et contexte tectonique. Un point par volcan.
+          Usage non commercial uniquement.
+  - id: global-gvp-pleistocene-volcanoes
+    name: Smithsonian GVP - Pleistocene Volcanoes
+    description: Volcanoes with known Pleistocene activity but no confirmed
+      eruption in the last 12,000 years, from the Volcanoes of the World
+      database, with name, country, type and elevation. One point per volcano.
+      Non-commercial use only.
+    url: https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=GVP-VOTW:Smithsonian_VOTW_Pleistocene_Volcanoes
+    data_date: updated with each Volcanoes of the World release
+    tags:
+      - pleistocene
+    i18n:
+      fr:
+        name: Smithsonian GVP - Volcans du Pléistocène
+        description: Volcans à activité pléistocène connue mais sans éruption
+          confirmée au cours des 12 000 dernières années, d'après la base
+          Volcanoes of the World, avec nom, pays, type et altitude. Un point par
+          volcan. Usage non commercial uniquement.

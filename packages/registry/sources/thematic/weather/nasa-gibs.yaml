@@ -1,0 +1,60 @@
+defaults:
+  category: weather
+  license: CC0-1.0 (NASA open data policy, no restriction; acknowledgement requested)
+  attribution: NASA GPM / EOSDIS Global Imagery Browse Services (GIBS)
+  tags:
+    - nasa
+    - gibs
+    - gpm
+    - imerg
+    - rain
+    - pluie
+    - rainfall
+    - precipitation
+    - precipitations
+    - meteo
+    - weather
+sources:
+  - id: global-gibs-imerg-precipitation-rate
+    name: NASA GIBS - IMERG Precipitation Rate (Daily)
+    description: Pre-rendered picture of the satellite-estimated precipitation
+      rate (mm/h) from GPM IMERG, about 10 km resolution, between 60°N and
+      60°S and partly beyond. Shows the latest available day (usually
+      yesterday). Colour image, not values; tiles stop at zoom 6.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 6
+    data_date: daily, latest day shown (about one day behind)
+    tags:
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Taux de précipitation IMERG (quotidien)
+        description: Image pré-rendue du taux de précipitation (mm/h) estimé par
+          satellite (GPM IMERG), résolution d'environ 10 km, entre 60°N et 60°S
+          et partiellement au-delà. Affiche le dernier jour disponible (en
+          général la veille). Image colorée et non des valeurs, tuiles limitées
+          au zoom 6.
+  - id: global-gibs-imerg-precipitation-rate-30min
+    name: NASA GIBS - IMERG Precipitation Rate (Latest Half Hour)
+    description: Pre-rendered picture of the satellite-estimated precipitation
+      rate (mm/h) from GPM IMERG for the latest available 30-minute step, a few
+      hours behind real time, about 10 km resolution. Colour image, not
+      values; tiles stop at zoom 6.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate_30min/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 6
+    data_date: every 30 minutes, latest step shown (a few hours behind real time)
+    tags:
+      - live
+      - temps reel
+    i18n:
+      fr:
+        name: NASA GIBS - Taux de précipitation IMERG (dernière demi-heure)
+        description: Image pré-rendue du taux de précipitation (mm/h) estimé par
+          satellite (GPM IMERG) pour le dernier pas de 30 minutes disponible,
+          avec quelques heures de retard sur le temps réel, résolution d'environ
+          10 km. Image colorée et non des valeurs, tuiles limitées au zoom 6.

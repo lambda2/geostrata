@@ -5,11 +5,11 @@ import { fileURLToPath } from 'node:url'
 import zlib from 'node:zlib'
 import Database from 'better-sqlite3'
 import { parse as parseYaml } from 'yaml'
+import { type CountryIndex, expandCatalogFileContent } from './expand.js'
 import {
 	type BoundingBox,
 	type CatalogEntry,
 	type SourceCategory,
-	parseCatalogFileContent,
 } from './schema.js'
 
 interface LanguageSynonyms {
@@ -24,7 +24,7 @@ interface CountrySynonymEntry {
 }
 
 interface SynonymsDictionary {
-	categories: Record<SourceCategory, LanguageSynonyms>
+	categories: Partial<Record<SourceCategory, LanguageSynonyms>>
 	countries: Record<string, CountrySynonymEntry>
 }
 
@@ -61,8 +61,19 @@ interface CompiledCatalogRow {
 	min_zoom: number | null
 	max_zoom: number | null
 	archive_target: string | null
+	priority: number
+	data_date: string | null
 	health_status: string
+	health_checked_at: string | null
 }
+
+interface HealthReport {
+	checked_at: string
+	results: Record<string, { status: string; detail?: string }>
+}
+
+/** Output of `npm run ingest`, ignored by git and rebuilt in CI. */
+const GENERATED_DIR_NAME = '_generated'
 
 function getPackageRootDir(): string {
 	const currentFilePath = fileURLToPath(import.meta.url)
@@ -111,6 +122,39 @@ function loadCountryPolygons(assetsDir: string): CountryPolygonsDictionary {
 		? fs.readFileSync(polygonsPath, 'utf-8')
 		: '{}'
 	return JSON.parse(rawJson) as CountryPolygonsDictionary
+}
+
+function loadCountryIndex(assetsDir: string): CountryIndex {
+	const indexPath = path.join(assetsDir, 'polygons', 'country-index.json')
+	return JSON.parse(fs.readFileSync(indexPath, 'utf-8')) as CountryIndex
+}
+
+/** Curated outlines win; any other country falls back to its bounding box from the country index. */
+function mergeCountryGeometries(
+	curatedPolygons: CountryPolygonsDictionary,
+	countryIndex: CountryIndex,
+): CountryPolygonsDictionary {
+	const merged: CountryPolygonsDictionary = {}
+	for (const country of Object.values(countryIndex)) {
+		merged[country.iso2] = {
+			bbox: country.bbox,
+			geom_wkt: createBoundingBoxWkt(country.bbox),
+		}
+	}
+	return { ...merged, ...curatedPolygons }
+}
+
+/** Written by `npm run healthcheck`; absent on a first build, in which case every source is assumed ok. */
+function loadHealthReport(distDir: string): HealthReport | null {
+	const healthPath = path.join(distDir, 'health.json')
+	if (!fs.existsSync(healthPath)) {
+		return null
+	}
+	try {
+		return JSON.parse(fs.readFileSync(healthPath, 'utf-8')) as HealthReport
+	} catch {
+		return null
+	}
 }
 
 function loadStyleQmlContent(
@@ -173,6 +217,7 @@ function compileCatalogEntry(
 	assetsDir: string,
 	synonyms: SynonymsDictionary,
 	countryPolygons: CountryPolygonsDictionary,
+	healthReport: HealthReport | null,
 ): CompiledCatalogRow {
 	const countryGeometry = entry.country_iso
 		? countryPolygons[entry.country_iso]
@@ -253,7 +298,13 @@ function compileCatalogEntry(
 		min_zoom: entry.min_zoom !== undefined ? entry.min_zoom : null,
 		max_zoom: entry.max_zoom !== undefined ? entry.max_zoom : null,
 		archive_target: entry.archive_target ? entry.archive_target : null,
-		health_status: 'ok',
+		priority: entry.priority,
+		data_date: entry.data_date ? entry.data_date : null,
+		health_status: healthReport?.results[entry.id]?.status ?? 'ok',
+		health_checked_at:
+			healthReport && healthReport.results[entry.id]
+				? healthReport.checked_at
+				: null,
 	}
 }
 
@@ -266,7 +317,10 @@ export function buildCatalog(): void {
 	const packageRoot = getPackageRootDir()
 	const sourcesDir = path.join(packageRoot, 'sources')
 	const assetsDir = path.join(packageRoot, 'assets')
-	const distDir = path.join(packageRoot, 'dist')
+	// GEOSTRATA_DIST_DIR lets parallel builds (tests, CI matrix) write to separate directories.
+	const distDir = process.env.GEOSTRATA_DIST_DIR
+		? path.resolve(process.env.GEOSTRATA_DIST_DIR)
+		: path.join(packageRoot, 'dist')
 
 	fs.mkdirSync(distDir, { recursive: true })
 
@@ -274,9 +328,19 @@ export function buildCatalog(): void {
 	if (yamlFiles.length === 0) {
 		throw new Error(`No YAML source files found in ${sourcesDir}`)
 	}
+	if (!fs.existsSync(path.join(sourcesDir, GENERATED_DIR_NAME))) {
+		console.warn(
+			`No sources/${GENERATED_DIR_NAME}/ directory: run "npm run ingest" to add the generated families (OSM Editor Layer Index, geoBoundaries).`,
+		)
+	}
 
 	const synonyms = loadSynonymsDictionary(assetsDir)
-	const countryPolygons = loadCountryPolygons(assetsDir)
+	const countryIndex = loadCountryIndex(assetsDir)
+	const countryPolygons = mergeCountryGeometries(
+		loadCountryPolygons(assetsDir),
+		countryIndex,
+	)
+	const healthReport = loadHealthReport(distDir)
 
 	const compiledRows: Array<CompiledCatalogRow> = []
 	const seenIds = new Set<string>()
@@ -285,7 +349,13 @@ export function buildCatalog(): void {
 		const relativeFilePath = path.relative(packageRoot, yamlFilePath)
 		const rawYamlText = fs.readFileSync(yamlFilePath, 'utf-8')
 		const parsedYaml = parseYaml(rawYamlText)
-		const entries = parseCatalogFileContent(parsedYaml)
+		let entries: Array<CatalogEntry>
+		try {
+			entries = expandCatalogFileContent(parsedYaml, countryIndex)
+		} catch (error) {
+			const message = error instanceof Error ? error.message : String(error)
+			throw new Error(`${relativeFilePath}: ${message}`)
+		}
 
 		for (const entry of entries) {
 			if (seenIds.has(entry.id)) {
@@ -299,6 +369,7 @@ export function buildCatalog(): void {
 				assetsDir,
 				synonyms,
 				countryPolygons,
+				healthReport,
 			)
 			compiledRows.push(compiledRow)
 		}
@@ -339,7 +410,10 @@ export function buildCatalog(): void {
 			min_zoom INTEGER,
 			max_zoom INTEGER,
 			archive_target TEXT,
-			health_status TEXT NOT NULL DEFAULT 'ok'
+			priority INTEGER NOT NULL DEFAULT 0,
+			data_date TEXT,
+			health_status TEXT NOT NULL DEFAULT 'ok',
+			health_checked_at TEXT
 		);
 
 		CREATE VIRTUAL TABLE sources_rtree USING rtree(
@@ -363,12 +437,12 @@ export function buildCatalog(): void {
 			id, name, description, i18n_json, type, category, url, crs, country_iso,
 			min_x, min_y, max_x, max_y, area_deg2, geom_wkt, tags_json, search_text,
 			license, attribution, style_qml, min_zoom, max_zoom,
-			archive_target, health_status
+			archive_target, priority, data_date, health_status, health_checked_at
 		) VALUES (
 			@id, @name, @description, @i18n_json, @type, @category, @url, @crs, @country_iso,
 			@min_x, @min_y, @max_x, @max_y, @area_deg2, @geom_wkt, @tags_json, @search_text,
 			@license, @attribution, @style_qml, @min_zoom, @max_zoom,
-			@archive_target, @health_status
+			@archive_target, @priority, @data_date, @health_status, @health_checked_at
 		)
 	`)
 
@@ -446,6 +520,10 @@ export function buildCatalog(): void {
 			tags: JSON.parse(row.tags_json) as Array<string>,
 			license: row.license,
 			attribution: row.attribution,
+			priority: row.priority,
+			data_date: row.data_date,
+			health_status: row.health_status,
+			health_checked_at: row.health_checked_at,
 		}
 	})
 	const webCatalogPath = path.join(distDir, 'catalog.json')

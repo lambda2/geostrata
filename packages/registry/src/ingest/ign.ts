@@ -1,5 +1,6 @@
 import {
 	type CatalogEntry,
+	type CatalogEntryInput,
 	CatalogEntrySchema,
 	type SourceCategory,
 } from '../schema.js'
@@ -19,7 +20,7 @@ export function buildIgnGeoplateformeWfsEntry(
 	const encodedTypename = encodeURIComponent(descriptor.typename)
 	const wfsUrl = `https://data.geopf.fr/wfs/ows?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=${encodedTypename}`
 
-	const candidate: CatalogEntry = {
+	const candidate: CatalogEntryInput = {
 		id: `fr-ign-bdtopo-${descriptor.idSuffix}`,
 		name: `IGN Géoplateforme - BD TOPO (${descriptor.title})`,
 		description: descriptor.description,

@@ -1,0 +1,47 @@
+# Gridfinder (Arderne et al. 2020, World Bank ESMAP), files hosted on Zenodo.
+defaults:
+  category: utilities
+  license: CC-BY-4.0
+  attribution: Arderne, Zorn, Nicolas and Koks (2020), Predictive mapping of the global power system using open data, Scientific Data; World Bank
+  tags:
+    - gridfinder
+    - world bank
+    - banque mondiale
+    - zenodo
+sources:
+  - id: global-gridfinder-power-grid
+    name: Gridfinder - Predicted Electricity Grid (medium and high voltage lines)
+    description: Worldwide vector lines of the medium and high voltage electricity
+      network, combining power lines mapped in OpenStreetMap with lines predicted from
+      night-time lights and roads where OSM is empty (a `source` attribute tells
+      which). Fills the gap in countries with no public grid map, at about 1 km
+      accuracy; predicted lines show where the grid probably runs, not surveyed
+      routes. 725 MB GeoPackage read remotely from Zenodo - zoom to your area first,
+      Zenodo may throttle repeated requests.
+    type: fgb
+    url: https://zenodo.org/records/3628142/files/grid.gpkg
+    crs: EPSG:4326
+    style_file: utilities.qml
+    data_date: "2020 (night lights of 2016, OSM of 2019)"
+    tags:
+      - electricity
+      - power grid
+      - power lines
+      - transmission
+      - energy
+      - electricite
+      - reseau electrique
+      - lignes electriques
+      - haute tension
+      - energie
+    i18n:
+      fr:
+        name: Gridfinder - Réseau électrique prédit (lignes moyenne et haute tension)
+        description: Lignes vectorielles mondiales du réseau électrique moyenne et
+          haute tension, combinant les lignes cartographiées dans OpenStreetMap et des
+          lignes prédites à partir des lumières nocturnes et des routes là où OSM est
+          vide (l'attribut `source` les distingue). Comble l'absence de carte publique
+          du réseau dans de nombreux pays, avec une précision d'environ 1 km ; les
+          lignes prédites indiquent le tracé probable, pas un relevé. GeoPackage de
+          725 Mo lu à distance sur Zenodo - zoomer d'abord sur sa zone, Zenodo peut
+          brider les requêtes répétées.

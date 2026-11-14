@@ -560,3 +560,468 @@
       name: OSM Overpass - Châteaux d'eau et stations de traitement des eaux
       description: Localisation des châteaux d'eau (man_made=water_tower), réservoirs
         et stations d'épuration (man_made=wastewater_plant).
+- id: global-overpass-refugee-sites
+  name: OSM Overpass - Refugee & IDP Sites (Camps, Settlements)
+  description: Live OpenStreetMap extraction of refugee and internally displaced
+    persons sites (amenity=refugee_site, social_facility=refugee_site), returned
+    as one point per site. Only sites mapped in OSM appear; not an official camp
+    list.
+  type: overpass
+  category: crisis
+  url: amenity=refugee_site|social_facility=refugee_site
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: crisis.qml
+  tags:
+    - camp
+    - camps
+    - refugies
+    - deplaces
+    - site de deplaces
+    - refugee
+    - refugee camp
+    - idp
+    - displacement
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  priority: 2
+  i18n:
+    fr:
+      name: OSM Overpass - Sites de réfugiés et de déplacés (camps, installations)
+      description: Extraction dynamique OpenStreetMap des sites de réfugiés et de
+        personnes déplacées internes (amenity=refugee_site,
+        social_facility=refugee_site), un point par site. Seuls les sites
+        cartographiés dans OSM apparaissent ; ce n'est pas une liste officielle
+        de camps.
+- id: global-overpass-airfields
+  name: OSM Overpass - Airports, Airfields & Airstrips
+  description: Live OpenStreetMap extraction of aerodromes (aeroway=aerodrome),
+    runways (aeroway=runway) and airstrips (aeroway=airstrip), returned as one
+    point per feature with name, IATA/ICAO codes and runway surface when tagged.
+  type: overpass
+  category: transport
+  url: aeroway=aerodrome|aeroway=runway|aeroway=airstrip
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - aeroport
+    - aeroports
+    - aerodrome
+    - piste
+    - piste d atterrissage
+    - airport
+    - airfield
+    - airstrip
+    - runway
+    - logistique
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Aéroports, aérodromes et pistes d'atterrissage
+      description: Extraction dynamique OpenStreetMap des aérodromes
+        (aeroway=aerodrome), pistes (aeroway=runway) et pistes sommaires
+        (aeroway=airstrip), un point par objet avec nom, codes IATA/OACI et
+        revêtement de piste lorsqu'ils sont renseignés.
+- id: global-overpass-bridges-fords
+  name: OSM Overpass - Bridges & Fords
+  description: Live OpenStreetMap extraction of bridges (bridge=yes,
+    man_made=bridge) and fords (ford=yes), returned as one point per feature
+    with road class, name and weight or width limits when tagged. Key crossing
+    points for access planning; can be heavy in dense cities, zoom in first.
+  type: overpass
+  category: transport
+  url: bridge=yes|ford=yes|man_made=bridge
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - pont
+    - ponts
+    - gue
+    - franchissement
+    - traversee
+    - bridge
+    - bridges
+    - ford
+    - river crossing
+    - acces
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Ponts et gués
+      description: Extraction dynamique OpenStreetMap des ponts (bridge=yes,
+        man_made=bridge) et des gués (ford=yes), un point par objet avec classe
+        de route, nom et limites de poids ou de largeur lorsqu'elles sont
+        renseignées. Points de franchissement clés pour planifier les accès ;
+        peut être lourd en ville dense, zoomer d'abord.
+- id: global-overpass-ferry-ports
+  name: OSM Overpass - Ferry Terminals & Harbours
+  description: Live OpenStreetMap extraction of ferry terminals
+    (amenity=ferry_terminal) and harbour areas (landuse=harbour), returned as
+    one point per feature.
+  type: overpass
+  category: transport
+  url: amenity=ferry_terminal|landuse=harbour
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - port
+    - ports
+    - gare maritime
+    - embarcadere
+    - bac
+    - ferry
+    - ferry terminal
+    - harbour
+    - harbor
+    - logistique
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Gares maritimes, embarcadères et ports
+      description: Extraction dynamique OpenStreetMap des gares maritimes et
+        embarcadères de ferry (amenity=ferry_terminal) et des zones portuaires
+        (landuse=harbour), un point par objet.
+- id: global-overpass-border-crossings
+  name: OSM Overpass - Border Control Posts
+  description: Live OpenStreetMap extraction of border control and customs
+    checkpoints (barrier=border_control), returned as points. Shows where roads
+    cross an international border through an official post; informal crossings
+    are not mapped.
+  type: overpass
+  category: transport
+  url: barrier=border_control
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - frontiere
+    - poste frontiere
+    - douane
+    - point de passage
+    - border
+    - border crossing
+    - border control
+    - customs
+    - checkpoint
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Postes-frontières
+      description: Extraction dynamique OpenStreetMap des postes de contrôle
+        frontalier et de douane (barrier=border_control), en points. Indique où
+        les routes franchissent une frontière internationale par un poste
+        officiel ; les passages informels ne sont pas cartographiés.
+- id: global-overpass-main-roads
+  name: OSM Overpass - Main Roads (Motorway to Secondary)
+  description: Live linear OpenStreetMap extraction of the structuring road
+    network only - motorways, trunk, primary and secondary roads
+    (highway=motorway, trunk, primary, secondary) - with name, reference, surface
+    and lanes when tagged. Much lighter than a full road export; tertiary roads
+    and tracks are left out.
+  type: overpass
+  category: transport
+  url: highway=motorway|highway=trunk|highway=primary|highway=secondary
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport.qml
+  tags:
+    - route
+    - routes
+    - routes principales
+    - autoroute
+    - nationale
+    - reseau routier
+    - road
+    - roads
+    - main roads
+    - highway
+    - motorway
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  priority: 2
+  i18n:
+    fr:
+      name: OSM Overpass - Routes principales (autoroutes à routes secondaires)
+      description: Extraction dynamique linéaire OpenStreetMap du seul réseau
+        routier structurant - autoroutes, voies rapides, routes primaires et
+        secondaires (highway=motorway, trunk, primary, secondary) - avec nom,
+        référence, revêtement et voies lorsqu'ils sont renseignés. Bien plus
+        léger qu'un export routier complet ; routes tertiaires et pistes exclues.
+- id: global-overpass-places
+  name: OSM Overpass - Cities, Towns, Villages & Hamlets
+  description: Live OpenStreetMap extraction of populated place names
+    (place=city, town, village, hamlet) as points, with name, translations and
+    population when tagged. A quick locality layer for labelling a field map.
+  type: overpass
+  category: admin
+  url: place=city|place=town|place=village|place=hamlet
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - ville
+    - villes
+    - village
+    - villages
+    - hameau
+    - localite
+    - localites
+    - toponyme
+    - city
+    - town
+    - hamlet
+    - settlement
+    - populated places
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Villes, bourgs, villages et hameaux
+      description: Extraction dynamique OpenStreetMap des noms de lieux habités
+        (place=city, town, village, hamlet) en points, avec nom, traductions et
+        population lorsqu'ils sont renseignés. Couche de localités rapide pour
+        étiqueter une carte de terrain.
+- id: global-overpass-markets-banks
+  name: OSM Overpass - Marketplaces, Banks, ATMs & Money Transfer
+  description: Live OpenStreetMap extraction of marketplaces
+    (amenity=marketplace), banks (amenity=bank), cash machines (amenity=atm) and
+    money transfer agents (amenity=money_transfer), one point per feature.
+    Useful for market assessments and cash-based assistance planning.
+  type: overpass
+  category: utilities
+  url: amenity=marketplace|amenity=bank|amenity=atm|amenity=money_transfer
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: transport-point.qml
+  tags:
+    - marche
+    - marches
+    - banque
+    - banques
+    - distributeur
+    - transfert d argent
+    - assistance monetaire
+    - market
+    - marketplace
+    - bank
+    - atm
+    - money transfer
+    - cash
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Marchés, banques, distributeurs et transfert d'argent
+      description: Extraction dynamique OpenStreetMap des marchés
+        (amenity=marketplace), banques (amenity=bank), distributeurs de billets
+        (amenity=atm) et agences de transfert d'argent (amenity=money_transfer),
+        un point par objet. Utile pour les évaluations de marché et la
+        planification d'une assistance monétaire.
+- id: global-overpass-places-of-worship-community
+  name: OSM Overpass - Places of Worship, Community Centres & Town Halls
+  description: Live OpenStreetMap extraction of places of worship
+    (amenity=place_of_worship), community centres (amenity=community_centre)
+    and town halls (amenity=townhall), one point per feature. Typical gathering
+    points, potential collective shelters and local authority contacts.
+  type: overpass
+  category: crisis
+  url: amenity=place_of_worship|amenity=community_centre|amenity=townhall
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: crisis.qml
+  tags:
+    - eglise
+    - mosquee
+    - temple
+    - lieu de culte
+    - centre communautaire
+    - mairie
+    - salle communale
+    - church
+    - mosque
+    - place of worship
+    - community centre
+    - town hall
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Lieux de culte, centres communautaires et mairies
+      description: Extraction dynamique OpenStreetMap des lieux de culte
+        (amenity=place_of_worship), centres communautaires
+        (amenity=community_centre) et mairies (amenity=townhall), un point par
+        objet. Lieux de rassemblement habituels, abris collectifs potentiels et
+        relais des autorités locales.
+- id: global-overpass-dams-levees
+  name: OSM Overpass - Dams, Weirs, Dykes & Embankments
+  description: Live linear OpenStreetMap extraction of dams (waterway=dam),
+    weirs (waterway=weir), dykes (man_made=dyke) and embankments
+    (man_made=embankment). Flood protection and water retention structures
+    drawn as lines or outlines; structures mapped as single points are not
+    returned.
+  type: overpass
+  category: hydrography
+  url: waterway=dam|man_made=dyke|man_made=embankment|waterway=weir
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: hydrography-line.qml
+  tags:
+    - barrage
+    - barrages
+    - digue
+    - digues
+    - seuil
+    - remblai
+    - inondation
+    - dam
+    - weir
+    - dyke
+    - levee
+    - embankment
+    - flood protection
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Barrages, seuils, digues et remblais
+      description: Extraction dynamique linéaire OpenStreetMap des barrages
+        (waterway=dam), seuils (waterway=weir), digues (man_made=dyke) et
+        remblais (man_made=embankment). Ouvrages de protection contre les
+        inondations et de retenue dessinés en lignes ou contours ; les ouvrages
+        saisis en simples points ne sont pas renvoyés.
+- id: global-overpass-sanitation
+  name: OSM Overpass - Toilets, Showers & Waste Disposal
+  description: Live OpenStreetMap extraction of public toilets and latrines
+    (amenity=toilets), showers (amenity=shower) and waste disposal points
+    (amenity=waste_disposal), one point per feature. WASH facilities as mapped
+    in OSM, most complete in camps mapped by humanitarian teams.
+  type: overpass
+  category: utilities
+  url: amenity=toilets|amenity=shower|amenity=waste_disposal
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: hydrography.qml
+  tags:
+    - toilettes
+    - latrines
+    - douches
+    - dechets
+    - assainissement
+    - eha
+    - toilets
+    - latrine
+    - shower
+    - waste
+    - sanitation
+    - wash
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Toilettes, douches et points de collecte des déchets
+      description: Extraction dynamique OpenStreetMap des toilettes et latrines
+        publiques (amenity=toilets), douches (amenity=shower) et points de dépôt
+        des déchets (amenity=waste_disposal), un point par objet. Équipements EHA
+        tels que cartographiés dans OSM, surtout complets dans les camps
+        cartographiés par des équipes humanitaires.
+- id: global-overpass-ngo-offices
+  name: OSM Overpass - NGO, Government & Diplomatic Offices
+  description: Live OpenStreetMap extraction of offices of non-governmental
+    organisations (office=ngo), government services (office=government) and
+    embassies or consulates (office=diplomatic), one point per feature with
+    name and operator when tagged.
+  type: overpass
+  category: crisis
+  url: office=ngo|office=government|office=diplomatic
+  crs: EPSG:4326
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  style_file: crisis.qml
+  tags:
+    - ong
+    - association
+    - administration
+    - gouvernement
+    - ambassade
+    - consulat
+    - bureau
+    - ngo
+    - government
+    - embassy
+    - consulate
+    - office
+    - overpass
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors (via Overpass API)
+  i18n:
+    fr:
+      name: OSM Overpass - Bureaux d'ONG, administrations et représentations diplomatiques
+      description: Extraction dynamique OpenStreetMap des bureaux d'organisations
+        non gouvernementales (office=ngo), des services de l'État
+        (office=government) et des ambassades ou consulats (office=diplomatic),
+        un point par objet avec nom et opérateur lorsqu'ils sont renseignés.

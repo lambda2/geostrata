@@ -11,6 +11,10 @@ export const SourceCategorySchema = z.enum([
 	'imagery',
 	'utilities',
 	'crisis',
+	'population',
+	'health',
+	'hazard',
+	'weather',
 ])
 
 export type SourceCategory = z.infer<typeof SourceCategorySchema>
@@ -82,6 +86,10 @@ export const CatalogEntrySchema = z
 		min_zoom: z.number().int().min(0).max(24).optional(),
 		max_zoom: z.number().int().min(0).max(24).optional(),
 		archive_target: z.string().min(1).optional(),
+		/** Editorial ranking boost: higher values are listed earlier for an equally relevant search. */
+		priority: z.number().int().min(-10).max(10).default(0),
+		/** Free-text vintage or refresh rate of the data, e.g. "2021" or "updated daily". */
+		data_date: z.string().min(1).optional(),
 	})
 	.refine(
 		function validateArchiveTarget(entry) {
@@ -95,12 +103,21 @@ export const CatalogEntrySchema = z
 
 export type CatalogEntry = z.infer<typeof CatalogEntrySchema>
 
+/** Entry as written in YAML or by an ingest script, before defaults are applied. */
+export type CatalogEntryInput = z.input<typeof CatalogEntrySchema>
+
+/**
+ * A file is a single entry, a list of entries, or `{ defaults, sources }` where
+ * `defaults` holds the fields shared by every entry of the file (see expand.ts).
+ * Entries are validated one by one after defaults and country templates are applied.
+ */
 export const CatalogFileSchema = z.union([
-	CatalogEntrySchema,
-	z.array(CatalogEntrySchema).min(1),
+	z.object({
+		defaults: z.record(z.unknown()).optional(),
+		sources: z.array(z.record(z.unknown())).min(1),
+	}),
+	z.array(z.record(z.unknown())).min(1),
+	z.record(z.unknown()),
 ])
 
-export function parseCatalogFileContent(rawContent: unknown): Array<CatalogEntry> {
-	const parsed = CatalogFileSchema.parse(rawContent)
-	return Array.isArray(parsed) ? parsed : [parsed]
-}
+export type CatalogFile = z.infer<typeof CatalogFileSchema>

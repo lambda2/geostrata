@@ -1,0 +1,70 @@
+name: Publish Catalog & QGIS Plugin Repository to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build-static-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: packages/registry/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Install registry dependencies
+        working-directory: packages/registry
+        run: npm ci
+
+      - name: Ingest & Build catalog.sqlite
+        working-directory: packages/registry
+        run: npm run ingest && npm run build
+
+      - name: Package QGIS plugin ZIP & plugins.xml
+        env:
+          GEOSTRATA_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: python3 packages/qgis-plugin/scripts/package_plugin.py
+
+      - name: Assemble _site directory for GitHub Pages
+        run: python3 packages/website/build_site.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy-pages:
+    needs: build-static-site
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

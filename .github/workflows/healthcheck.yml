@@ -1,0 +1,32 @@
+name: Geostrata Weekly Endpoint Healthcheck
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/registry
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: packages/registry/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build catalog.sqlite
+        run: npm run build
+
+      - name: Check endpoints availability
+        run: npm run healthcheck

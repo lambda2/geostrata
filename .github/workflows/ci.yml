@@ -1,0 +1,54 @@
+name: Geostrata CI & Release Artifacts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: packages/registry/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install registry dependencies
+        working-directory: packages/registry
+        run: npm ci
+
+      - name: Typecheck TypeScript
+        working-directory: packages/registry
+        run: npm run typecheck
+
+      - name: Run FieldMaps/HDX ingestion & Build catalog.sqlite
+        working-directory: packages/registry
+        run: npm run ingest && npm run build
+
+      - name: Run PyQGIS core unit tests
+        run: python3 packages/qgis-plugin/tests/test_core.py -v
+
+      - name: Package QGIS plugin ZIP archive
+        run: python3 packages/qgis-plugin/scripts/package_plugin.py
+
+      - name: Upload compiled catalog & QGIS plugin artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: geostrata-release-bundle
+          path: |
+            packages/registry/dist/catalog.sqlite
+            packages/registry/dist/catalog.sqlite.gz
+            packages/registry/dist/manifest.json
+            packages/qgis-plugin/dist/geostrata.zip

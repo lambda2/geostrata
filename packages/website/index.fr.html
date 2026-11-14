@@ -3,10 +3,10 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Geostrata — Moteur spatialisé statique · Plugin PyQGIS</title>
+	<title>Geostrata — Catalogue spatial pour QGIS</title>
 	<meta
 		name="description"
-		content="Moteur de catalogue spatial statique et plugin PyQGIS pour QGIS 3 & 4. Indexation SQLite R-Tree + FTS5, recherche multilingue, streaming cloud-native et extraction locale."
+		content="Plugin QGIS 3 & 4 ajoutant un catalogue spatial SQLite statique dans la barre de recherche Ctrl+K."
 	/>
 	<link rel="icon" type="image/svg+xml" href="./icons/geostrata.svg" />
 	<link rel="stylesheet" href="./styles.css" />
@@ -17,528 +17,116 @@
 			<a href="#" class="brand">
 				<img src="./icons/geostrata.svg" alt="Geostrata" class="brand-logo" />
 				<span class="brand-name">Geostrata</span>
-				<span class="brand-badge">QGIS 3 &amp; 4</span>
 			</a>
 			<nav class="main-nav">
-				<a href="#constat">Constat</a>
-				<a href="#moteur-spatial">Moteur spatial</a>
-				<a href="#protocoles">Protocoles</a>
+				<a href="#fonctionnement">Fonctionnement</a>
 				<a href="#catalogue">Catalogue</a>
 				<a href="#installation">Installation</a>
+				<a href="https://github.com/lambda2/geostrata" target="_blank" rel="noopener">GitHub</a>
 			</nav>
 			<div class="header-actions">
 				<div class="lang-switch" aria-label="Sélecteur de langue">
 					<a href="./index.html">EN</a>
 					<a href="./index.fr.html" class="active">FR</a>
 				</div>
-				<a href="./geostrata.zip" class="btn btn-secondary btn-sm" download>.ZIP</a>
-				<a href="#installation" class="btn btn-primary btn-sm">Installer</a>
+				<a href="./geostrata.zip" class="btn btn-secondary btn-sm" download>geostrata.zip</a>
 			</div>
 		</div>
 	</header>
 
 	<main>
-		<!-- SLIDE 1: HERO -->
-		<section class="hero-slide">
-			<div class="container hero-layout">
+		<!-- INTRO -->
+		<section class="section">
+			<div class="container intro-grid">
 				<div>
-					<span class="kicker">MOTEUR SPATIALISÉ STATIQUE &middot; PLUGIN PYQGIS</span>
-					<h1 class="hero-title">Geostrata</h1>
-					<p class="hero-subtitle">
-						La donnée géographique à portée de recherche dans QGIS
+					<h1 class="intro-title">Geostrata</h1>
+					<p class="intro-text">
+						Un plugin PyQGIS (QGIS 3.28+ &amp; 4.x) qui interroge un catalogue SQLite statique (<span id="hero-total-count">267</span> couches) depuis la barre de recherche de QGIS (<kbd>Ctrl</kbd>+<kbd>K</kbd>).
 					</p>
-					<div class="hero-actions">
-						<a href="#catalogue" class="btn btn-primary">
-							Parcourir le catalogue (<span id="hero-total-count">267</span> couches)
-						</a>
-						<a href="#installation" class="btn btn-outline">
-							Dépôt QGIS &amp; archive ZIP
-						</a>
-					</div>
-					<div class="mono-caption">
-						INTÉGRATION NATIVE QGIS &middot; ARCHITECTURE STATIQUE SANS SERVEUR<br />
-						INDEXATION MULTILINGUE &amp; EXTRACTION DIRECTE
-					</div>
-				</div>
-
-				<!-- ISOMETRIC LAYERED STRATA BLUEPRINT SVG -->
-				<div class="hero-diagram-wrap">
-					<svg class="blueprint-svg" viewBox="0 0 640 460" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schéma d'architecture en strates Geostrata">
-						<!-- Vertical dashed guide lines -->
-						<line x1="120" y1="95" x2="120" y2="335" stroke="#1F45C6" stroke-width="1" stroke-dasharray="3 3" opacity="0.55" />
-						<line x1="430" y1="95" x2="430" y2="335" stroke="#1F45C6" stroke-width="1" stroke-dasharray="3 3" opacity="0.55" />
-
-						<!-- LAYER 1: CANEVAS QGIS -->
-						<polygon points="275,28 430,90 275,152 120,90" fill="#DCE5F7" stroke="#1F45C6" stroke-width="1.6" />
-						<polygon points="120,90 275,152 275,160 120,98" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1.2" />
-						<polygon points="430,90 275,152 275,160 430,98" fill="#C7D6F4" stroke="#1F45C6" stroke-width="1.2" />
-						<path d="M210,64 C245,82 260,96 315,128" stroke="#FAF9F5" stroke-width="7" stroke-linecap="round" />
-						<path d="M210,64 C245,82 260,96 315,128" stroke="#1F45C6" stroke-width="1.3" stroke-linecap="round" />
-						<polygon points="295,66 335,82 315,94 275,78" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1" />
-						<polygon points="342,86 378,100 358,112 322,98" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1" />
-						<line x1="175" y1="88" x2="235" y2="112" stroke="#1F45C6" stroke-width="1" opacity="0.7" />
-
-						<!-- Callout 1: CANEVAS QGIS -->
-						<circle cx="392" cy="90" r="3" fill="#1F45C6" />
-						<line x1="392" y1="90" x2="482" y2="90" stroke="#1F45C6" stroke-width="1.2" />
-						<text x="488" y="94" fill="#1A1D24" font-family="monospace" font-size="11" letter-spacing="0.08em">CANEVAS QGIS</text>
-
-						<!-- LAYER 2: BARRE DE RECHERCHE -->
-						<polygon points="150,152 405,198 392,226 137,180" fill="#DCE5F7" stroke="#1F45C6" stroke-width="1.5" />
-						<polygon points="137,180 392,226 392,236 137,190" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1.2" />
-						<circle cx="165" cy="172" r="7" stroke="#1F45C6" stroke-width="1.6" fill="none" />
-						<line x1="170" y1="177" x2="176" y2="183" stroke="#1F45C6" stroke-width="1.6" />
-						<text x="188" y="185" fill="#1A1D24" font-family="monospace" font-size="10.5" transform="rotate(10 188 185)">gst eau · BBOX(4.83, 45.76)</text>
-
-						<!-- Callout 2: INDEX FTS5 & R-TREE -->
-						<circle cx="355" cy="212" r="3" fill="#1F45C6" />
-						<line x1="355" y1="212" x2="482" y2="212" stroke="#1F45C6" stroke-width="1.2" />
-						<text x="488" y="210" fill="#1A1D24" font-family="monospace" font-size="11" letter-spacing="0.08em">INDEX FTS5 &amp; R-</text>
-						<text x="488" y="224" fill="#1A1D24" font-family="monospace" font-size="11" letter-spacing="0.08em">TREE</text>
-
-						<!-- LAYER 3: SPATIAL INDEX PLANE -->
-						<polygon points="275,216 430,268 275,320 120,268" fill="#1F45C6" stroke="#173499" stroke-width="1.5" />
-						<polygon points="240,248 310,248 325,282 225,282" fill="none" stroke="#DCE5F7" stroke-width="1.2" stroke-dasharray="3 2" />
-						<text x="247" y="266" fill="#FFFFFF" font-family="monospace" font-size="9.5" letter-spacing="0.08em">SPATIAL</text>
-						<text x="254" y="278" fill="#FFFFFF" font-family="monospace" font-size="9.5" letter-spacing="0.08em">INDEX</text>
-						<rect x="172" y="256" width="28" height="16" stroke="#DCE5F7" stroke-width="1" fill="none" />
-						<circle cx="358" cy="268" r="4" stroke="#DCE5F7" stroke-width="1.2" fill="none" />
-						<circle cx="378" cy="260" r="3" stroke="#DCE5F7" stroke-width="1.2" fill="none" />
-						<line x1="362" y1="266" x2="375" y2="261" stroke="#DCE5F7" stroke-width="1" />
-
-						<!-- Callout 3: CATALOGUE STATIQUE -->
-						<circle cx="395" cy="302" r="3" fill="#1F45C6" />
-						<line x1="395" y1="302" x2="482" y2="302" stroke="#1F45C6" stroke-width="1.2" />
-						<text x="488" y="300" fill="#1A1D24" font-family="monospace" font-size="11" letter-spacing="0.08em">CATALOGUE</text>
-						<text x="488" y="314" fill="#1A1D24" font-family="monospace" font-size="11" letter-spacing="0.08em">STATIQUE</text>
-
-						<!-- LAYER 4: CYLINDRE SQLITE -->
-						<path d="M135,348 C135,322 415,322 415,348 L415,412 C415,438 135,438 135,412 Z" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1.5" />
-						<ellipse cx="275" cy="348" rx="140" ry="26" fill="#DCE5F7" stroke="#1F45C6" stroke-width="1.5" />
-						<ellipse cx="275" cy="348" rx="42" ry="10" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1.2" />
-						<path d="M135,370 C135,396 415,396 415,370" stroke="#1F45C6" stroke-width="1" fill="none" />
-						<path d="M135,392 C135,418 415,418 415,392" stroke="#1F45C6" stroke-width="1" fill="none" />
-						<line x1="220" y1="372" x2="220" y2="432" stroke="#1F45C6" stroke-width="1" />
-						<text x="148" y="384" fill="#1A1D24" font-family="monospace" font-size="8.5">SOURCES_RTREE</text>
-						<text x="148" y="405" fill="#1A1D24" font-family="monospace" font-size="8.5">SOURCES_FTS</text>
-						<text x="148" y="425" fill="#1A1D24" font-family="monospace" font-size="8.5">I18N &amp; QML</text>
-						<text x="242" y="385" fill="#1F45C6" font-family="monospace" font-size="9">WMTS &middot; WFS &middot; COG &middot; FGB &middot; OVERPASS</text>
-						<text x="242" y="406" fill="#3F4654" font-family="monospace" font-size="9">catalog.sqlite (SHA-256 sync)</text>
-					</svg>
-				</div>
-			</div>
-		</section>
-
-		<!-- SLIDE 2: CONSTAT -->
-		<section id="constat" class="slide-section">
-			<div class="container">
-				<div class="slide-heading">
-					<h2>La donnée géographique reste dispersée</h2>
-					<hr class="slide-rule" />
-				</div>
-
-				<div class="three-col-bars">
-					<div class="top-bar-col">
-						<span class="kicker">FONDS DE CARTE</span>
-						<h3>Tuiles et orthophotos</h3>
-						<p>
-							Les serveurs WMTS et flux tuilés sont éparpillés entre multiples portails nationaux, sans indexation spatiale unifiée.
-						</p>
-					</div>
-
-					<div class="top-bar-col">
-						<span class="kicker">FLUX MÉTIERS &amp; HUMANITAIRES</span>
-						<h3>Entrepôts sectoriels</h3>
-						<p>
-							Les couches thématiques (HDX, OpenStreetMap, serveurs WFS régionaux) imposent de chercher manuellement sur chaque catalogue.
-						</p>
-					</div>
-
-					<div class="top-bar-col">
-						<span class="kicker">LIMITES QUICKMAPSERVICES</span>
-						<h3>Couverture restreinte</h3>
-						<p>
-							Le projet pointe le manque de granularité locale dans QuickMapServices et l'absence de requêtes sémantiques contextuelles.
-						</p>
-					</div>
-				</div>
-
-				<div class="slide-footnote">
-					CONSTAT DU PROJET GEOSTRATA SUR LA DISSÉMINATION DES SOURCES DE DONNÉES SPATIALES
-				</div>
-			</div>
-		</section>
-
-		<!-- SLIDE 3: CTRL+K -->
-		<section class="slide-section slide-section-alt">
-			<div class="container">
-				<div class="slide-heading">
-					<h2>Une recherche depuis Ctrl+K</h2>
-					<hr class="slide-rule" />
-				</div>
-
-				<div class="ctrlk-layout">
-					<div class="ctrlk-illustration">
-						<svg viewBox="0 0 380 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Raccourci Ctrl+K et barre de recherche QGIS">
-							<!-- Ctrl Keycap -->
-							<polygon points="65,36 145,68 115,104 35,72" fill="#1F45C6" stroke="#173499" stroke-width="1.5" />
-							<polygon points="35,72 115,104 110,122 30,90" fill="#173499" />
-							<polygon points="145,68 115,104 110,122 140,86" fill="#2B56E0" />
-							<text x="68" y="76" fill="#FFFFFF" font-family="sans-serif" font-weight="700" font-size="16" transform="rotate(20 68 76)">Ctrl</text>
-
-							<!-- K Keycap -->
-							<polygon points="185,78 245,102 218,134 158,110" fill="#DCE5F7" stroke="#1F45C6" stroke-width="1.5" />
-							<polygon points="158,110 218,134 214,150 154,126" fill="#FAF9F5" stroke="#1F45C6" stroke-width="1.2" />
-							<polygon points="245,102 218,134 214,150 241,118" fill="#C7D6F4" stroke="#1F45C6" stroke-width="1.2" />
-							<text x="193" y="114" fill="#1F45C6" font-family="sans-serif" font-weight="700" font-size="16" transform="rotate(20 193 114)">K</text>
-
-							<!-- Dashed connectors -->
-							<line x1="72" y1="120" x2="72" y2="178" stroke="#1F45C6" stroke-width="1.2" stroke-dasharray="4 4" />
-							<line x1="196" y1="150" x2="196" y2="215" stroke="#1F45C6" stroke-width="1.2" stroke-dasharray="4 4" />
-
-							<!-- Isometric Search Bar -->
-							<polygon points="25,168 345,252 315,286 5,200" fill="#DCE5F7" stroke="#1F45C6" stroke-width="1.6" />
-							<circle cx="48" cy="192" r="7" stroke="#1F45C6" stroke-width="1.6" fill="none" />
-							<line x1="53" y1="197" x2="59" y2="203" stroke="#1F45C6" stroke-width="1.6" />
-							<text x="72" y="206" fill="#1F45C6" font-family="monospace" font-size="14" transform="rotate(15 72 206)">gst Search...</text>
-						</svg>
-						<div class="kicker" style="margin-top: 10px;">LOCATE BAR NATIVE &middot; PRÉFIXE GST</div>
-					</div>
-
-					<div>
-						<span class="kicker">LOCALISATEUR QGIS UNIFIÉ</span>
-						<p style="margin-top: 0; color: var(--ink-secondary);">
-							Geostrata s'insère dans la barre d'action globale de QGIS (<kbd>Ctrl</kbd> + <kbd>K</kbd>). Le préfixe <code class="inline-code-highlight">gst</code> interroge l'index sans quitter le plan de travail.
-						</p>
-
-						<div class="command-list">
-							<div class="command-row">
-								<div class="command-icon">
-									<img src="./icons/hydrography.svg" alt="" />
-								</div>
-								<div>
-									<span class="command-pill">gst eau</span>
-									<p class="command-desc">Réseaux hydrographiques, masses d'eau locales, bornes-fontaines et couches bathymétriques.</p>
-								</div>
-							</div>
-
-							<div class="command-row">
-								<div class="command-icon">
-									<img src="./icons/elevation.svg" alt="" />
-								</div>
-								<div>
-									<span class="command-pill">gst dem</span>
-									<p class="command-desc">Modèles numériques de terrain, LiDAR HD, ombrages et rasters d'élévation altimétrique.</p>
-								</div>
-							</div>
-
-							<div class="command-row">
-								<div class="command-icon">
-									<img src="./icons/crisis.svg" alt="" />
-								</div>
-								<div>
-									<span class="command-pill">gst hopital</span>
-									<p class="command-desc">Équipements de santé et infrastructures d'urgence de la zone affichée.</p>
-								</div>
-							</div>
-
-							<div class="command-row">
-								<div class="command-icon">
-									<img src="./icons/admin.svg" alt="" />
-								</div>
-								<div>
-									<span class="command-pill">gst communes</span>
-									<p class="command-desc">Limites administratives et zonages territoriaux intersectant l'écran.</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- SLIDE 4: FILTRE SPATIAL -->
-		<section id="moteur-spatial" class="slide-section">
-			<div class="container">
-				<div class="slide-heading">
-					<h2>Des sources adaptées à l'emprise du canevas</h2>
-					<hr class="slide-rule" />
-				</div>
-
-				<div class="spatial-layout">
-					<div class="spatial-steps-flow">
-						<div class="spatial-step-box">
-							<div>
-								<span class="kicker">ÉTAPE 1</span>
-								<h3>R-Tree SQLite</h3>
-								<p>Bounding Box intersectant l'emprise canevas</p>
-								<span class="spatial-step-note">Filtrant rapidement les candidats</span>
-							</div>
-							<svg viewBox="0 0 180 90" width="100%" height="84" style="margin-top: 18px;">
-								<rect x="28" y="18" width="76" height="52" fill="none" stroke="#1A1D24" stroke-width="2" />
-								<rect x="64" y="28" width="78" height="50" fill="#DCE5F7" fill-opacity="0.7" stroke="#1F45C6" stroke-width="2" stroke-dasharray="4 3" />
-								<rect x="64" y="28" width="40" height="42" fill="#C7D6F4" />
-							</svg>
-						</div>
-
-						<div class="spatial-flow-arrow">&rarr;</div>
-
-						<div class="spatial-step-box">
-							<div>
-								<span class="kicker">ÉTAPE 2</span>
-								<h3>Géométrie exacte WKT PyQGIS</h3>
-								<p>Intersection fine géométrique</p>
-							</div>
-							<svg viewBox="0 0 180 90" width="100%" height="84" style="margin-top: 18px;">
-								<polygon points="45,22 102,15 118,52 75,78 32,62" fill="none" stroke="#1A1D24" stroke-width="2" />
-								<polygon points="78,24 136,36 122,76 68,68" fill="#DCE5F7" fill-opacity="0.75" stroke="#1F45C6" stroke-width="2" />
-							</svg>
-						</div>
-
-						<div class="spatial-flow-arrow">&rarr;</div>
-
-						<div class="spatial-step-box">
-							<div>
-								<span class="kicker">RÉSULTAT ORDONNÉ</span>
-								<div class="spatial-rank-card-primary" style="margin-top: 14px;">
-									Sources locales prioritaires en tête
-								</div>
-								<div class="spatial-rank-card-secondary">
-									Couvertures mondiales en second
-								</div>
-							</div>
-							<div class="mono-caption" style="margin-top: 16px;">ORDER BY area_deg2 ASC</div>
-						</div>
-					</div>
-
-					<div class="spatial-sidebar">
-						<span class="kicker">DOUBLE FILTRE SPATIAL</span>
-						<div>
-							<h4>1. Index R-Tree SQLite</h4>
-							<p>Pré-sélection ultra-rapide des couches dont l'enveloppe rectangulaire (Bounding Box) croise l'emprise affichée à l'écran.</p>
-						</div>
-						<div>
-							<h4>2. Précision WKT PyQGIS</h4>
-							<p>Calcul géométrique exact sur la géométrie Well-Known Text pour éliminer les faux positifs aux frontières.</p>
-						</div>
-						<div>
-							<span class="kicker" style="margin-bottom: 4px;">PRIORISATION</span>
-							<p>Les jeux de données locaux à haute résolution sont automatiquement présentés avant les couches mondiales globales.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- SLIDE 5: PERFORMANCE & FTS5 MULTILINGUE -->
-		<section class="slide-section slide-section-alt">
-			<div class="container">
-				<div class="slide-heading">
-					<h2>Un index conçu pour répondre vite</h2>
-					<hr class="slide-rule" />
-				</div>
-
-				<div class="metrics-band">
-					<div class="metric-cell">
-						<span class="metric-number">&lt; 3 ms</span>
-						<span class="kicker">OBJECTIF ANNONCÉ PAR LE PROJET</span>
-					</div>
-					<div class="metric-cell">
-						<span class="metric-number">4</span>
-						<span class="kicker">LANGUES D'INDEXATION FTS5</span>
-					</div>
-					<div class="metric-cell">
-						<span class="metric-number">0 ms</span>
-						<span class="kicker">LATENCE RÉSEAU À LA FRAPPE</span>
-					</div>
-				</div>
-
-				<div class="two-col-hairline">
-					<div>
-						<span class="kicker">MOTEUR TEXTE FULL-TEXT SEARCH</span>
-						<h3>SQLite FTS5 embarqué</h3>
-						<p>
-							L'indexation repose sur le module natif SQLite FTS5. La recherche textuelle s'exécute directement en local dans le processus QGIS, sans dépendance externe ni requête HTTP synchrone durant la saisie.
-						</p>
-						<p>
-							Le projet affiche une latence inférieure à trois millisecondes par requête sur le catalogue standard (<strong id="stat-sources-count">267</strong> sources compilées), offrant un affichage instantané des résultats au fil de la frappe.
-						</p>
-					</div>
-
-					<div>
-						<span class="kicker">COUVERTURE MULTILINGUE</span>
-						<h3>Recherche multilingue native &amp; i18n</h3>
-						<p>
-							Toutes les couches disposent d'un nom par défaut en anglais et d'un bloc de traduction <code>i18n.fr</code>, tandis que les synonymes sont indexés en quatre langues :
-						</p>
-						<ul>
-							<li><strong>Français</strong> — traductions complètes <code>i18n.fr</code>, terminologie administrative, cadastrale et environnementale.</li>
-							<li><strong>Anglais</strong> — schémas internationaux, standards OGC et référentiels OSM par défaut.</li>
-							<li><strong>Espagnol</strong> — données territoriales et cartographies régionales.</li>
-							<li><strong>Arabe</strong> — prise en charge des mots-clés thématiques et synonymes régionaux.</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- SLIDE 6 & 7: PROTOCOLES & MODES D'EXÉCUTION -->
-		<section id="protocoles" class="slide-section">
-			<div class="container">
-				<div class="slide-heading">
-					<h2>Une recherche pour de nombreuses sources</h2>
-					<hr class="slide-rule" />
-					<p class="slide-lead">
-						Protocoles standardisés, flux tuilés, formats modernes et entrepôts ouverts accessibles depuis la même interface.
+					<p class="intro-sub">
+						Les couches sont filtrées selon l'emprise visible du canevas via un index R-Tree SQLite et triées de l'échelle locale à l'échelle mondiale. Fonctionne sans serveur backend et sans dépendance Python externe.
 					</p>
-				</div>
-
-				<div class="four-col-hairline">
-					<div class="protocol-col">
-						<span class="kicker">VECTEURS &amp; PROTOCOLES</span>
-						<h3>WFS &amp; FlatGeobuf</h3>
-						<p>
-							Interrogation des services OGC WFS et des flux vectoriels cloud-native FlatGeobuf indexés avec lecture spatiale par morceaux (HTTP Range).
-						</p>
-					</div>
-
-					<div class="protocol-col">
-						<span class="kicker">FLUX TUILÉS &amp; BASES</span>
-						<h3>WMTS &amp; Raster</h3>
-						<p>
-							Connexion transparente aux serveurs de tuiles WMTS, TMS, XYZ et fonds raster d'orthophotographies aériennes ou satellitaires.
-						</p>
-					</div>
-
-					<div class="protocol-col">
-						<span class="kicker">RELIEF &amp; ALTIMÉTRIE</span>
-						<h3>MNT, DEM &amp; COG</h3>
-						<p>
-							Modèles numériques de terrain servis sous forme de Cloud Optimized GeoTIFF (COG) et VRT, autorisant l'échantillonnage direct sans téléchargement total.
-						</p>
-					</div>
-
-					<div class="protocol-col">
-						<span class="kicker">ENTREPÔTS COLLABORATIFS</span>
-						<h3>Overpass &amp; ELI</h3>
-						<p>
-							Requêtes pré-paramétrées sur OpenStreetMap via Overpass API (multi-miroirs) et index des couches d'imagerie issues du référentiel Editor Layer Index.
-						</p>
+					<div class="intro-actions">
+						<a href="#installation" class="btn btn-primary">Installer dans QGIS</a>
+						<a href="#catalogue" class="btn btn-secondary">Parcourir le catalogue</a>
+						<a href="https://github.com/lambda2/geostrata" class="btn btn-outline" target="_blank" rel="noopener">Code source</a>
 					</div>
 				</div>
 
-				<!-- SLIDE 7: ENTRÉE vs MAJ+ENTRÉE -->
-				<div class="slide-heading" style="margin-top: 72px; margin-bottom: 24px;">
-					<h2>Entrée pour le direct, Maj + Entrée pour extraire</h2>
-					<hr class="slide-rule" />
-				</div>
-
-				<div class="exec-layout">
-					<div class="exec-boxes">
-						<div class="exec-box">
-							<div>
-								<span class="exec-key-label">Touche</span>
-								<span class="exec-key-pill">Entrée</span>
-							</div>
-							<div class="exec-arrow">&rarr;</div>
-							<div>
-								<h4>Flux direct</h4>
-								<ul>
-									<li>chargement WFS/WMTS/XYZ/COG instantané</li>
-									<li>styles QML par défaut</li>
-									<li>attribution légale</li>
-								</ul>
-							</div>
-						</div>
-
-						<div class="exec-box">
-							<div>
-								<span class="exec-key-label">Touche</span>
-								<span class="exec-key-pill">Maj + Entrée</span>
-							</div>
-							<div class="exec-arrow">&rarr;</div>
-							<div>
-								<h4>Extraction locale</h4>
-								<ul>
-									<li>tâche en arrière-plan (<code>QgsTask</code>)</li>
-									<li>découpage sur emprise</li>
-									<li>conversion en GeoPackage vectoriel ou GeoTIFF raster</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-
-					<div class="spatial-sidebar">
-						<span class="kicker">MODES D'EXÉCUTION</span>
-						<div>
-							<h4>Touche Entrée : Chargement direct</h4>
-							<p>La couche est injectée directement comme flux connecté (WMTS, XYZ ou WFS). Les styles par défaut et mentions d'attribution sont appliqués automatiquement.</p>
-						</div>
-						<div>
-							<h4>Maj + Entrée : Extraction locale</h4>
-							<p>Une tâche PyQGIS asynchrone est lancée en arrière-plan. La portion de données découpée selon l'emprise courante est matérialisée sur disque en fichier <strong>GeoPackage</strong> pour les vecteurs ou <strong>GeoTIFF</strong> pour les rasters.</p>
-						</div>
-					</div>
+				<div>
+					<table class="spec-table">
+						<thead>
+							<tr>
+								<th>Commande / Touche</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code class="cmd-code">gst &lt;requête&gt;</code></td>
+								<td>Cherche les couches qui intersectent la vue active (ex. <code>gst eau</code>, <code>gst dem</code>, <code>gst hopital</code>).</td>
+							</tr>
+							<tr>
+								<td><code class="cmd-code">gst &lt;requête&gt; !global</code></td>
+								<td>Ignore l'emprise de la carte et cherche sur l'ensemble du catalogue.</td>
+							</tr>
+							<tr>
+								<td><kbd>Entrée</kbd></td>
+								<td>Charge le flux en direct (<code>WMTS</code>, <code>WFS</code>, <code>XYZ</code>, <code>COG /vsicurl/</code>, <code>FlatGeobuf</code> ou <code>Overpass</code>) avec son style QML.</td>
+							</tr>
+							<tr>
+								<td><kbd>Maj</kbd> + <kbd>Entrée</kbd></td>
+								<td>Découpe la couche sur l'emprise active en tâche de fond (<code>QgsTask</code>) et l'enregistre en <code>.gpkg</code> ou <code>.tif</code> local.</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</section>
 
-		<!-- SLIDE 8 & 9: ARCHITECTURE STATIQUE & PERSONNALISATION -->
-		<section class="slide-section slide-section-alt">
+		<!-- FONCTIONNEMENT -->
+		<section id="fonctionnement" class="section section-alt">
 			<div class="container">
-				<div class="slide-heading">
-					<h2>Une recherche géographique qui s'adapte</h2>
-					<hr class="slide-rule" />
-					<p class="slide-lead">
-						Options de personnalisation, autonomie sans serveur et combinaison multi-catalogues conçues pour les pratiques quotidiennes des spécialistes SIG.
-					</p>
-				</div>
-
-				<div class="three-bordered-cards">
-					<div class="bordered-card">
-						<span class="kicker">MODIFICATEUR DE REQUÊTE</span>
-						<h3>Le filtre <span class="inline-code-highlight">!global</span></h3>
+				<h2 class="section-title">Fonctionnement</h2>
+				<div class="how-grid">
+					<div class="how-box">
+						<h3>1. Compilation SQLite statique</h3>
 						<p>
-							Permet de débrayer instantanément la contrainte d'emprise spatiale pour rechercher des référentiels mondiaux, nationaux ou thématiques indépendamment de la vue canevas active.
+							Les fichiers YAML de <code>packages/registry/sources/</code> sont validés avec Zod et compilés dans un fichier unique <code>catalog.sqlite</code> contenant un index spatial R-Tree (<code>sources_rtree</code>), un index plein-texte FTS5 (<code>sources_fts</code>), les traductions <code>i18n</code> et les styles QML.
 						</p>
 					</div>
 
-					<div class="bordered-card">
-						<span class="kicker">IMAGERIE AÉRIENNE</span>
-						<h3>Orthophotos ELI optionnelles</h3>
+					<div class="how-box">
+						<h3>2. Filtrage spatial en deux étapes</h3>
 						<p>
-							Activation à la demande du vaste référentiel mondial <a href="https://osmlab.github.io/editor-layer-index/" target="_blank" rel="noopener">Editor Layer Index</a> pour découvrir les mosaïques d'imagerie satellitaire et aérienne disponibles sur le secteur.
+							Lors d'une recherche dans <kbd>Ctrl</kbd>+<kbd>K</kbd>, le plugin filtre les boîtes englobantes dans le R-Tree SQLite, vérifie l'intersection exacte du polygone WKT dans PyQGIS, puis trie les résultats par superficie croissante (<code>area_deg2 ASC</code>) pour afficher les sources locales avant les couches mondiales.
 						</p>
 					</div>
 
-					<div class="bordered-card">
-						<span class="kicker">PERSONNALISATION &amp; MULTI-CATALOGUES</span>
-						<h3>Icônes &amp; index privés</h3>
+					<div class="how-box">
+						<h3>3. Paramètres &amp; multi-catalogues</h3>
 						<p>
-							Connexion simultanée à un catalogue public mondial et à des index privés d'entreprise (<code>ATTACH DATABASE</code>), avec attribution d'icônes personnalisées par catégorie ou couche.
+							Dans <strong>Internet &rarr; Geostrata &rarr; Paramètres</strong>, il est possible de choisir la langue des couches (<code>auto</code>, <code>en</code>, <code>fr</code>), d'activer ou masquer l'imagerie OSM Editor Layer Index (ELI), de remplacer les icônes SVG, ou d'ajouter d'autres catalogues <code>manifest.json</code>.
 						</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- EXPLORATEUR DU CATALOGUE -->
-		<section id="catalogue" class="slide-section">
+		<!-- CATALOGUE -->
+		<section id="catalogue" class="section">
 			<div class="container">
-				<div class="slide-heading">
-					<h2>Explorateur du catalogue</h2>
-					<hr class="slide-rule" />
-					<p class="slide-lead">
-						Consultez les sources compilées dans <code>catalog.json</code> (noms et descriptions traduits via <code>i18n.fr</code>). Version : <strong id="catalog-version-badge">Chargement…</strong>
-					</p>
-				</div>
+				<h2 class="section-title">Catalogue (<span id="stat-sources-count">267</span> couches)</h2>
+				<p class="section-desc">
+					Données issues de <code>catalog.json</code>. Version : <strong id="catalog-version-badge">Chargement…</strong>
+				</p>
 
 				<div class="catalog-controls">
 					<div class="search-box">
 						<input
 							type="search"
 							id="catalog-search-input"
-							placeholder="Filtrer par mot-clé en français ou anglais (ex: lidar, ign, orthophoto, osm, swisstopo, eau, cadastre…)"
+							placeholder="Rechercher une couche (ex: lidar, ign, orthophoto, osm, swisstopo, eau, cadastre…)"
 							autocomplete="off"
 						/>
 					</div>
@@ -587,10 +175,10 @@
 								<option value="ALL">Tous les protocoles</option>
 								<option value="wmts">WMTS</option>
 								<option value="wms">WMS</option>
-								<option value="xyz">Tuiles XYZ / TMS</option>
+								<option value="xyz">XYZ / TMS</option>
 								<option value="wfs">WFS</option>
 								<option value="cog">COG / VRT (/vsicurl/)</option>
-								<option value="fgb">FlatGeobuf / GeoJSON (/vsicurl/)</option>
+								<option value="fgb">FlatGeobuf / GeoJSON</option>
 								<option value="overpass">OSM Overpass</option>
 								<option value="vectortile">Vector Tiles</option>
 							</select>
@@ -603,7 +191,7 @@
 					</div>
 
 					<div class="catalog-results-bar">
-						<span id="catalog-results-count">Chargement des sources…</span>
+						<span id="catalog-results-count">Chargement…</span>
 						<a href="./catalog.sqlite" download>Télécharger <code>catalog.sqlite</code></a>
 					</div>
 				</div>
@@ -612,58 +200,48 @@
 
 				<div class="catalog-load-more-wrap" id="load-more-wrap" hidden>
 					<button type="button" id="load-more-btn" class="btn btn-secondary">
-						Afficher plus de couches
+						Afficher plus
 					</button>
 				</div>
 			</div>
 		</section>
 
-		<!-- INSTALLATION & RÉFÉRENCE TECHNIQUE -->
-		<section id="installation" class="slide-section slide-section-alt">
+		<!-- INSTALLATION -->
+		<section id="installation" class="section section-alt">
 			<div class="container">
-				<div class="slide-heading">
-					<h2>Installation &amp; Référence technique</h2>
-					<hr class="slide-rule" />
-				</div>
+				<h2 class="section-title">Installation</h2>
 
 				<div class="install-grid">
 					<div class="install-card">
-						<span class="kicker">OPTION 1 &middot; DÉPÔT XML</span>
-						<h3>Dépôt d'extensions QGIS</h3>
+						<h3>Option 1 : Dépôt d'extensions QGIS</h3>
 						<ol class="install-steps">
-							<li>Ouvrez <strong>Extensions &rarr; Installer/Gérer les extensions… &rarr; Paramètres</strong>.</li>
-							<li>Cliquez sur <strong>Ajouter…</strong> sous Dépôts d'extensions et renseignez l'URL ci-dessous :</li>
+							<li>Dans QGIS, ouvrez <strong>Extensions &rarr; Installer/Gérer les extensions… &rarr; Paramètres</strong>.</li>
+							<li>Cliquez sur <strong>Ajouter…</strong> sous Dépôts d'extensions et renseignez cette URL :</li>
 						</ol>
 						<div class="copy-box">
 							<code id="repo-xml-url">https://lambda2.github.io/geostrata/plugins.xml</code>
 							<button type="button" class="btn btn-secondary btn-sm" id="copy-repo-url-btn">Copier</button>
 						</div>
-						<p style="margin: 0; font-size: 0.88rem; color: var(--ink-secondary);">
-							Recherchez ensuite <strong>Geostrata</strong> dans l'onglet <em>Toutes</em> et cliquez sur <strong>Installer l'extension</strong>.
+						<p style="margin: 0; font-size: 0.85rem; color: var(--ink-secondary);">
+							Cherchez ensuite <strong>Geostrata</strong> dans l'onglet <em>Toutes</em> et cliquez sur <strong>Installer l'extension</strong>.
 						</p>
 					</div>
 
 					<div class="install-card">
-						<span class="kicker">OPTION 2 &middot; ARCHIVE ZIP &amp; BUILD LOCAL</span>
-						<h3>Installer depuis un ZIP ou compiler</h3>
-						<p style="margin: 0 0 10px; font-size: 0.92rem; color: var(--ink-secondary);">
-							Téléchargez <a href="./geostrata.zip" download><strong>geostrata.zip</strong></a> via <strong>Extensions &rarr; Installer depuis un ZIP</strong>, ou compilez le registre localement :
+						<h3>Option 2 : Archive ZIP ou compilation locale</h3>
+						<p style="margin: 0 0 8px; font-size: 0.88rem; color: var(--ink-secondary);">
+							Téléchargez <a href="./geostrata.zip" download><strong>geostrata.zip</strong></a> et installez-le via <strong>Extensions &rarr; Installer depuis un ZIP</strong>, ou compilez depuis le dépôt :
 						</p>
 						<pre class="code-block"><code>npm --prefix packages/registry install
 npm run build
 npm run deploy:qgis</code></pre>
-						<div class="install-actions">
-							<a href="./geostrata.zip" class="btn btn-primary btn-sm" download>Télécharger geostrata.zip</a>
-							<a href="./plugins.xml" class="btn btn-outline btn-sm" target="_blank" rel="noopener">plugins.xml</a>
-							<a href="https://github.com/lambda2/geostrata" class="btn btn-outline btn-sm" target="_blank" rel="noopener">Dépôt GitHub</a>
-						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 	</main>
 
-	<!-- MODAL FOR SOURCE DETAILS -->
+	<!-- MODAL -->
 	<div id="source-modal" class="modal-backdrop" hidden>
 		<div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 			<div class="modal-header">
@@ -682,9 +260,7 @@ npm run deploy:qgis</code></pre>
 
 	<footer class="site-footer">
 		<div class="container footer-inner">
-			<div class="mono-caption">
-				GEOSTRATA &middot; EXTENSION LIBRE POUR QGIS &middot; ACCÈS FACILITÉ AUX DONNÉES SPATIALISÉES
-			</div>
+			<div>Geostrata &middot; GPL-2.0-or-later</div>
 			<div class="footer-links">
 				<a href="https://github.com/lambda2/geostrata" target="_blank" rel="noopener">GitHub</a>
 				<a href="./manifest.json" target="_blank" rel="noopener">manifest.json</a>

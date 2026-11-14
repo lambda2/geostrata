@@ -1747,5 +1747,32 @@ class TestTranslations(unittest.TestCase):
         self.assertEqual(record.localized_name(), "Test xyz")
 
 
+class TestCatalogSyncUrl(unittest.TestCase):
+    """The plugin must refresh its catalog from a file that is really published."""
+
+    def test_default_manifest_is_the_published_one(self) -> None:
+        from geostrata.core import sync_manager
+
+        url = sync_manager.DEFAULT_MANIFEST_URL
+        # packages/registry/dist is git-ignored: a raw.githubusercontent.com address into it is a 404.
+        self.assertNotIn("/packages/registry/dist/", url)
+        # packages/website/build_site.py copies manifest.json to the root of the GitHub Pages site.
+        self.assertEqual(url, "https://lambda2.github.io/geostrata/manifest.json")
+
+    def test_retired_default_url_is_replaced(self) -> None:
+        from geostrata.core import sync_manager
+
+        retired = sync_manager._RETIRED_MANIFEST_URLS[0]
+        team = "https://example.org/team/manifest.json"
+        self.assertEqual(
+            sync_manager._replace_retired_urls([retired, team]),
+            [sync_manager.DEFAULT_MANIFEST_URL, team],
+        )
+        self.assertEqual(
+            sync_manager._replace_retired_urls([sync_manager.DEFAULT_MANIFEST_URL, retired]),
+            [sync_manager.DEFAULT_MANIFEST_URL],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

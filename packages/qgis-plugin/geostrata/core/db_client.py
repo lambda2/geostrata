@@ -1,5 +1,5 @@
 """Thread-safe SQLite client: R-Tree + FTS5 (with LIKE fallback) candidate search, Python
-ranking (text relevance + locality + curated priority) and multi-catalog ATTACH.
+ranking (text relevance + locality + curated priority) across several catalogs.
 
 This module must stay importable without QGIS (see tests/test_core.py)."""
 
@@ -453,16 +453,52 @@ def _sqlite_supports_fts5(conn: sqlite3.Connection) -> bool:
         return False
 
 
-# Columns added to `sources` over time: name -> SQL literal used when the column is absent.
-_OPTIONAL_COLUMNS: Tuple[Tuple[str, str], ...] = (
-    ("i18n_json", "'{}'"),
-    ("priority", "0"),
-    ("data_date", "NULL"),
-    ("health_checked_at", "NULL"),
-    ("layer", "NULL"),
-    ("geometry_type", "NULL"),
-    ("time_json", "NULL"),
+# Columns added to `sources` over time: name -> value used when a catalog predates the column.
+_OPTIONAL_COLUMN_DEFAULTS: Dict[str, Any] = {
+    "i18n_json": "{}",
+    "priority": 0,
+    "data_date": None,
+    "health_checked_at": None,
+    "layer": None,
+    "geometry_type": None,
+    "time_json": None,
+}
+
+_WORLD_BBOX: Tuple[float, float, float, float] = (-180.0, -90.0, 180.0, 90.0)
+
+# The queries are constant strings: every variable part (words, bbox) is a bound
+# parameter. `sources` may be a table (older catalogs) or a view with the same
+# column names, `rowid` included (normalised catalogs); `s.*` works on both and
+# columns a catalog does not have yet are defaulted in Python.
+_SQL_SEARCH_FTS = (
+    "SELECT s.*, f.enriched_tags AS fts_tags, f.country_names AS fts_countries "
+    "FROM sources s "
+    "INNER JOIN sources_fts f ON s.rowid = f.rowid "
+    "INNER JOIN sources_rtree r ON s.rowid = r.id "
+    "WHERE s.health_status != 'dead' AND f.sources_fts MATCH ? "
+    "AND r.maxX >= ? AND r.minX <= ? AND r.maxY >= ? AND r.minY <= ?"
 )
+
+# search_text is ' word word word ' (normalized by the compiler). The number of
+# LIKE clauses is fixed; unused ones receive '%', which matches every row.
+_LIKE_TERM_SLOTS = 8
+_SQL_SEARCH_LIKE = (
+    "SELECT s.* FROM sources s "
+    "INNER JOIN sources_rtree r ON s.rowid = r.id "
+    "WHERE s.health_status != 'dead' "
+    "AND s.search_text LIKE ? AND s.search_text LIKE ? "
+    "AND s.search_text LIKE ? AND s.search_text LIKE ? "
+    "AND s.search_text LIKE ? AND s.search_text LIKE ? "
+    "AND s.search_text LIKE ? AND s.search_text LIKE ? "
+    "AND r.maxX >= ? AND r.minX <= ? AND r.maxY >= ? AND r.minY <= ?"
+)
+
+
+def _row_value(row: sqlite3.Row, name: str) -> Any:
+    """Read a column, falling back to its default when the catalog predates it."""
+    if name in row.keys():
+        return row[name]
+    return _OPTIONAL_COLUMN_DEFAULTS.get(name)
 
 
 class CatalogDatabaseClient:
@@ -543,35 +579,29 @@ class CatalogDatabaseClient:
         terms = tokenize(" ".join(tokens))
         bbox = canvas_bbox_4326 if not is_global else None
 
-        primary_uri = f"{valid_paths[0].resolve().as_uri()}?mode=ro"
-        conn = sqlite3.connect(primary_uri, uri=True, check_same_thread=False)
-        conn.row_factory = sqlite3.Row
-
-        try:
-            use_fts5 = self.allow_fts5 and _sqlite_supports_fts5(conn)
-            schemas: List[str] = ["main"]
-            for idx, extra_path in enumerate(valid_paths[1:], start=1):
-                alias = f"cat_{idx}"
-                extra_uri = f"{extra_path.resolve().as_uri()}?mode=ro"
-                conn.execute(f"ATTACH DATABASE ? AS {alias}", (extra_uri,))
-                schemas.append(alias)
-
-            scored: List[Tuple[float, CatalogSourceRecord]] = []
-            seen_ids: Set[str] = set()
-            for schema in schemas:
+        scored: List[Tuple[float, CatalogSourceRecord]] = []
+        seen_ids: Set[str] = set()
+        # One read-only connection per catalog, in the configured order.
+        for catalog_path in valid_paths:
+            catalog_uri = f"{catalog_path.resolve().as_uri()}?mode=ro"
+            conn = sqlite3.connect(catalog_uri, uri=True, check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            try:
+                use_fts5 = self.allow_fts5 and _sqlite_supports_fts5(conn)
                 rows: List[sqlite3.Row] = []
                 if use_fts5 and tokens:
                     try:
-                        rows = self._query_schema(conn, schema, tokens, terms, bbox, True)
+                        rows = self._query_catalog(conn, tokens, terms, bbox, True)
                     except sqlite3.OperationalError:
                         # Catalog without a usable sources_fts table: LIKE fallback.
-                        rows = self._query_schema(conn, schema, tokens, terms, bbox, False)
+                        rows = self._query_catalog(conn, tokens, terms, bbox, False)
                 else:
-                    rows = self._query_schema(conn, schema, tokens, terms, bbox, False)
+                    rows = self._query_catalog(conn, tokens, terms, bbox, False)
 
                 for row in rows:
                     source_id = str(row["id"])
-                    # First configured catalog wins when two catalogs share an id.
+                    # First configured catalog wins when two catalogs share an id; a
+                    # source also comes back once per R-Tree box that meets the canvas.
                     if source_id in seen_ids:
                         continue
                     seen_ids.add(source_id)
@@ -590,77 +620,47 @@ class CatalogDatabaseClient:
                         record.health_status,
                     )
                     scored.append((score, record))
+            finally:
+                conn.close()
 
-            scored.sort(key=lambda item: (-item[0], item[1].area_deg2, item[1].name, item[1].id))
+        scored.sort(key=lambda item: (-item[0], item[1].area_deg2, item[1].name, item[1].id))
 
-            results: List[Tuple[CatalogSourceRecord, float]] = []
-            for score, record in scored:
-                if len(results) >= limit:
-                    break
-                if accept is not None and not accept(record):
-                    continue
-                results.append((record, score))
-            return results
-        finally:
-            conn.close()
+        results: List[Tuple[CatalogSourceRecord, float]] = []
+        for score, record in scored:
+            if len(results) >= limit:
+                break
+            if accept is not None and not accept(record):
+                continue
+            results.append((record, score))
+        return results
 
     @staticmethod
-    def _query_schema(
+    def _query_catalog(
         conn: sqlite3.Connection,
-        schema: str,
         tokens: Sequence[str],
         terms: Sequence[str],
         bbox: Optional[Tuple[float, float, float, float]],
         use_fts5: bool,
     ) -> List[sqlite3.Row]:
-        """Return every non-dead source of one catalog matching the words and the bbox.
-
-        `sources` may be a table (older catalogs) or a view with the same column names,
-        `rowid` included (normalised catalogs): PRAGMA table_info works on both.
-        """
-        cols = {
-            row[1]
-            for row in conn.execute(f"PRAGMA {schema}.table_info(sources)").fetchall()
-        }
-        select_exprs: List[str] = [
-            "s.id", "s.name", "s.description", "s.type", "s.category", "s.url", "s.crs",
-            "s.country_iso", "s.min_x", "s.min_y", "s.max_x", "s.max_y", "s.area_deg2",
-            "s.geom_wkt", "s.tags_json", "s.license", "s.attribution", "s.style_qml",
-            "s.min_zoom", "s.max_zoom", "s.archive_target", "s.health_status",
-        ]
-        for col_name, default_sql in _OPTIONAL_COLUMNS:
-            select_exprs.append(
-                f"s.{col_name}" if col_name in cols else f"{default_sql} AS {col_name}"
-            )
-
-        joins: List[str] = []
-        where: List[str] = ["s.health_status != 'dead'"]
-        params: List[object] = []
+        """Return every non-dead source of one catalog matching the words and the bbox."""
+        min_x, min_y, max_x, max_y = bbox if bbox is not None else _WORLD_BBOX
+        bbox_params: List[object] = [min_x, max_x, min_y, max_y]
 
         if tokens and use_fts5:
-            joins.append(f"INNER JOIN {schema}.sources_fts f ON s.rowid = f.rowid")
-            where.append("f.sources_fts MATCH ?")
-            params.append(" AND ".join(f'"{tok}"*' for tok in tokens))
-            select_exprs.append("f.enriched_tags AS fts_tags")
-            select_exprs.append("f.country_names AS fts_countries")
-        elif tokens:
-            # search_text is ' word word word ' (normalized by the compiler).
-            for term in terms:
-                where.append("s.search_text LIKE ?")
-                params.append(f"% {term}%")
-            select_exprs.append("s.search_text AS search_text")
+            match_expr = " AND ".join(f'"{tok}"*' for tok in tokens)
+            return conn.execute(_SQL_SEARCH_FTS, [match_expr] + bbox_params).fetchall()
 
-        if bbox is not None:
-            joins.append(f"INNER JOIN {schema}.sources_rtree r ON s.rowid = r.id")
-            where.append("r.maxX >= ? AND r.minX <= ? AND r.maxY >= ? AND r.minY <= ?")
-            min_x, min_y, max_x, max_y = bbox
-            params.extend([min_x, max_x, min_y, max_y])
-
-        sql = (
-            f"SELECT {', '.join(select_exprs)} FROM {schema}.sources s "
-            f"{' '.join(joins)} WHERE {' AND '.join(where)}"
-        )
-        return conn.execute(sql, params).fetchall()
+        like_params: List[object] = [f"% {term}%" for term in terms[:_LIKE_TERM_SLOTS]]
+        like_params += ["%"] * (_LIKE_TERM_SLOTS - len(like_params))
+        rows = conn.execute(_SQL_SEARCH_LIKE, like_params + bbox_params).fetchall()
+        extra_terms = list(terms[_LIKE_TERM_SLOTS:])
+        if extra_terms:
+            rows = [
+                row
+                for row in rows
+                if all(f" {term}" in str(row["search_text"] or "") for term in extra_terms)
+            ]
+        return rows
 
     @staticmethod
     def _row_text_relevance(
@@ -676,7 +676,7 @@ class CatalogDatabaseClient:
         if "fts_tags" in keys:
             synonyms = _split_synonyms(str(row["fts_tags"] or ""), record.i18n)
             countries = f"{countries} {row['fts_countries'] or ''}"
-        if "search_text" in keys:
+        elif "search_text" in keys:
             synonyms, other = _split_search_text(str(row["search_text"] or ""), record)
 
         weighted_fields: List[Tuple[float, Sequence[str]]] = [
@@ -703,7 +703,7 @@ class CatalogDatabaseClient:
             parsed_tags = []
 
         try:
-            parsed_i18n = json.loads(row["i18n_json"]) if row["i18n_json"] else {}
+            parsed_i18n = json.loads(_row_value(row, "i18n_json")) if _row_value(row, "i18n_json") else {}
             if not isinstance(parsed_i18n, dict):
                 parsed_i18n = {}
         except (ValueError, TypeError):
@@ -733,10 +733,10 @@ class CatalogDatabaseClient:
             archive_target=str(row["archive_target"]) if row["archive_target"] else None,
             health_status=str(row["health_status"] or "ok"),
             i18n=parsed_i18n,
-            priority=_clamp_priority(row["priority"]),
-            data_date=_optional_text(row["data_date"]),
-            health_checked_at=_optional_text(row["health_checked_at"]),
-            layer=_optional_text(row["layer"]),
-            geometry_type=_optional_geometry_type(row["geometry_type"]),
-            time=_optional_time_spec(row["time_json"]),
+            priority=_clamp_priority(_row_value(row, "priority")),
+            data_date=_optional_text(_row_value(row, "data_date")),
+            health_checked_at=_optional_text(_row_value(row, "health_checked_at")),
+            layer=_optional_text(_row_value(row, "layer")),
+            geometry_type=_optional_geometry_type(_row_value(row, "geometry_type")),
+            time=_optional_time_spec(_row_value(row, "time_json")),
         )

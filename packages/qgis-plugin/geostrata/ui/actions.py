@@ -16,6 +16,7 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QLocale
 
+from ..diagnostics import note_ignored
 from ..core.db_client import CatalogSourceRecord
 from ..core.extractor_task import launch_offline_extraction_task
 from ..core.loader_task import launch_file_load_task
@@ -114,8 +115,8 @@ def push_message(
     try:
         if iface is not None and iface.messageBar() is not None:
             iface.messageBar().pushMessage("Geostrata", text, level=level, duration=duration)
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
 
 def country_display_name(iso_code: str) -> str:
@@ -133,8 +134,8 @@ def country_display_name(iso_code: str) -> str:
                     if native:
                         return str(native)
             return str(QLocale.territoryToString(territory))
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return ""
 
 
@@ -221,8 +222,8 @@ def load_entry(
             try:
                 layer.setScaleBasedVisibility(True)
                 layer.setMinimumScale(50000.0)
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
             push_message(
                 iface,
                 tr(

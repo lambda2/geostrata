@@ -19,6 +19,7 @@ from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QApplication
 
+from ..diagnostics import note_ignored
 from ..core.db_client import (
     GLOBAL_GROUP_AREA_DEG2,
     CatalogDatabaseClient,
@@ -238,8 +239,9 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             result.group = local_group if is_local else global_group
             try:
                 result.groupScore = 2.0 if is_local != global_first else 1.0
-            except Exception:
-                pass  # QGIS < 3.40: the numbered group names give the order
+            except Exception as error:
+                # QGIS < 3.40: the numbered group names give the order
+                note_ignored(error)
             # Entries arrive ranked: keep that order inside each group.
             result.score = max(0.1, 1.0 - (idx * 0.015))
 
@@ -248,8 +250,8 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
                     QgsLocatorResult.ResultAction(action_id, label)
                     for action_id, label in action_labels
                 ]
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
 
             self._emitted_results.append(result)
             self.resultFetched.emit(result)

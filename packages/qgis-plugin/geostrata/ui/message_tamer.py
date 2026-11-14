@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Optional, Set
 from qgis.core import Qgis, QgsSettings
 from qgis.PyQt.QtCore import QObject, QTimer
 
+from ..diagnostics import note_ignored
+
 SETTINGS_TAME_MESSAGES_KEY = "geostrata/tame_network_messages"
 
 NETWORK_MESSAGE_AUTO_HIDE_MS = 12000
@@ -75,8 +77,8 @@ class MessageBarTamer(QObject):
             try:
                 self._bar.widgetAdded.disconnect(self._on_widget_added)
                 self._bar.widgetRemoved.disconnect(self._on_widget_removed)
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
         self._connected = False
         self._shown.clear()
         self._seen_ids.clear()
@@ -95,8 +97,8 @@ class MessageBarTamer(QObject):
                     continue
                 self._seen_ids.add(id(item))
                 self._handle_new_item(item)
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
     def _handle_new_item(self, item: Any) -> None:
         text = str(item.text() or "")
@@ -112,8 +114,8 @@ class MessageBarTamer(QObject):
             known["count"] += 1
             try:
                 known["item"].setText(f"{known['text']} (×{known['count']})")
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
             # Removing an item from inside the signal that announces it is not safe.
             QTimer.singleShot(0, lambda: self._pop(item))
             return
@@ -137,6 +139,6 @@ class MessageBarTamer(QObject):
         try:
             if self._bar is not None:
                 self._bar.popWidget(item)
-        except Exception:
+        except Exception as error:
             # The item was already closed by the user or deleted with the bar.
-            pass
+            note_ignored(error)

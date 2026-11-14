@@ -31,6 +31,7 @@ import os
 import re
 from typing import Dict, Optional
 
+from ..diagnostics import note_ignored
 from .fr import TRANSLATIONS as _FR
 
 SOURCE_LANGUAGE = "en"
@@ -92,8 +93,8 @@ def get_preferred_language() -> str:
         code = _qgis_locale_code()
         if code:
             return code
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
     for env_name in ("GEOSTRATA_LANG", "LANG"):
         code = _normalize_language_code(os.environ.get(env_name))

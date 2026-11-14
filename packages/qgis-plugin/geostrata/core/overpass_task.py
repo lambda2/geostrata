@@ -11,6 +11,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from ..diagnostics import note_ignored
 from ..i18n import tr
 from .net import build_direct_opener
 from .db_client import CatalogSourceRecord
@@ -183,8 +184,8 @@ def get_configured_overpass_servers() -> List[Dict[str, Any]]:
                         )
                 if valid:
                     return valid
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return [dict(s) for s in DEFAULT_OVERPASS_SERVERS]
 
 
@@ -211,8 +212,8 @@ def save_configured_overpass_servers(servers: Sequence[Dict[str, Any]]) -> None:
             SETTINGS_OVERPASS_SERVERS_KEY,
             json.dumps(serializable, ensure_ascii=False),
         )
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
 
 def _bbox_fits_server_region(
@@ -724,7 +725,7 @@ def launch_overpass_fetch_task(
         def __init__(self) -> None:
             super().__init__(
                 tr("Geostrata Overpass: {name}", name=title_str),
-                QgsTask.CanCancel,
+                QgsTask.Flag.CanCancel,
             )
             self.output_file: Path = output_geojson_path
             # (geometry kind, file) of each layer to add; the first one is the main layer.
@@ -784,8 +785,8 @@ def launch_overpass_fetch_task(
             try:
                 if self in _ACTIVE_OVERPASS_TASKS:
                     _ACTIVE_OVERPASS_TASKS.remove(self)
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
 
             if not result or not self.output_file.is_file():
                 msg = (

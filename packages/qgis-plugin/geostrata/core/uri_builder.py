@@ -8,6 +8,7 @@ import urllib.parse
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
+from ..diagnostics import note_ignored
 from .db_client import CatalogSourceRecord
 
 OVERPASS_INTERPRETER_URL = "https://overpass-api.de/api/interpreter"
@@ -36,8 +37,8 @@ def _wfs_geometry_probe_option() -> str:
 
         if int(Qgis.QGIS_VERSION_INT) >= 40000:
             return " forceInitialGetFeature='true'"
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
     return ""
 
 
@@ -540,16 +541,16 @@ def apply_layer_metadata_and_style(layer: Any, entry: CatalogSourceRecord) -> No
         metadata.setRights([entry.attribution])
         metadata.setLicenses([entry.license])
         layer.setMetadata(metadata)
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
     try:
         if hasattr(layer, "setAttribution"):
             layer.setAttribution(entry.attribution)
         if hasattr(layer, "serverProperties") and layer.serverProperties() is not None:
             layer.serverProperties().setAttribution(entry.attribution)
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
     if entry.style_qml and _style_matches_layer_geometry(layer, entry.style_qml):
         try:
@@ -560,8 +561,8 @@ def apply_layer_metadata_and_style(layer: Any, entry: CatalogSourceRecord) -> No
             if ok:
                 layer.importNamedStyle(doc)
                 layer.triggerRepaint()
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
 
 def instantiate_layer(spec: ResolvedLayerSpec) -> Any:
@@ -590,8 +591,8 @@ def _assign_declared_crs_if_missing(layer: Any, entry: CatalogSourceRecord) -> N
         declared = QgsCoordinateReferenceSystem(entry.crs)
         if declared.isValid():
             layer.setCrs(declared)
-    except Exception:
-        pass
+    except Exception as error:
+        note_ignored(error)
 
 
 def create_qgis_layer(

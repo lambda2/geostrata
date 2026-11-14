@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import configparser
 import datetime
 import os
@@ -77,10 +78,21 @@ def package_qgis_plugin() -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Copy latest compiled catalog.sqlite and manifest.json into plugin folder for offline seed
-    for artifact_name in ("catalog.sqlite", "manifest.json"):
-        src_artifact = registry_dist_dir / artifact_name
-        if src_artifact.is_file():
-            shutil.copy2(src_artifact, plugin_src_dir / artifact_name)
+    src_catalog = registry_dist_dir / "catalog.sqlite"
+    if src_catalog.is_file():
+        shutil.copy2(src_catalog, plugin_src_dir / "catalog.sqlite")
+
+    # The bundled manifest only feeds the settings dialog (count, build date). Its
+    # checksums are left out: the plugin hashes the bundled catalog itself, and the
+    # plugins.qgis.org secret scanner rejects long hexadecimal strings.
+    src_manifest = registry_dist_dir / "manifest.json"
+    if src_manifest.is_file():
+        manifest_data = json.loads(src_manifest.read_text(encoding="utf-8"))
+        for checksum_key in ("sha256", "gzip_sha256"):
+            manifest_data.pop(checksum_key, None)
+        (plugin_src_dir / "manifest.json").write_text(
+            json.dumps(manifest_data, indent="\t") + "\n", encoding="utf-8"
+        )
 
     zip_path = out_dir / "geostrata.zip"
     if zip_path.is_file():

@@ -6,6 +6,7 @@ import datetime
 from pathlib import Path
 from typing import Any, Optional, Tuple
 
+from ..diagnostics import note_ignored
 from ..i18n import tr
 from .db_client import CatalogSourceRecord
 from .file_cache import DownloadCancelled, DownloadError, configured_file_cache
@@ -80,7 +81,7 @@ def launch_offline_extraction_task(
         def __init__(self) -> None:
             super().__init__(
                 tr("Geostrata: offline extraction ({name})", name=title),
-                QgsTask.CanCancel,
+                QgsTask.Flag.CanCancel,
             )
             self.output_file: Path = output_path
             self.error_message: Optional[str] = None
@@ -177,8 +178,8 @@ def launch_offline_extraction_task(
             try:
                 if self in _ACTIVE_EXTRACTOR_TASKS:
                     _ACTIVE_EXTRACTOR_TASKS.remove(self)
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
             if self.was_canceled or (not result and self.isCanceled()):
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(

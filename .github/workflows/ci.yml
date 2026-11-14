@@ -53,6 +53,11 @@ jobs:
       - name: Package QGIS plugin ZIP archive
         run: python3 packages/qgis-plugin/scripts/package_plugin.py
 
+      - name: Scan the packaged plugin like plugins.qgis.org (Bandit, detect-secrets)
+        run: |
+          python3 -m pip install --quiet bandit detect-secrets
+          packages/qgis-plugin/scripts/scan_package.sh
+
       - name: Upload compiled catalog & QGIS plugin artifacts
         uses: actions/upload-artifact@v4
         with:

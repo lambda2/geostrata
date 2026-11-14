@@ -21,6 +21,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ..diagnostics import note_ignored
 from ..core.db_client import CatalogDatabaseClient, CatalogSourceRecord
 from ..core.entry_details import build_details_html
 from ..i18n import N_, tr, tr_n
@@ -160,8 +161,8 @@ class GeostrataDockWidget(QDockWidget):
                 self._iface.mapCanvas().extentsChanged.connect(
                     self._on_canvas_extents_changed
                 )
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
 
     def _on_canvas_extents_changed(self) -> None:
         if self.isVisible() and self._spatial_checkbox.isChecked():
@@ -178,8 +179,8 @@ class GeostrataDockWidget(QDockWidget):
                 self._iface.mapCanvas().extentsChanged.disconnect(
                     self._on_canvas_extents_changed
                 )
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
         if self._owns_preview:
             self._coverage_preview.dispose()
         else:

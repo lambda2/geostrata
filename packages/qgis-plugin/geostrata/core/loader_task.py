@@ -22,6 +22,7 @@ from __future__ import annotations
 import time
 from typing import Any, Callable, Iterable, List, Optional, Tuple
 
+from ..diagnostics import note_ignored
 from ..i18n import tr
 from .db_client import CatalogSourceRecord
 from .file_cache import (
@@ -96,8 +97,8 @@ def cancel_active_file_load_tasks() -> None:
     for task in list(_ACTIVE_FILE_LOAD_TASKS):
         try:
             task.cancel()
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
 
 def progress_text(title: str, phase: str, done: int, total: Optional[int]) -> str:
@@ -143,8 +144,8 @@ def launch_file_load_task(
         try:
             if iface is not None and iface.messageBar() is not None:
                 iface.messageBar().pushMessage("Geostrata", text, level=level, duration=duration)
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
     for running in _ACTIVE_FILE_LOAD_TASKS:
         if getattr(running, "cache_key", None) == cache_key and not running.isCanceled():
@@ -160,7 +161,7 @@ def launch_file_load_task(
         def __init__(self) -> None:
             super().__init__(
                 tr("Geostrata: loading {name}", name=title),
-                QgsTask.CanCancel,
+                QgsTask.Flag.CanCancel,
             )
             self.cache_key: str = cache_key
             self.layer: Any = None
@@ -223,8 +224,8 @@ def launch_file_load_task(
             try:
                 if self in _ACTIVE_FILE_LOAD_TASKS:
                     _ACTIVE_FILE_LOAD_TASKS.remove(self)
-            except Exception:
-                pass
+            except Exception as error:
+                note_ignored(error)
             close_progress_item()
 
             if self.was_canceled or (not result and self.isCanceled()):
@@ -332,8 +333,8 @@ def launch_file_load_task(
             return
         try:
             iface.messageBar().popWidget(item)
-        except Exception:
-            pass
+        except Exception as error:
+            note_ignored(error)
 
     task.progressChanged.connect(on_progress_changed)
     _ACTIVE_FILE_LOAD_TASKS.append(task)

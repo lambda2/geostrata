@@ -1095,7 +1095,13 @@ def worker_main(http_timeout_s: int) -> int:
 
 def _probe_after_crash(row: Dict[str, Any]) -> Tuple[str, str]:
     """Ask the endpoint of a layer that crashed its worker whether it answers at all."""
-    target = probe_url_for(str(row["type"]).lower(), str(row["url"]))
+    source_type = str(row["type"]).lower()
+    if source_type in ("archive", "geojson"):
+        # The plugin never streams these: it downloads them with urllib and opens the
+        # local copy (uri_builder.needs_local_copy). A crash of the streamed read used
+        # here as a cheap check says nothing about what a user gets.
+        return STATUS_UNREACHABLE, "crash_on_streamed_read"
+    target = probe_url_for(source_type, str(row["url"]))
     if not target or "{" in target:
         return STATUS_BROKEN, "worker_crash"
     request = urllib.request.Request(

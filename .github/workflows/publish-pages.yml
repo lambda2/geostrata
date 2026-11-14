@@ -45,6 +45,31 @@ jobs:
         working-directory: packages/registry
         run: npm run ingest && npm run build
 
+      # Writes dist/health.json. Exits 1 when it finds dead links: that must be
+      # visible (summary + warning below) but never blocks publishing.
+      - name: Check endpoints availability
+        id: healthcheck
+        working-directory: packages/registry
+        run: |
+          set +e
+          npm run healthcheck > "$RUNNER_TEMP/healthcheck.log" 2>&1
+          code=$?
+          set -e
+          grep -vE '^\[OK\]' "$RUNNER_TEMP/healthcheck.log" || true
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+
+      # Second build: bakes health.json into catalog.sqlite / catalog.json
+      # (health_status, health_checked_at) and refreshes the gzip and manifest.
+      - name: Rebuild catalog.sqlite with health status
+        working-directory: packages/registry
+        run: npm run build
+
+      - name: Healthcheck summary
+        run: |
+          python3 .github/workflows/scripts/health-summary.py \
+            packages/registry/dist/health.json "$GITHUB_STEP_SUMMARY" \
+            "${{ steps.healthcheck.outputs.exit_code }}"
+
       - name: Package QGIS plugin ZIP & plugins.xml
         env:
           GEOSTRATA_BASE_URL: ${{ steps.pages.outputs.base_url }}

@@ -1,16 +1,26 @@
-name: Geostrata Weekly Endpoint Healthcheck
+name: Geostrata Weekly Catalog Health
+
+# Every Monday: HTTP healthcheck of every endpoint, then every layer of the
+# catalog is really loaded in headless QGIS. Broken layers are listed in one
+# GitHub issue (label `catalog-health`), rewritten by each run.
 
 on:
   schedule:
     - cron: '0 4 * * 1'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-health
+  cancel-in-progress: false
+
 jobs:
   healthcheck:
+    name: Build catalog & HTTP healthcheck
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/registry
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,10 +33,185 @@ jobs:
           cache-dependency-path: packages/registry/package-lock.json
 
       - name: Install dependencies
+        working-directory: packages/registry
         run: npm ci
 
-      - name: Build catalog.sqlite
-        run: npm run build
+      - name: Ingest & build catalog.sqlite
+        working-directory: packages/registry
+        run: npm run ingest && npm run build
 
       - name: Check endpoints availability
-        run: npm run healthcheck
+        id: healthcheck
+        working-directory: packages/registry
+        run: |
+          set +e
+          npm run healthcheck > "$RUNNER_TEMP/healthcheck.log" 2>&1
+          code=$?
+          set -e
+          grep -vE '^\[OK\]' "$RUNNER_TEMP/healthcheck.log" || true
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Healthcheck summary
+        run: |
+          python3 .github/workflows/scripts/health-summary.py \
+            packages/registry/dist/health.json "$GITHUB_STEP_SUMMARY" \
+            "${{ steps.healthcheck.outputs.exit_code }}"
+
+      - name: Upload catalog and health report
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-health-input
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            packages/registry/dist/catalog.sqlite
+            packages/registry/dist/health.json
+
+      # Last on purpose: the live test and the issue report still get their input.
+      - name: Fail when dead links were found
+        if: ${{ steps.healthcheck.outputs.exit_code != '0' }}
+        run: |
+          echo "npm run healthcheck exited with ${{ steps.healthcheck.outputs.exit_code }} (dead links, see the summary)"
+          exit 1
+
+  live-layers:
+    name: Live layers (QGIS ${{ matrix.qgis.label }})
+    needs: healthcheck
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    # ~3400 layers today, about two hours for the full leg: the per-country
+    # archives of large countries are slow to open.
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        # The LTR leg loads every layer. The latest-release leg is there to
+        # catch QGIS regressions, not link rot: 25 entries of each generated
+        # family are enough and spare the providers a second full download.
+        qgis:
+          - label: LTR 3.44
+            tag: 3.44-noble
+            selection: --all
+          - label: latest release
+            tag: stable
+            selection: --all --sample-families 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download catalog.sqlite
+        uses: actions/download-artifact@v4
+        with:
+          name: catalog-health-input
+          path: packages/registry/dist
+
+      - name: Load every catalog layer in headless QGIS
+        run: |
+          # shellcheck disable=SC2086  # selection is a list of flags, split on purpose
+          packages/qgis-plugin/tests/run_live_in_docker.sh "${{ matrix.qgis.tag }}" \
+            ${{ matrix.qgis.selection }} \
+            --jobs 6 \
+            --overpass-live 3 \
+            --fail-if-unreachable-above 0.5 \
+            --json "live-result-${{ matrix.qgis.tag }}.json" \
+            --markdown live-summary.md
+
+      - name: Publish summary
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f live-summary.md ]; then
+            cat live-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Live layer test produced no summary (QGIS did not start?)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload live test result
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-result-${{ matrix.qgis.tag }}
+          retention-days: 30
+          if-no-files-found: ignore
+          path: |
+            live-result-${{ matrix.qgis.tag }}.json
+            live-summary.md
+
+  report:
+    name: Open, update or close the catalog-health issue
+    needs: [healthcheck, live-layers]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      ISSUE_LABEL: catalog-health
+      ISSUE_TITLE: Broken catalog layers (weekly live test)
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download results
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Build the issue body
+        id: issue
+        run: |
+          gh label create "$ISSUE_LABEL" --color B60205 \
+            --description "Catalog layers that no longer load (weekly live test)" 2>/dev/null || true
+          open_number="$(gh issue list --label "$ISSUE_LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          # The hidden state (unreachable streaks) may live in the last closed issue.
+          state_number="$open_number"
+          if [ -z "$state_number" ]; then
+            state_number="$(gh issue list --label "$ISSUE_LABEL" --state closed --limit 1 --json number --jq '.[0].number // empty')"
+          fi
+          : > previous-body.md
+          if [ -n "$state_number" ]; then
+            gh issue view "$state_number" --json body --jq '.body' > previous-body.md
+          fi
+          echo "open_number=$open_number" >> "$GITHUB_OUTPUT"
+          echo "state_number=$state_number" >> "$GITHUB_OUTPUT"
+          python3 packages/qgis-plugin/tests/live_layers_issue.py \
+            --results-dir artifacts \
+            --health artifacts/catalog-health-input/health.json \
+            --previous-body previous-body.md \
+            --run-url "$RUN_URL" \
+            --out issue-body.md \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Create, update or close the issue
+        env:
+          STATUS: ${{ steps.issue.outputs.status }}
+          NEEDS_ISSUE: ${{ steps.issue.outputs.needs_issue }}
+          OPEN_NUMBER: ${{ steps.issue.outputs.open_number }}
+          STATE_NUMBER: ${{ steps.issue.outputs.state_number }}
+        run: |
+          if [ "$STATUS" != "ok" ]; then
+            echo "::warning::The live test produced no result: the issue is left untouched"
+            exit 0
+          fi
+          if [ "$NEEDS_ISSUE" = "true" ]; then
+            if [ -n "$OPEN_NUMBER" ]; then
+              gh issue edit "$OPEN_NUMBER" --body-file issue-body.md
+              echo "Updated issue #$OPEN_NUMBER" >> "$GITHUB_STEP_SUMMARY"
+            else
+              url="$(gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body-file issue-body.md)"
+              echo "Opened $url" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            if [ -n "$STATE_NUMBER" ]; then
+              gh issue edit "$STATE_NUMBER" --body-file issue-body.md
+            fi
+            if [ -n "$OPEN_NUMBER" ]; then
+              gh issue close "$OPEN_NUMBER" --comment "Every layer loaded in $RUN_URL."
+              echo "Closed issue #$OPEN_NUMBER: everything passes" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "Nothing broken, no issue open" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          fi

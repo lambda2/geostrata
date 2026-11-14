@@ -1,49 +1,55 @@
 # Geostrata
 
-**Geostrata** est un moteur de recherche spatialisé, 100 % statique et sans serveur de sources de données géographiques (vecteurs, rasters, MNT/DEM, COG, FlatGeobuf, WFS, WMTS, requêtes Overpass OSM, Editor Layer Index), couplé à un plugin PyQGIS natif intégré directement dans la barre de recherche universelle de QGIS (`Ctrl+K`).
+🌐 **Language**: **English** | [Français](README.fr.md)
+
+**Geostrata** is a 100% static, serverless spatial data catalog engine (vectors, rasters, DEM/DTM, Cloud-Optimized GeoTIFF, FlatGeobuf, WFS, WMTS, OSM Overpass recipes, and OSM Editor Layer Index) paired with a zero-dependency native PyQGIS 3 & 4 plugin integrated directly into the QGIS Universal Locator Bar (`Ctrl+K`).
+
+🔗 **Live Catalog & Documentation**: [https://lambda2.github.io/geostrata/](https://lambda2.github.io/geostrata/)  
+📦 **QGIS Plugin Repository XML**: `https://lambda2.github.io/geostrata/plugins.xml`
 
 ---
 
-## Pourquoi Geostrata ?
+## Why Geostrata?
 
-Dans l'écosystème QGIS, l'accès rapide à la donnée géographique est fragmenté :
-- **QuickMapServices (QMS)** dépend d'un backend centralisé et se limite essentiellement aux fonds de carte rasters (TMS/XYZ/WMS), sans couvrir la donnée brute exploitable (vecteurs, MNT/DEM, données humanitaires).
-- **Les flux métiers et humanitaires** (WFS locaux, Cloud-Optimized GeoTIFF, FlatGeobuf, limites administratives FieldMaps/HDX, requêtes Overpass OSM) sont dispersés sur des dizaines de portails.
-- **Aucun moteur de recherche spatialisé unifié** ne permettait de taper un mot-clé (`gst eau`, `gst dem`, `gst hopital`, `gst communes`) et d'obtenir en moins de 3 millisecondes toutes les couches locales et mondiales qui intersectent l'emprise actuelle du canevas QGIS.
-
----
-
-## Fonctionnalités Clés
-
-- **Recherche instantanée (`Ctrl+K`)** : Intégration native via `QgsLocatorFilter` (préfixe `gst`) avec indexation plein texte multilingue (**SQLite FTS5** : FR, EN, ES, AR) et filtrage spatial en deux étapes (**R-Tree SQLite** + géométrie exacte **WKT PyQGIS**).
-- **Tri par pertinence géographique** : Les sources locales (ex. WFS métropolitain ou national) apparaissent toujours avant les sources mondiales (`area_deg2 ASC`). Le mot-clé `!global` permet de désactiver le filtre spatial.
-- **Streaming ou Extraction hors-ligne** :
-  - `Entrée` : Charge le flux en direct (`/vsicurl/`, WFS avec `restrictToRequestBBOX='1'`, WMTS, XYZ, ou requête Overpass multi-miroirs) avec application automatique du style `.qml` et de l'attribution.
-  - `Maj + Entrée` : Découpe et extrait la couche sur l'emprise du canevas en tâche de fond (`QgsTask`) vers un fichier local `.gpkg` ou `.tif`.
-- **OSM Editor Layer Index (ELI) & Icônes personnalisables** : Accès optionnel aux couches mondiales et régionales d'orthophotos ELI, pack de 12 icônes SVG thématiques et support d'icônes personnalisées par couche ou par catégorie.
-- **100 % Statique & Multi-catalogue** : Aucune dépendance Python externe (`pip`). Compatible QGIS 3 (Qt5) et QGIS 4 (Qt6). Possibilité d'attacher simultanément le catalogue public et des catalogues privés (`ATTACH DATABASE`).
+Finding and loading geospatial datasets in QGIS is traditionally fragmented:
+- **QuickMapServices (QMS)** relies on a centralized backend and primarily focuses on raster basemaps (TMS/XYZ/WMS), leaving out raw analytical datasets (vectors, elevation models, humanitarian boundaries).
+- **Thematic and national open-data streams** (local WFS, Cloud-Optimized GeoTIFFs, FlatGeobuf, FieldMaps/HDX administrative boundaries, live OSM Overpass queries) are scattered across dozens of portals.
+- **No unified spatial search engine** previously allowed typing a keyword (`gst water`, `gst dem`, `gst hospital`, `gst cadastre`) to retrieve in under 3 milliseconds every local, national, and global dataset intersecting your active QGIS map canvas.
 
 ---
 
-## Architecture du Monorepo
+## Key Features
+
+- **Instant Universal Search (`Ctrl+K`)**: Native `QgsLocatorFilter` integration (prefix `gst`) powered by multilingual full-text search (**SQLite FTS5**: EN, FR, ES, AR) and two-stage spatial filtering (**SQLite R-Tree** + exact **PyQGIS WKT** geometry intersection).
+- **Spatial Relevance Ranking**: Local and national datasets (e.g., municipal WFS or national LiDAR DEM) automatically rank above global datasets (`area_deg2 ASC`). Append `!global` to bypass the map canvas spatial filter.
+- **Dual Mode — Streaming or Offline Extraction**:
+  - `Enter`: Streams the layer directly (`/vsicurl/`, WFS with `restrictToRequestBBOX='1'`, WMTS, XYZ, or multi-mirror Overpass query) and automatically applies embedded `.qml` cartographic styling and attribution metadata.
+  - `Shift + Enter`: Clips and extracts the dataset to your current map canvas extent in a background task (`QgsTask`) as a local `.gpkg`, `.tif`, or `.geojson` file.
+- **OSM Editor Layer Index (ELI) & Customizable Icons**: Optional toggle for 170+ regional and global imagery layers from the OSM Editor Layer Index, 12 bundled thematic SVG icons, and support for user-defined custom `.svg`/`.png` icons per category or layer ID.
+- **100% Static & Multi-Catalog**: Zero external Python dependencies (`pip`). Runs natively on Windows, macOS, and Linux across QGIS 3 (Qt5) and QGIS 4 (Qt6). Supports querying public and private team/NGO catalogs simultaneously via SQLite `ATTACH DATABASE`.
+
+---
+
+## Monorepo Architecture
 
 ```text
 geostrata/
-├── docs/                           # Documentation d'architecture et guides techniques
+├── docs/                           # Technical architecture & developer guides (EN / FR)
 ├── packages/
-│   ├── registry/                   # [TypeScript] Sources YAML, VRT, Styles QML & Compilateur SQLite
-│   │   ├── sources/                # Fichiers YAML (global/, countries/, thematic/)
-│   │   ├── assets/                 # Styles QML, VRT globaux, polygones WKT, synonymes i18n
-│   │   ├── src/                    # Validation Zod et compilateur SQLite (FTS5 + R-Tree)
-│   │   └── dist/                   # Artefacts compilés (catalog.sqlite, catalog.sqlite.gz, manifest.json)
-│   ├── qgis-plugin/                # [Python] Plugin PyQGIS natif (zéro dépendance externe)
-│   └── website/                    # [HTML/CSS/JS] Site web, explorateur interactif & documentation
-└── CONTRIBUTING.md
+│   ├── registry/                   # [TypeScript] YAML sources, VRT, QML styles & SQLite compiler
+│   │   ├── sources/                # YAML definitions (global/, countries/, thematic/)
+│   │   ├── assets/                 # QML styles, global VRTs, WKT polygons, i18n synonyms
+│   │   ├── src/                    # Zod schema validation & SQLite compiler (FTS5 + R-Tree)
+│   │   └── dist/                   # Compiled artifacts (catalog.sqlite, catalog.sqlite.gz, manifest.json)
+│   ├── qgis-plugin/                # [Python] Native PyQGIS 3 & 4 plugin (zero pip dependencies)
+│   └── website/                    # [HTML/CSS/JS] Interactive catalog explorer & documentation site
+├── CONTRIBUTING.md                 # Contribution guide (EN)
+└── CONTRIBUTING.fr.md              # Guide de contribution (FR)
 ```
 
 ---
 
-## Démarrage Rapide
+## Quick Start (Catalog Compiler)
 
 ```bash
 cd packages/registry
@@ -52,16 +58,28 @@ npm run ingest
 npm run build
 ```
 
-Les fichiers `catalog.sqlite`, `catalog.sqlite.gz`, `catalog.json` et `manifest.json` sont générés dans `packages/registry/dist/`.
+Compiled artifacts (`catalog.sqlite`, `catalog.sqlite.gz`, `catalog.json`, and `manifest.json`) are emitted to `packages/registry/dist/`.
+
+To package and deploy the plugin directly to your local QGIS 3 / QGIS 4 profile:
+
+```bash
+cd packages/registry
+npm run deploy:qgis
+```
 
 ---
 
-## Contribuer
+## Documentation
 
-Ajouter une nouvelle source de données ne nécessite que quelques lignes de YAML dans `packages/registry/sources/`. Consultez [CONTRIBUTING.md](CONTRIBUTING.md) et [docs/adding-a-source.md](docs/adding-a-source.md) pour les détails.
+| Document | English (Default) | Français |
+| :--- | :--- | :--- |
+| **Contributing Guide** | [CONTRIBUTING.md](CONTRIBUTING.md) | [CONTRIBUTING.fr.md](CONTRIBUTING.fr.md) |
+| **Technical Architecture** | [docs/architecture.md](docs/architecture.md) | [docs/architecture.fr.md](docs/architecture.fr.md) |
+| **Adding a Data Source** | [docs/adding-a-source.md](docs/adding-a-source.md) | [docs/adding-a-source.fr.md](docs/adding-a-source.fr.md) |
+| **PyQGIS Plugin Guidelines** | [docs/pyqgis-guidelines.md](docs/pyqgis-guidelines.md) | [docs/pyqgis-guidelines.fr.md](docs/pyqgis-guidelines.fr.md) |
 
 ---
 
-## Licence
+## License
 
-Distribué sous licence **GNU General Public License v2.0 or later (GPL-2.0-or-later)** conformément aux exigences de l'écosystème des plugins QGIS. Les métadonnées YAML du catalogue sont librement réutilisables.
+Distributed under the **GNU General Public License v2.0 or later (GPL-2.0-or-later)** in compliance with the QGIS plugin ecosystem. Catalog YAML metadata definitions are freely reusable.

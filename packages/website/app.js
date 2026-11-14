@@ -1,4 +1,6 @@
 (function initWebsite() {
+	var isFr = (document.documentElement.lang || 'en').toLowerCase().indexOf('fr') === 0
+
 	var state = {
 		sources: [],
 		filtered: [],
@@ -23,18 +25,31 @@
 		crisis: './icons/crisis.svg'
 	}
 
-	var CATEGORY_LABELS = {
-		basemap: 'Fond de carte',
-		imagery: 'Imagerie',
-		elevation: 'Élévation & MNT',
-		hydrography: 'Hydrographie',
-		admin: 'Administratif',
-		buildings: 'Bâtiments',
-		transport: 'Transport',
-		utilities: 'Réseaux',
-		landuse: 'Occupation du sol',
-		crisis: 'Crise & Risques'
-	}
+	var CATEGORY_LABELS = isFr
+		? {
+				basemap: 'Fond de carte',
+				imagery: 'Imagerie',
+				elevation: 'Élévation & MNT',
+				hydrography: 'Hydrographie',
+				admin: 'Administratif',
+				buildings: 'Bâtiments',
+				transport: 'Transport',
+				utilities: 'Réseaux',
+				landuse: 'Occupation du sol',
+				crisis: 'Crise & Risques'
+			}
+		: {
+				basemap: 'Basemap',
+				imagery: 'Imagery',
+				elevation: 'Elevation & DEM',
+				hydrography: 'Hydrography',
+				admin: 'Admin Boundaries',
+				buildings: 'Buildings',
+				transport: 'Transport',
+				utilities: 'Utilities',
+				landuse: 'Landuse',
+				crisis: 'Crisis & Relief'
+			}
 
 	function getIconForSource(source) {
 		var srcType = String(source.type || '').toLowerCase()
@@ -66,7 +81,7 @@
 			return
 		}
 		if (window.location.protocol.indexOf('http') === 0) {
-			var base = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '')
+			var base = window.location.origin + window.location.pathname.replace(/\/index(\.fr)?\.html$/, '').replace(/\/$/, '')
 			el.textContent = base + '/plugins.xml'
 		}
 	}
@@ -90,7 +105,8 @@
 			var c = codes[j]
 			var opt = document.createElement('option')
 			opt.value = c
-			opt.textContent = (c === 'GLOBAL' ? '🌐 Monde entier (Global)' : '🏳️ ' + c) + ' (' + counts[c] + ')'
+			var globalText = isFr ? '🌐 Monde entier (Global)' : '🌐 Worldwide (Global)'
+			opt.textContent = (c === 'GLOBAL' ? globalText : '🏳️ ' + c) + ' (' + counts[c] + ')'
 			select.appendChild(opt)
 		}
 	}
@@ -167,23 +183,40 @@
 		}
 
 		if (countEl) {
-			countEl.textContent =
-				state.filtered.length +
-				' couche' +
-				(state.filtered.length > 1 ? 's' : '') +
-				' affichée' +
-				(state.filtered.length > 1 ? 's' : '') +
-				' sur ' +
-				state.sources.length +
-				' au total'
+			if (isFr) {
+				countEl.textContent =
+					state.filtered.length +
+					' couche' +
+					(state.filtered.length > 1 ? 's' : '') +
+					' affichée' +
+					(state.filtered.length > 1 ? 's' : '') +
+					' sur ' +
+					state.sources.length +
+					' au total'
+			} else {
+				countEl.textContent =
+					'Showing ' +
+					state.filtered.length +
+					' matching layer' +
+					(state.filtered.length === 1 ? '' : 's') +
+					' out of ' +
+					state.sources.length +
+					' total'
+			}
 		}
 
 		var slice = state.filtered.slice(0, state.visibleLimit)
 		if (slice.length === 0) {
 			grid.innerHTML =
 				'<div class="feature-card" style="grid-column: 1 / -1; text-align: center;">' +
-				'<h3>Aucune couche ne correspond à ces critères</h3>' +
-				'<p>Essayez un autre mot-clé ou réinitialisez les filtres de catégorie/pays.</p>' +
+				'<h3>' +
+				(isFr ? 'Aucune couche ne correspond à ces critères' : 'No layers match your search criteria') +
+				'</h3>' +
+				'<p>' +
+				(isFr
+					? 'Essayez un autre mot-clé ou réinitialisez les filtres de catégorie/pays.'
+					: 'Try another keyword or reset the category/country filters.') +
+				'</p>' +
 				'</div>'
 			if (loadMoreWrap) {
 				loadMoreWrap.hidden = true
@@ -191,6 +224,7 @@
 			return
 		}
 
+		var detailsLabel = isFr ? 'Détails &amp; URI' : 'Details &amp; URI'
 		var html = []
 		for (var i = 0; i < slice.length; i++) {
 			var item = slice[i]
@@ -243,7 +277,9 @@
 					')</span>' +
 					'<button type="button" class="btn btn-sm btn-outline" data-open-id="' +
 					escapeHtml(item.id) +
-					'">Détails &amp; URI</button>' +
+					'">' +
+					detailsLabel +
+					'</button>' +
 					'</div>' +
 					'</article>'
 			)
@@ -286,18 +322,26 @@
 			'<p>' +
 			escapeHtml(item.description) +
 			'</p>' +
-			'<p><strong>Attribution :</strong> ' +
+			'<p><strong>' +
+			(isFr ? 'Attribution :' : 'Attribution:') +
+			'</strong> ' +
 			escapeHtml(item.attribution) +
-			' &nbsp;|&nbsp; <strong>Licence :</strong> ' +
+			' &nbsp;|&nbsp; <strong>' +
+			(isFr ? 'Licence :' : 'License:') +
+			'</strong> ' +
 			escapeHtml(item.license) +
-			' &nbsp;|&nbsp; <strong>CRS :</strong> <code>' +
+			' &nbsp;|&nbsp; <strong>CRS:</strong> <code>' +
 			escapeHtml(item.crs) +
 			'</code></p>' +
-			'<p><strong>Commande rapide dans QGIS (<kbd>Ctrl</kbd>+<kbd>K</kbd>) :</strong></p>' +
+			'<p><strong>' +
+			(isFr ? 'Commande rapide dans QGIS (<kbd>Ctrl</kbd>+<kbd>K</kbd>) :' : 'Quick command in QGIS (<kbd>Ctrl</kbd>+<kbd>K</kbd>):') +
+			'</strong></p>' +
 			'<pre class="code-block"><code>gst ' +
 			escapeHtml(String(firstKeyword).toLowerCase()) +
 			'</code></pre>' +
-			'<p><strong>Définition complète (JSON / YAML compilé) :</strong></p>' +
+			'<p><strong>' +
+			(isFr ? 'Définition complète (JSON / YAML compilé) :' : 'Full compiled definition (JSON / YAML):') +
+			'</strong></p>' +
 			'<pre class="code-block"><code>' +
 			escapeHtml(JSON.stringify(item, null, 2)) +
 			'</code></pre>'
@@ -397,9 +441,9 @@
 				var urlEl = document.getElementById('repo-xml-url')
 				if (urlEl && navigator.clipboard) {
 					navigator.clipboard.writeText(urlEl.textContent || '')
-					copyBtn.textContent = 'Copié ✓'
+					copyBtn.textContent = isFr ? 'Copié ✓' : 'Copied ✓'
 					setTimeout(function resetCopyText() {
-						copyBtn.textContent = 'Copier'
+						copyBtn.textContent = isFr ? 'Copier' : 'Copy'
 					}, 2000)
 				}
 			})
@@ -442,7 +486,9 @@
 			.catch(function onLoadError() {
 				var countEl = document.getElementById('catalog-results-count')
 				if (countEl) {
-					countEl.textContent = 'Exécutez npm run build:site pour générer catalog.json.'
+					countEl.textContent = isFr
+						? 'Exécutez npm run build:site pour générer catalog.json.'
+						: 'Run npm run build:site to generate catalog.json.'
 				}
 			})
 	}

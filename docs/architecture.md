@@ -1,45 +1,47 @@
-# Architecture Technique de Geostrata
+# Geostrata Technical Architecture
 
-Ce document décrit le flux de données de bout en bout (YAML -> Compilateur TypeScript -> Base SQLite -> Plugin PyQGIS) ainsi que le schéma exact de `catalog.sqlite`.
+🌐 **Language**: **English** | [Français](architecture.fr.md)
+
+This document describes the end-to-end data pipeline (YAML -> TypeScript Compiler -> SQLite Database -> PyQGIS Plugin) and the exact schema of `catalog.sqlite`.
 
 ---
 
-## 1. Flux de Données Global
+## 1. End-to-End Data Pipeline
 
 ```text
-[Fichiers YAML + Styles QML + Polygones WKT + Synonymes i18n]
-                            │
-                            ▼ (CI GitHub Actions / npm run build)
-         [Compilateur TypeScript : src/build.ts]
-         - Validation stricte via Zod (src/schema.ts)
-         - Injection bbox/WKT pays (si country_iso présent)
-         - Calcul de l'aire en degrés² (area_deg2)
-         - Lecture du contenu XML brut des styles .qml
-         - Enrichissement multilingue (FR, EN, ES, AR)
-                            │
-                            ▼
-    [Artefacts Statiques : dist/catalog.sqlite.gz + manifest.json]
-                            │
-                            ▼ (Téléchargement asynchrone PyQGIS)
-            [Cache Local QGIS : catalog.sqlite]
-         - Multi-catalogue via ATTACH DATABASE
-         - Étape 1 (< 1 ms) : R-Tree bbox + FTS5 plein texte
-         - Étape 2 (< 2 ms) : Intersection exacte QgsGeometry.fromWkt()
-         - Tri : area_deg2 ASC (Sources locales -> Sources globales)
+[YAML Sources + QML Styles + Country WKT Polygons + i18n Synonyms]
+                             │
+                             ▼ (GitHub Actions CI / npm run build)
+          [TypeScript Compiler: src/build.ts]
+          - Strict Zod validation (src/schema.ts)
+          - Country bbox/WKT polygon injection (when country_iso is set)
+          - Bounding-box area calculation in deg² (area_deg2)
+          - Raw XML embedding of .qml symbology files
+          - Multilingual synonym expansion (EN, FR, ES, AR)
+                             │
+                             ▼
+     [Static Artifacts: dist/catalog.sqlite.gz + manifest.json]
+                             │
+                             ▼ (Asynchronous PyQGIS background sync)
+             [Local QGIS Cache: catalog.sqlite]
+          - Multi-catalog support via ATTACH DATABASE
+          - Stage 1 (< 1 ms): SQLite R-Tree bbox + FTS5 full-text match
+          - Stage 2 (< 2 ms): Exact QgsGeometry.fromWkt() intersection
+          - Ranking: area_deg2 ASC (Local sources -> Global sources)
 ```
 
 ---
 
-## 2. Schéma Exact de la Base SQLite (`catalog.sqlite`)
+## 2. SQLite Database Schema (`catalog.sqlite`)
 
-La base est compilée avec `better-sqlite3` en mode lecture seule optimisé :
+The database is compiled with `better-sqlite3` in read-only optimized mode:
 ```sql
 PRAGMA journal_mode = OFF;
 PRAGMA synchronous = OFF;
 ```
-Un `VACUUM;` final compacte les pages avant la compression Gzip (`catalog.sqlite.gz`).
+A final `VACUUM;` compacts all pages before Gzip compression (`catalog.sqlite.gz`).
 
-### 2.1. Table principale `sources`
+### 2.1. Primary Table: `sources`
 
 ```sql
 CREATE TABLE sources (
@@ -59,6 +61,7 @@ CREATE TABLE sources (
 	area_deg2 REAL NOT NULL,
 	geom_wkt TEXT NOT NULL,
 	tags_json TEXT NOT NULL,
+	search_text TEXT NOT NULL DEFAULT '',
 	license TEXT NOT NULL,
 	attribution TEXT NOT NULL,
 	style_qml TEXT,
@@ -69,11 +72,11 @@ CREATE TABLE sources (
 );
 ```
 
-- **`area_deg2`** : Superficie du rectangle englobant en degrés carrés `(max_x - min_x) * (max_y - min_y)`. Une source municipale (ex: Grand Lyon, `~0.148 deg²`) a une valeur très inférieure à une source nationale (ex: France métropolitaine, `~100 deg²`) ou mondiale (`64800 deg²`), garantissant un tri naturel `ORDER BY s.area_deg2 ASC`.
-- **`style_qml`** : Contenu XML complet du fichier `.qml` embarqué directement dans la colonne texte afin que PyQGIS puisse appliquer le style immédiatement sans requête réseau supplémentaire.
-- **`health_status`** : `'ok' | 'degraded' | 'dead'`.
+- **`area_deg2`**: Bounding-box area in square degrees `(max_x - min_x) * (max_y - min_y)`. A metropolitan dataset (e.g., Greater Lyon, `~0.148 deg²`) has a much smaller area than a national dataset (e.g., France, `~100 deg²`) or a global dataset (`64800 deg²`), ensuring natural local-first sorting via `ORDER BY s.area_deg2 ASC`.
+- **`style_qml`**: Full XML content of the `.qml` style embedded directly in the column so PyQGIS can apply cartographic symbology immediately without extra network requests.
+- **`search_text`**: Normalized, diacritic-stripped token string used as an automatic fallback if the host SQLite runtime was compiled without `ENABLE_FTS5`.
 
-### 2.2. Index Spatial `sources_rtree` (R-Tree SQLite)
+### 2.2. Spatial Index: `sources_rtree` (SQLite R-Tree)
 
 ```sql
 CREATE VIRTUAL TABLE sources_rtree USING rtree(
@@ -82,25 +85,10 @@ CREATE VIRTUAL TABLE sources_rtree USING rtree(
 	minY, maxY
 );
 ```
-- Attention à l'ordre des colonnes imposé par l'extension R-Tree de SQLite : `(id, minX, maxX, minY, maxY)` où `id` correspond exactement à `sources.rowid`.
+- Column order required by the SQLite R-Tree extension: `(id, minX, maxX, minY, maxY)` where `id` matches `sources.rowid`.
 
-### 2.3. Index Plein Texte `sources_fts` (FTS5)
+### 2.3. Full-Text Index: `sources_fts` (FTS5)
 
-```sql
-CREATE VIRTUAL TABLE sources_fts USING fts5(
-	name,
-	description,
-	category,
-	enriched_tags,
-	country_names,
-	content='sources',
-	content_rowid='rowid',
-	tokenize='unicode61 remove_diacritics 2'
-);
-```
-*(Note : `sources_fts` peut être créée en table FTS5 standard liée par `rowid` pour permettre l'indexation directe de `enriched_tags` et `country_names` sans alourdir la table `sources`.)*
-
-Structure retenue pour une interrogation directe et rapide par `rowid` :
 ```sql
 CREATE VIRTUAL TABLE sources_fts USING fts5(
 	name,
@@ -111,14 +99,13 @@ CREATE VIRTUAL TABLE sources_fts USING fts5(
 	tokenize='unicode61 remove_diacritics 2'
 );
 ```
-Lors de l'insertion d'une source avec `rowid = rowId`, on insère dans `sources_fts(rowid, name, description, category, enriched_tags, country_names)`.
-Le tokenizer `unicode61 remove_diacritics 2` permet de rechercher `hopital` et de trouver `Hôpital` ou `hôpitaux`, ainsi que les termes arabes, espagnols et anglais.
+The `unicode61 remove_diacritics 2` tokenizer matches unaccented queries (`hopital`) against accented titles (`Hôpital`, `hôpitaux`) across English, French, Spanish, and Arabic synonyms.
 
 ---
 
-## 3. Requête Type du Moteur de Recherche (R-Tree + FTS5)
+## 3. Search Engine Query (R-Tree + FTS5)
 
-Pour une recherche sur le mot-clé `:query` et une emprise de carte `(canvas_min_x, canvas_min_y, canvas_max_x, canvas_max_y)` en `EPSG:4326` :
+For a search query `:fts_query` and a map canvas bounding box `(canvas_min_x, canvas_min_y, canvas_max_x, canvas_max_y)` in `EPSG:4326`:
 
 ```sql
 SELECT
@@ -146,21 +133,21 @@ ORDER BY s.area_deg2 ASC, f.rank ASC
 LIMIT 50;
 ```
 
-Si l'utilisateur inclut le modificateur `!global` dans sa requête, la clause sur `sources_rtree` est omise.
+If the user appends `!global` to their query, the `sources_rtree` bounding-box filter is bypassed.
 
 ---
 
-## 4. Format du fichier `manifest.json`
+## 4. `manifest.json` Format
 
-Généré dans `packages/registry/dist/manifest.json` :
+Generated in `packages/registry/dist/manifest.json`:
 ```json
 {
 	"version": "1.0.0",
-	"generated_at": "2026-11-13T10:00:00.000Z",
-	"source_count": 10,
+	"generated_at": "2026-11-14T10:00:00.000Z",
+	"source_count": 267,
 	"sqlite_file": "catalog.sqlite",
 	"gzip_file": "catalog.sqlite.gz",
-	"sha256": "<hash-sha256-du-fichier-catalog.sqlite>",
-	"gzip_sha256": "<hash-sha256-du-fichier-catalog.sqlite.gz>"
+	"sha256": "<sha256-hash-of-catalog.sqlite>",
+	"gzip_sha256": "<sha256-hash-of-catalog.sqlite.gz>"
 }
 ```

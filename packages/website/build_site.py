@@ -24,7 +24,7 @@ def build_static_site() -> None:
     site_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Copier les fichiers du site web
-    for asset_name in ("index.html", "styles.css", "app.js"):
+    for asset_name in ("index.html", "index.fr.html", "styles.css", "app.js"):
         src = website_dir / asset_name
         if src.exists():
             shutil.copy2(src, site_dir / asset_name)

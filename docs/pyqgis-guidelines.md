@@ -1,56 +1,58 @@
-# Directives de Développement PyQGIS (`pyqgis-guidelines.md`)
+# PyQGIS Development Guidelines (`pyqgis-guidelines.md`)
 
-Ce document fixe les règles strictes de conception et de codage pour `packages/qgis-plugin/geostrata/`.
+🌐 **Language**: **English** | [Français](pyqgis-guidelines.fr.md)
 
----
-
-## 1. Zéro Dépendance Externe (`pip`)
-
-Le plugin doit fonctionner immédiatement après installation sur Windows, macOS et Linux dans n'importe quelle version standard de QGIS (3.28 LTR à 3.40+ / Qt5 & Qt6) :
-- **Modules Python autorisés** : Bibliothèque standard uniquement (`sqlite3`, `urllib.parse`, `urllib.request`, `gzip`, `json`, `pathlib`, `hashlib`, `shutil`, `tempfile`, `typing`, `dataclasses`).
-- **Modules QGIS / Qt autorisés** : `qgis.core`, `qgis.gui`, `qgis.utils`, `qgis.processing`, `qgis.PyQt.QtCore`, `qgis.PyQt.QtGui`, `qgis.PyQt.QtWidgets`, `qgis.PyQt.QtNetwork`, `qgis.PyQt.QtXml`.
-- **Interdit** : `requests`, `pydantic`, `pyyaml`, `shapely`, `geopandas`, `sqlalchemy`.
+This document defines the architecture and coding standards for `packages/qgis-plugin/geostrata/`.
 
 ---
 
-## 2. Thread-Safety & Exécution Non-Bloquante
+## 1. Zero External Dependencies (`pip`)
 
-L'interface graphique de QGIS ne doit **jamais** geler :
-
-1. **Dans `QgsLocatorFilter.fetchResults(string, context, feedback)`** :
-   - `fetchResults` est exécuté dans un thread d'arrière-plan géré par QGIS.
-   - **Règle SQLite** : Toujours ouvrir une connexion SQLite dédiée au thread courant (`sqlite3.connect(f'file:{db_path}?mode=ro', uri=True, check_same_thread=False)`) et la fermer en fin de recherche.
-   - **Accès au canevas** : Ne jamais appeler `iface.mapCanvas()` directement depuis le thread secondaire de `fetchResults`. Capturer l'emprise du canevas (`QgsRectangle`) et son CRS dans `prepare(string, context)` (qui s'exécute sur le thread principal avant `fetchResults`) et la reprojeter en `EPSG:4326` via `QgsCoordinateTransform`.
-   - Vérifier régulièrement `feedback.isCanceled()` dans la boucle de résultats.
-
-2. **Téléchargement et Synchronisation (`sync_manager.py`)** :
-   - Utiliser `QgsNetworkAccessManager` ou une sous-classe de `QgsTask` pour télécharger `manifest.json` et `catalog.sqlite.gz`.
-   - Vérifier le hash SHA-256 avant de remplacer atomiquement le fichier `catalog.sqlite` en cache (`QgsApplication.qgisSettingsDirPath()`).
-
-3. **Extraction Hors-Ligne (`Maj + Entrée` -> `extractor_task.py`)** :
-   - Exécuter le découpage dans une `QgsTask` en appelant `processing.run("native:extractbyextent", ...)` pour les vecteurs ou `processing.run("gdal:cliprasterbyextent", ...)` pour les rasters.
-   - Ne jamais instancier ou ajouter une couche au `QgsProject.instance()` depuis `QgsTask.run()`. Retourner le chemin du fichier `.gpkg` ou `.tif` généré et charger la couche dans `QgsTask.finished(result)` (qui s'exécute sur le thread principal).
+The plugin must work out-of-the-box on Windows, macOS, and Linux across standard QGIS installations (QGIS 3.28 LTR through QGIS 4.x / Qt5 & Qt6):
+- **Allowed Python modules**: Python standard library only (`sqlite3`, `urllib.parse`, `urllib.request`, `gzip`, `json`, `pathlib`, `hashlib`, `shutil`, `tempfile`, `typing`, `dataclasses`).
+- **Allowed QGIS / Qt modules**: `qgis.core`, `qgis.gui`, `qgis.utils`, `qgis.processing`, `qgis.PyQt.QtCore`, `qgis.PyQt.QtGui`, `qgis.PyQt.QtWidgets`, `qgis.PyQt.QtNetwork`, `qgis.PyQt.QtXml`.
+- **Forbidden**: `requests`, `pydantic`, `pyyaml`, `shapely`, `geopandas`, `sqlalchemy`.
 
 ---
 
-## 3. Construction des URIs par Type de Flux (`uri_builder.py`)
+## 2. Thread Safety & Non-Blocking Execution
 
-| `type` | Provider QGIS | Classe PyQGIS | Format de l'URI |
+The QGIS main UI thread must **never** freeze:
+
+1. **Inside `QgsLocatorFilter.fetchResults(string, context, feedback)`**:
+   - `fetchResults` runs on a worker thread managed by QGIS.
+   - **SQLite Connections**: Always open a dedicated read-only connection per worker thread (`sqlite3.connect(f'file:{db_path}?mode=ro', uri=True, check_same_thread=False)`) and close it in a `finally:` block.
+   - **Canvas Extent Access**: Never call `iface.mapCanvas()` from `fetchResults`. Capture the canvas extent (`QgsRectangle`) and CRS inside `prepare(string, context)` on the main thread and transform it to `EPSG:4326` using `QgsCoordinateTransform`.
+   - Periodically check `feedback.isCanceled()` inside loops.
+
+2. **Background Catalog Synchronization (`sync_manager.py`)**:
+   - Use a `QgsTask` subclass to download `manifest.json` and `catalog.sqlite.gz`.
+   - Verify the SHA-256 digest before atomically replacing the cached `catalog.sqlite` file.
+
+3. **Offline Extraction (`Shift + Enter` -> `extractor_task.py`)**:
+   - Run clipping inside a `QgsTask` calling `processing.run("native:extractbyextent", ...)` for vectors or `processing.run("gdal:cliprasterbyextent", ...)` for rasters.
+   - Only instantiate and add the resulting `.gpkg` or `.tif` layer to `QgsProject.instance()` inside `QgsTask.finished(result)` on the main thread.
+
+---
+
+## 3. Provider URI Construction (`uri_builder.py`)
+
+| `type` | QGIS Provider | PyQGIS Class | URI Format |
 | :--- | :--- | :--- | :--- |
 | `xyz` / `tms` | `wms` | `QgsRasterLayer` | `type=xyz&url=<encoded_url>&zmax=<max_zoom>&zmin=<min_zoom>&crs=EPSG:3857` |
-| `wms` / `wmts` | `wms` | `QgsRasterLayer` | Paramètres `contextualWMSLegend=0&crs=...&dpiMode=7&format=image/png&layers=...&styles=&tileMatrixSet=...&url=...` |
+| `wms` / `wmts` | `wms` | `QgsRasterLayer` | `contextualWMSLegend=0&crs=...&dpiMode=7&format=image/png&layers=...&styles=&tileMatrixSet=...&url=...` |
 | `wfs` | `WFS` | `QgsVectorLayer` | `pagingEnabled='true' preferCoordinatesForWfsT11='false' restrictToRequestBBOX='1' srsname='<crs>' typename='<typename>' url='<url>' version='auto'` |
 | `cog` / `vrt` | `gdal` | `QgsRasterLayer` | `/vsicurl/https://...` |
 | `fgb` / `geojson` | `ogr` | `QgsVectorLayer` | `/vsicurl/https://...` |
 | `vectortile` | `vectortile` | `QgsVectorTileLayer` | `type=xyz&url=<url>&zmax=<max_zoom>&zmin=<min_zoom>` |
-| `overpass` | `ogr` | `QgsVectorLayer` | Requête vers l'API Overpass remplissant `{{bbox}}` avec l'emprise courante en `EPSG:4326` (`south,west,north,east`). |
+| `overpass` | `ogr` | `QgsVectorLayer` | Asynchronous multi-mirror `[out:json]` query converted to a local `.geojson` file via `overpass_task.py`. |
 
 ---
 
-## 4. Application du Style QML et de l'Attribution
+## 4. Applying QML Styling and Attribution Metadata
 
-Dès qu'une couche `layer` est valide (`layer.isValid()`) :
-1. **Attribution & Licence** :
+Once a layer is valid (`layer.isValid()`):
+1. **Attribution & License**:
    ```python
    meta = layer.metadata()
    meta.setRights([entry.attribution])
@@ -58,7 +60,7 @@ Dès qu'une couche `layer` est valide (`layer.isValid()`) :
    layer.setMetadata(meta)
    layer.setAttribution(entry.attribution)
    ```
-2. **Style XML embarqué (`style_qml`)** :
+2. **Embedded XML Style (`style_qml`)**:
    ```python
    if entry.style_qml:
        doc = QDomDocument()

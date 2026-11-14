@@ -138,7 +138,14 @@ kbd {
 
 .header-actions {
 	display: flex;
+	align-items: center;
 	gap: 10px;
+}
+
+.lang-switch {
+	display: inline-flex;
+	gap: 4px;
+	margin-right: 4px;
 }
 
 /* BUTTONS */

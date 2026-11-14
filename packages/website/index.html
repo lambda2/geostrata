@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Geostrata — Moteur de recherche spatialisé & sans serveur pour QGIS</title>
+	<title>Geostrata — Serverless Spatial Search Engine for QGIS</title>
 	<meta
 		name="description"
-		content="Catalogue géographique open-source, 100 % statique (SQLite R-Tree + FTS5) et sans dépendance pip pour QGIS 3 & 4. Streaming /vsicurl/, WMTS, WFS, Overpass et extraction hors-ligne."
+		content="Open-source, 100% static (SQLite R-Tree + FTS5), zero-pip-dependency spatial catalog for QGIS 3 & 4. Cloud-native /vsicurl/, WMTS, WFS, Overpass, and offline extraction."
 	/>
 	<link rel="icon" type="image/svg+xml" href="./icons/geostrata.svg" />
 	<link rel="stylesheet" href="./styles.css" />
@@ -22,15 +22,19 @@
 				</div>
 			</a>
 			<nav class="main-nav">
-				<a href="#fonctionnalites">Fonctionnalités</a>
-				<a href="#catalogue">Catalogue interactif</a>
+				<a href="#features">Features</a>
+				<a href="#catalogue">Live Catalog</a>
 				<a href="#installation">Installation</a>
 				<a href="#documentation">Documentation</a>
 				<a href="#architecture">Architecture</a>
 			</nav>
 			<div class="header-actions">
-				<a href="./geostrata.zip" class="btn btn-secondary" download>Télécharger .ZIP</a>
-				<a href="#installation" class="btn btn-primary">Installer dans QGIS</a>
+				<div class="lang-switch" aria-label="Language switcher">
+					<a href="./index.html" class="btn btn-sm btn-primary">EN</a>
+					<a href="./index.fr.html" class="btn btn-sm btn-outline">FR</a>
+				</div>
+				<a href="./geostrata.zip" class="btn btn-secondary" download>Download .ZIP</a>
+				<a href="#installation" class="btn btn-primary">Install in QGIS</a>
 			</div>
 		</div>
 	</header>
@@ -42,36 +46,36 @@
 				<div class="hero-content">
 					<div class="eyebrow">
 						<span class="pulse-dot"></span>
-						100 % Statique &bull; SQLite R-Tree + FTS5 &bull; Zéro dépendance pip
+						100% Static &bull; SQLite R-Tree + FTS5 &bull; Zero pip dependency
 					</div>
 					<h1>
-						Trouvez et chargez vos données géographiques dans QGIS en <span class="gradient-text">une seconde</span>.
+						Find and stream spatial layers in QGIS in <span class="gradient-text">one second</span>.
 					</h1>
 					<p class="hero-lead">
-						<strong>Geostrata</strong> intègre directement dans la barre universelle de QGIS
-						(<kbd>Ctrl</kbd>+<kbd>K</kbd>) des centaines de couches nationales, mondiales, Overpass OSM et
-						<em>Editor Layer Index</em>, triées automatiquement selon la position de votre carte.
+						<strong>Geostrata</strong> integrates directly into the QGIS Universal Locator Bar
+						(<kbd>Ctrl</kbd>+<kbd>K</kbd>) to surface hundreds of local, national, global, OSM Overpass, and
+						<em>Editor Layer Index</em> datasets—automatically ranked by your active map canvas extent.
 					</p>
 					<div class="hero-cta">
 						<a href="#catalogue" class="btn btn-primary btn-lg">
-							Explorer les <span id="hero-total-count">…</span> couches
+							Explore all <span id="hero-total-count">…</span> layers
 						</a>
 						<a href="#installation" class="btn btn-outline btn-lg">
-							Guide d'installation
+							Installation Guide
 						</a>
 					</div>
 					<div class="hero-stats">
 						<div class="stat-card">
 							<span class="stat-value" id="stat-sources-count">--</span>
-							<span class="stat-label">Sources géographiques</span>
+							<span class="stat-label">Spatial data sources</span>
 						</div>
 						<div class="stat-card">
 							<span class="stat-value" id="stat-categories-count">10</span>
-							<span class="stat-label">Thématiques &amp; icônes SVG</span>
+							<span class="stat-label">Categories &amp; SVG icons</span>
 						</div>
 						<div class="stat-card">
 							<span class="stat-value">&lt; 5 ms</span>
-							<span class="stat-label">Requête R-Tree + FTS5 locale</span>
+							<span class="stat-label">Local R-Tree + FTS5 query</span>
 						</div>
 					</div>
 				</div>
@@ -83,47 +87,47 @@
 							<div class="window-dots">
 								<span></span><span></span><span></span>
 							</div>
-							<div class="window-title">QGIS 4.2 — Barre de recherche universelle (Ctrl+K)</div>
+							<div class="window-title">QGIS 4.2 — Universal Locator Bar (Ctrl+K)</div>
 						</div>
 						<div class="qgis-canvas-mock">
-							<div class="canvas-bbox-tag">Emprise active : Lyon / Auvergne-Rhône-Alpes (EPSG:3857)</div>
+							<div class="canvas-bbox-tag">Active Canvas: Lyon / Auvergne-Rhône-Alpes (EPSG:3857)</div>
 							<div class="locator-popup">
 								<div class="locator-results">
 									<div class="locator-group-header">Geostrata (gst)</div>
 									<div class="locator-item active">
 										<img src="./icons/hydrography.svg" alt="" />
 										<div class="locator-item-body">
-											<div class="locator-item-title">[FR] IGN BD TOPO® V3 — Hydrographie (Cours d'eau) <span class="proto-tag">WFS</span></div>
-											<div class="locator-item-sub">Hydrographie • IGN Géoplateforme • Entrée: Flux | Maj+Entrée: Extraire</div>
+											<div class="locator-item-title">[FR] IGN BD TOPO® V3 — Hydrography (Rivers) <span class="proto-tag">WFS</span></div>
+											<div class="locator-item-sub">Hydrography • IGN Géoplateforme • Enter: Stream | Shift+Enter: Extract</div>
 										</div>
 									</div>
 									<div class="locator-item">
 										<img src="./icons/elevation.svg" alt="" />
 										<div class="locator-item-body">
-											<div class="locator-item-title">[FR] IGN RGE ALTI® 1m (MNT LiDAR HD) <span class="proto-tag">WMTS</span></div>
-											<div class="locator-item-sub">Élévation &amp; MNT • IGN Géoplateforme • Entrée: Flux | Maj+Entrée: Extraire</div>
+											<div class="locator-item-title">[FR] IGN RGE ALTI® 1m (LiDAR HD DTM) <span class="proto-tag">WMTS</span></div>
+											<div class="locator-item-sub">Elevation &amp; DEM • IGN Géoplateforme • Enter: Stream | Shift+Enter: Extract</div>
 										</div>
 									</div>
 									<div class="locator-item">
 										<img src="./icons/overpass.svg" alt="" />
 										<div class="locator-item-body">
-											<div class="locator-item-title">[OSM] Cours d'eau &amp; Plans d'eau (Overpass Live) <span class="proto-tag">Overpass</span></div>
-											<div class="locator-item-sub">Hydrographie • OpenStreetMap • Téléchargement GeoJSON multi-miroirs</div>
+											<div class="locator-item-title">[OSM] Waterways &amp; Waterbodies (Overpass Live) <span class="proto-tag">Overpass</span></div>
+											<div class="locator-item-sub">Hydrography • OpenStreetMap • Multi-mirror GeoJSON download</div>
 										</div>
 									</div>
 									<div class="locator-item">
 										<img src="./icons/hydrography.svg" alt="" />
 										<div class="locator-item-body">
-											<div class="locator-item-title">[Monde] Worldulters / HydroRIVERS Global <span class="proto-tag">OGR /vsicurl/</span></div>
-											<div class="locator-item-sub">Hydrographie • WWF HydroSHEDS • Streaming Cloud-Native</div>
+											<div class="locator-item-title">[Global] Copernicus DEM GLO-30 (30m) <span class="proto-tag">VRT /vsicurl/</span></div>
+											<div class="locator-item-sub">Elevation • European Space Agency • Cloud-Native Streaming</div>
 										</div>
 									</div>
 								</div>
 								<div class="locator-input-bar">
 									<span class="search-icon">🔍</span>
-									<code>gst eau</code>
+									<code>gst water</code>
 									<span class="cursor-blink">|</span>
-									<span class="shortcut-hint"><kbd>Entrée</kbd> Streaming &bull; <kbd>Maj</kbd>+<kbd>Entrée</kbd> Extraire</span>
+									<span class="shortcut-hint"><kbd>Enter</kbd> Stream &bull; <kbd>Shift</kbd>+<kbd>Enter</kbd> Extract</span>
 								</div>
 							</div>
 						</div>
@@ -133,46 +137,46 @@
 		</section>
 
 		<!-- FEATURES SECTION -->
-		<section id="fonctionnalites" class="section">
+		<section id="features" class="section">
 			<div class="container">
 				<div class="section-header">
-					<h2>Conçu pour les géomaticiens exigeants</h2>
+					<h2>Built for demanding GIS workflows</h2>
 					<p>
-						Une architecture moderne qui remplace les listes statiques par un véritable moteur spatial embarqué.
+						A modern serverless architecture replacing static lists with an embedded spatial search engine.
 					</p>
 				</div>
 
 				<div class="features-grid">
 					<article class="feature-card">
 						<div class="feature-icon">
-							<img src="./icons/admin.svg" alt="Tri spatial" />
+							<img src="./icons/admin.svg" alt="Spatial ranking" />
 						</div>
-						<h3>Tri Spatial R-Tree Automatique</h3>
+						<h3>Automatic R-Tree Spatial Ranking</h3>
 						<p>
-							L'index R-Tree SQLite intersecte l'emprise courante de votre canevas QGIS et calcule la pertinence spatiale
-							(<code>area_deg2</code>). Si vous zoomez sur la France, l'IGN Géoplateforme passe automatiquement devant les couches mondiales.
+							The SQLite R-Tree index intersects your active QGIS map canvas and ranks results by bounding-box specificity
+							(<code>area_deg2</code>). Zoom into France or Switzerland and national datasets automatically appear above global layers.
 						</p>
 					</article>
 
 					<article class="feature-card">
 						<div class="feature-icon">
-							<img src="./icons/elevation.svg" alt="Streaming et extraction" />
+							<img src="./icons/elevation.svg" alt="Streaming and extraction" />
 						</div>
-						<h3>Double Mode : Streaming ou Extraction</h3>
+						<h3>Dual Mode: Stream or Extract Offline</h3>
 						<p>
-							Appuyez sur <kbd>Entrée</kbd> pour ouvrir la couche en streaming instantané (<code>/vsicurl/</code>, COG, WMTS, WFS).
-							Appuyez sur <kbd>Maj</kbd>+<kbd>Entrée</kbd> pour découper et exporter l'emprise courante vers un fichier local (<code>.gpkg</code>, <code>.tif</code>) via <code>QgsTask</code>.
+							Press <kbd>Enter</kbd> for instant cloud streaming (<code>/vsicurl/</code>, COG, WMTS, WFS).
+							Press <kbd>Shift</kbd>+<kbd>Enter</kbd> to clip and export the active canvas extent to a local file (<code>.gpkg</code>, <code>.tif</code>) via <code>QgsTask</code>.
 						</p>
 					</article>
 
 					<article class="feature-card">
 						<div class="feature-icon">
-							<img src="./icons/overpass.svg" alt="Overpass multi-miroirs" />
+							<img src="./icons/overpass.svg" alt="Multi-mirror Overpass" />
 						</div>
-						<h3>Overpass OSM Multi-Miroirs Résilient</h3>
+						<h3>Resilient Multi-Mirror Overpass</h3>
 						<p>
-							Fini les blocages de <code>/vsicurl_streaming/</code> ou les serveurs saturés : les requêtes Overpass s'exécutent en tâche de fond
-							avec bascule automatique entre plusieurs miroirs (Mail.ru, Overpass-API.de, Private.coffee) et sauvegarde en <code>.geojson</code>.
+							No more <code>/vsicurl_streaming/</code> driver lockups or server timeouts: Overpass queries run asynchronously
+							with automatic failover across multiple mirrors (Mail.ru, Overpass-API.de, Private.coffee) and save to a clean local <code>.geojson</code>.
 						</p>
 					</article>
 
@@ -180,32 +184,32 @@
 						<div class="feature-icon">
 							<img src="./icons/imagery.svg" alt="Editor Layer Index" />
 						</div>
-						<h3>OSM Editor Layer Index (ELI) Intégré</h3>
+						<h3>OSM Editor Layer Index (ELI) Built-In</h3>
 						<p>
-							Accédez aux centaines d'orthophotos aériennes et satellites mondiales et régionales maintenues par la communauté OpenStreetMap
-							(<a href="https://osmlab.github.io/editor-layer-index/" target="_blank" rel="noopener">ELI</a>), activables ou masquables en un clic dans les options.
+							Access 170+ regional and global aerial and satellite orthoimagery feeds maintained by the OpenStreetMap community
+							(<a href="https://osmlab.github.io/editor-layer-index/" target="_blank" rel="noopener">ELI</a>), togglable with a single checkbox in plugin settings.
 						</p>
 					</article>
 
 					<article class="feature-card">
 						<div class="feature-icon">
-							<img src="./icons/landuse.svg" alt="Icônes personnalisables" />
+							<img src="./icons/landuse.svg" alt="Custom icons" />
 						</div>
-						<h3>Icônes Thématiques &amp; Personnalisables</h3>
+						<h3>Thematic &amp; Customizable Icons</h3>
 						<p>
-							Chaque catégorie dispose d'une icône SVG colorée dédiée. Vous pouvez basculer sur les icônes techniques QGIS ou déposer vos propres
-							fichiers <code>.svg</code> / <code>.png</code> par catégorie ou par identifiant de couche dans votre profil QGIS.
+							Every thematic category comes with a dedicated color SVG icon. Switch to technical QGIS layer icons or drop your own
+							custom <code>.svg</code> / <code>.png</code> files per category or per layer ID into your QGIS profile folder.
 						</p>
 					</article>
 
 					<article class="feature-card">
 						<div class="feature-icon">
-							<img src="./icons/utilities.svg" alt="Zéro serveur" />
+							<img src="./icons/utilities.svg" alt="Serverless" />
 						</div>
-						<h3>100 % Statique &amp; Zéro Dépendance pip</h3>
+						<h3>100% Static &amp; Zero pip Dependencies</h3>
 						<p>
-							Aucun serveur backend à maintenir : le catalogue SQLite compilé et le dépôt de plugin QGIS sont servis statiquement par GitHub Pages.
-							Compatible nativement avec QGIS 3 (Qt5) et QGIS 4 (Qt6) sous Windows, macOS et Linux.
+							Zero backend servers to maintain: both the compiled SQLite catalog and the QGIS plugin repository are served statically via GitHub Pages.
+							Natively supports QGIS 3 (Qt5) and QGIS 4 (Qt6) on Windows, macOS, and Linux.
 						</p>
 					</article>
 				</div>
@@ -216,10 +220,10 @@
 		<section id="catalogue" class="section section-alt">
 			<div class="container">
 				<div class="section-header">
-					<h2>Explorateur du Catalogue en Direct</h2>
+					<h2>Interactive Live Catalog Explorer</h2>
 					<p>
-						Testez la recherche dans le fichier <code>catalog.json</code> généré automatiquement lors du build.
-						Version du catalogue : <strong id="catalog-version-badge">Chargement…</strong>
+						Search the live <code>catalog.json</code> compiled automatically during the build.
+						Catalog version: <strong id="catalog-version-badge">Loading…</strong>
 					</p>
 				</div>
 
@@ -228,56 +232,56 @@
 						<input
 							type="search"
 							id="catalog-search-input"
-							placeholder="Rechercher une couche (ex: lidar, ign, orthophoto, osm, suisse, hydro, sentinel…)"
+							placeholder="Search layers (e.g. lidar, ign, orthophoto, osm, swisstopo, water, sentinel…)"
 							autocomplete="off"
 						/>
 					</div>
 
 					<div class="filters-row">
 						<div class="category-pills" id="category-pills">
-							<button type="button" class="pill active" data-category="ALL">Toutes</button>
+							<button type="button" class="pill active" data-category="ALL">All</button>
 							<button type="button" class="pill" data-category="BASEMAP">
-								<img src="./icons/basemap.svg" alt="" /> Fonds de carte
+								<img src="./icons/basemap.svg" alt="" /> Basemaps
 							</button>
 							<button type="button" class="pill" data-category="IMAGERY">
-								<img src="./icons/imagery.svg" alt="" /> Imagerie
+								<img src="./icons/imagery.svg" alt="" /> Imagery
 							</button>
 							<button type="button" class="pill" data-category="ELEVATION">
-								<img src="./icons/elevation.svg" alt="" /> Élévation
+								<img src="./icons/elevation.svg" alt="" /> Elevation
 							</button>
 							<button type="button" class="pill" data-category="HYDROGRAPHY">
-								<img src="./icons/hydrography.svg" alt="" /> Hydrographie
+								<img src="./icons/hydrography.svg" alt="" /> Hydrography
 							</button>
 							<button type="button" class="pill" data-category="ADMIN">
-								<img src="./icons/admin.svg" alt="" /> Administratif
+								<img src="./icons/admin.svg" alt="" /> Admin
 							</button>
 							<button type="button" class="pill" data-category="BUILDINGS">
-								<img src="./icons/buildings.svg" alt="" /> Bâtiments
+								<img src="./icons/buildings.svg" alt="" /> Buildings
 							</button>
 							<button type="button" class="pill" data-category="TRANSPORT">
 								<img src="./icons/transport.svg" alt="" /> Transport
 							</button>
 							<button type="button" class="pill" data-category="UTILITIES">
-								<img src="./icons/utilities.svg" alt="" /> Réseaux
+								<img src="./icons/utilities.svg" alt="" /> Utilities
 							</button>
 							<button type="button" class="pill" data-category="LANDUSE">
-								<img src="./icons/landuse.svg" alt="" /> Occupation du sol
+								<img src="./icons/landuse.svg" alt="" /> Landuse
 							</button>
 							<button type="button" class="pill" data-category="CRISIS">
-								<img src="./icons/crisis.svg" alt="" /> Crise
+								<img src="./icons/crisis.svg" alt="" /> Crisis
 							</button>
 						</div>
 
 						<div class="secondary-filters">
-							<select id="country-select" aria-label="Filtrer par couverture géographique">
-								<option value="ALL">🌍 Toutes les couvertures</option>
+							<select id="country-select" aria-label="Filter by geographic coverage">
+								<option value="ALL">🌍 All geographic coverages</option>
 							</select>
 
-							<select id="type-select" aria-label="Filtrer par protocole">
-								<option value="ALL">⚡ Tous les protocoles</option>
+							<select id="type-select" aria-label="Filter by protocol">
+								<option value="ALL">⚡ All protocols</option>
 								<option value="wmts">WMTS</option>
 								<option value="wms">WMS</option>
-								<option value="xyz">Tuiles XYZ / TMS</option>
+								<option value="xyz">XYZ / TMS Tiles</option>
 								<option value="wfs">WFS</option>
 								<option value="cog">COG / VRT (/vsicurl/)</option>
 								<option value="fgb">FlatGeobuf / GeoJSON (/vsicurl/)</option>
@@ -287,15 +291,15 @@
 
 							<label class="eli-toggle-label">
 								<input type="checkbox" id="include-eli-checkbox" checked />
-								<span>Inclure l'OSM Editor Layer Index (ELI)</span>
+								<span>Include OSM Editor Layer Index (ELI)</span>
 							</label>
 						</div>
 					</div>
 
 					<div class="catalog-results-bar">
-						<span id="catalog-results-count">Chargement des sources…</span>
+						<span id="catalog-results-count">Loading sources…</span>
 						<a href="./catalog.sqlite" class="download-sqlite-link" download>
-							📥 Télécharger <code>catalog.sqlite</code> brut
+							📥 Download raw <code>catalog.sqlite</code>
 						</a>
 					</div>
 				</div>
@@ -306,7 +310,7 @@
 
 				<div class="catalog-load-more-wrap" id="load-more-wrap" hidden>
 					<button type="button" id="load-more-btn" class="btn btn-secondary">
-						Afficher plus de couches
+						Show more layers
 					</button>
 				</div>
 			</div>
@@ -316,39 +320,39 @@
 		<section id="installation" class="section">
 			<div class="container">
 				<div class="section-header">
-					<h2>Installation dans QGIS (3.28+ &amp; 4.x)</h2>
-					<p>Deux méthodes simples : via le dépôt XML GitHub Pages (mise à jour automatique) ou par fichier ZIP.</p>
+					<h2>Installing in QGIS (3.28+ &amp; 4.x)</h2>
+					<p>Two easy methods: via the GitHub Pages XML plugin repository (automatic updates) or via ZIP archive.</p>
 				</div>
 
 				<div class="install-grid">
 					<div class="install-card">
-						<div class="step-badge">Méthode 1 — Recommandée</div>
-						<h3>Via le dépôt de plugins QGIS</h3>
+						<div class="step-badge">Method 1 — Recommended</div>
+						<h3>Via QGIS Plugin Repository</h3>
 						<ol class="install-steps">
-							<li>Dans QGIS, ouvrez le menu <strong>Extensions &rarr; Installer/Gérer les extensions…</strong></li>
-							<li>Allez dans l'onglet <strong>Paramètres</strong> puis cliquez sur <strong>Ajouter…</strong> sous "Dépôts d'extensions".</li>
-							<li>Donnez le nom <code>Geostrata</code> et collez l'URL du dépôt ci-dessous :</li>
+							<li>In QGIS, open <strong>Plugins &rarr; Manage and Install Plugins…</strong></li>
+							<li>Switch to the <strong>Settings</strong> tab and click <strong>Add…</strong> under "Plugin Repositories".</li>
+							<li>Name it <code>Geostrata</code> and paste the repository URL below:</li>
 						</ol>
 						<div class="copy-box">
 							<code id="repo-xml-url">https://lambda2.github.io/geostrata/plugins.xml</code>
-							<button type="button" class="btn btn-sm" id="copy-repo-url-btn">Copier</button>
+							<button type="button" class="btn btn-sm" id="copy-repo-url-btn">Copy</button>
 						</div>
 						<p class="install-note">
-							Recherchez ensuite <strong>Geostrata</strong> dans l'onglet <em>Toutes</em> et cliquez sur <strong>Installer l'extension</strong>.
+							Then search for <strong>Geostrata</strong> in the <em>All</em> tab and click <strong>Install Plugin</strong>.
 						</p>
 					</div>
 
 					<div class="install-card">
-						<div class="step-badge">Méthode 2 — Directe</div>
-						<h3>Installer depuis l'archive ZIP</h3>
+						<div class="step-badge">Method 2 — Direct Archive</div>
+						<h3>Install from ZIP</h3>
 						<ol class="install-steps">
-							<li>Téléchargez l'archive prête à l'emploi : <a href="./geostrata.zip" download><strong>geostrata.zip</strong></a>.</li>
-							<li>Dans QGIS, ouvrez <strong>Extensions &rarr; Installer/Gérer les extensions…</strong></li>
-							<li>Sélectionnez l'onglet <strong>Installer depuis un ZIP</strong>, choisissez le fichier téléchargé et cliquez sur <strong>Installer l'extension</strong>.</li>
+							<li>Download the ready-to-use archive: <a href="./geostrata.zip" download><strong>geostrata.zip</strong></a>.</li>
+							<li>In QGIS, open <strong>Plugins &rarr; Manage and Install Plugins…</strong></li>
+							<li>Select <strong>Install from ZIP</strong>, pick the downloaded archive, and click <strong>Install Plugin</strong>.</li>
 						</ol>
 						<div class="install-actions">
-							<a href="./geostrata.zip" class="btn btn-primary" download>📥 Télécharger geostrata.zip</a>
-							<a href="./plugins.xml" class="btn btn-outline" target="_blank" rel="noopener">Voir plugins.xml</a>
+							<a href="./geostrata.zip" class="btn btn-primary" download>📥 Download geostrata.zip</a>
+							<a href="./plugins.xml" class="btn btn-outline" target="_blank" rel="noopener">View plugins.xml</a>
 						</div>
 					</div>
 				</div>
@@ -359,69 +363,69 @@
 		<section id="documentation" class="section section-alt">
 			<div class="container">
 				<div class="section-header">
-					<h2>Documentation &amp; Guide Utilisateur</h2>
-					<p>Tout savoir sur les raccourcis, les options Editor Layer Index, la personnalisation des icônes et l'ajout de sources.</p>
+					<h2>Documentation &amp; User Guide</h2>
+					<p>Everything you need to know about locator shortcuts, Editor Layer Index options, custom icons, and adding sources.</p>
 				</div>
 
 				<div class="docs-grid">
 					<div class="doc-block">
-						<h3>1. Raccourcis de la barre universelle (<kbd>Ctrl</kbd>+<kbd>K</kbd>)</h3>
+						<h3>1. Universal Locator Bar Shortcuts (<kbd>Ctrl</kbd>+<kbd>K</kbd>)</h3>
 						<table class="doc-table">
 							<thead>
 								<tr>
-									<th>Saisie / Action</th>
-									<th>Comportement dans QGIS</th>
+									<th>Input / Action</th>
+									<th>QGIS Behavior</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td><code>gst &lt;mot-clé&gt;</code></td>
-									<td>Recherche plein texte + synonymes multilingues filtrée sur l'emprise visible de la carte.</td>
+									<td><code>gst &lt;keyword&gt;</code></td>
+									<td>Full-text + multilingual synonym search filtered by your visible map canvas extent.</td>
 								</tr>
 								<tr>
-									<td><code>gst &lt;mot-clé&gt; !global</code></td>
-									<td>Ignore le filtre d'emprise de la carte et cherche dans le monde entier.</td>
+									<td><code>gst &lt;keyword&gt; !global</code></td>
+									<td>Bypasses the map canvas spatial filter and searches worldwide.</td>
 								</tr>
 								<tr>
-									<td><kbd>Entrée</kbd></td>
-									<td>Charge la couche en <strong>Streaming</strong> (WMTS, WFS, XYZ, COG <code>/vsicurl/</code>) ou lance la requête Overpass sur la vue.</td>
+									<td><kbd>Enter</kbd></td>
+									<td>Loads the layer in <strong>Streaming mode</strong> (WMTS, WFS, XYZ, COG <code>/vsicurl/</code>) or triggers a live Overpass query.</td>
 								</tr>
 								<tr>
-									<td><kbd>Maj</kbd> + <kbd>Entrée</kbd></td>
-									<td><strong>Extraction hors-ligne</strong> : découpe la couche sur le rectangle du canevas actif et l'enregistre en <code>.gpkg</code> ou <code>.tif</code> local.</td>
+									<td><kbd>Shift</kbd> + <kbd>Enter</kbd></td>
+									<td><strong>Offline Extraction</strong>: clips the dataset to the active canvas extent and saves a local <code>.gpkg</code> or <code>.tif</code>.</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
 					<div class="doc-block">
-						<h3>2. Couches OSM Editor Layer Index (ELI)</h3>
+						<h3>2. OSM Editor Layer Index (ELI) Layers</h3>
 						<p>
-							Geostrata intègre un connecteur dédié vers le projet
-							<a href="https://osmlab.github.io/editor-layer-index/" target="_blank" rel="noopener">OSM Editor Layer Index</a> :
+							Geostrata includes an automated ingestion connector for the
+							<a href="https://osmlab.github.io/editor-layer-index/" target="_blank" rel="noopener">OSM Editor Layer Index</a>:
 						</p>
 						<ul class="doc-list">
-							<li>Les couches d'imagerie aérienne et satellite (sans clé API propriétaire obligatoire) sont converties avec leur boîte englobante exacte.</li>
-							<li>Dans QGIS, ouvrez <strong>Extensions &rarr; Geostrata &rarr; Paramètres &amp; Synchronisation…</strong></li>
-							<li>Cochez ou décochez <strong>« Inclure les couches OSM Editor Layer Index (ELI — Imagerie mondiale/locale) »</strong> pour afficher ou masquer instantanément ces couches dans <kbd>Ctrl</kbd>+<kbd>K</kbd> et dans le panneau latéral.</li>
+							<li>Aerial and satellite imagery feeds (that do not require private API keys) are compiled with their exact polygon bounding boxes.</li>
+							<li>In QGIS, open <strong>Web &rarr; Geostrata &rarr; Settings &amp; Catalogs…</strong></li>
+							<li>Check or uncheck <strong>"Include OSM Editor Layer Index (ELI)"</strong> to immediately show or hide ELI layers in <kbd>Ctrl</kbd>+<kbd>K</kbd> and in the dockable explorer.</li>
 						</ul>
 					</div>
 
 					<div class="doc-block">
-						<h3>3. Personnaliser les Icônes</h3>
+						<h3>3. Customizing Icons</h3>
 						<p>
-							Le plugin propose <strong>3 niveaux de personnalisation visuelle</strong> accessibles depuis
-							<strong>Extensions &rarr; Geostrata &rarr; Paramètres &amp; Synchronisation…</strong> :
+							The plugin supports <strong>3 levels of icon customization</strong> from
+							<strong>Web &rarr; Geostrata &rarr; Settings &amp; Catalogs…</strong>:
 						</p>
 						<ul class="doc-list">
-							<li><strong>Icônes thématiques colorées Geostrata (par défaut)</strong> : 12 icônes SVG vectorielles distinctes par catégorie (Hydrographie, Élévation, Imagerie, Bâtiments, Transport, Overpass, etc.).</li>
-							<li><strong>Icônes techniques QGIS</strong> : Utilise les icônes natives de QGIS selon le type de couche (Raster, Vecteur, MNT, Mesh).</li>
+							<li><strong>Geostrata Thematic Color Icons (Default)</strong>: 12 crisp vector SVG icons tailored per theme (Hydrography, Elevation, Imagery, Buildings, Transport, Overpass, etc.).</li>
+							<li><strong>Technical QGIS Layer Icons</strong>: Uses native QGIS layer icons according to geometry/raster type.</li>
 							<li>
-								<strong>Icônes 100 % personnalisées (Override utilisateur)</strong> : Cliquez sur le bouton
-								<em>« Ouvrir le dossier d'icônes personnalisées… »</em> dans les paramètres du plugin. Déposez-y vos propres fichiers :
+								<strong>100% Custom User Override Icons</strong>: Click
+								<em>"Open custom icons folder…"</em> in the plugin settings and drop your own <code>.svg</code> or <code>.png</code> files:
 								<ul>
-									<li>Par catégorie : <code>hydrography.svg</code>, <code>elevation.svg</code>, <code>imagery.png</code>, <code>overpass.svg</code>…</li>
-									<li>Par identifiant de couche précis : <code>fr-ign-bdtopo-hydro.svg</code>, <code>ch-swisstopo-swissalti3d.png</code>…</li>
+									<li>By category: <code>hydrography.svg</code>, <code>elevation.svg</code>, <code>imagery.png</code>, <code>overpass.svg</code>…</li>
+									<li>By specific source ID: <code>fr-ign-bdtopo-cours-eau.svg</code>, <code>ch-swisstopo-swissalti3d.png</code>…</li>
 								</ul>
 							</li>
 						</ul>
@@ -441,23 +445,23 @@
 					</div>
 
 					<div class="doc-block">
-						<h3>4. Ajouter une source ou déployer sur GitHub Pages</h3>
+						<h3>4. Adding a Source or Building Locally</h3>
 						<p>
-							Pour ajouter une nouvelle source au catalogue ou publier votre propre instance sur GitHub Pages :
+							To add a new YAML source to the catalog or deploy directly into your local QGIS profile:
 						</p>
-						<pre class="code-block"><code># 1. Installer les dépendances du compilateur
+						<pre class="code-block"><code># 1. Install registry compiler dependencies
 cd packages/registry
 npm install
 
-# 2. Ingérer les catalogues externes (ELI, FieldMaps, IGN) &amp; compiler SQLite + JSON
+# 2. Ingest external catalogs (ELI, FieldMaps, IGN) &amp; build SQLite + JSON
 npm run ingest
 npm run build
 
-# 3. Déployer directement dans votre profil local QGIS 3 / QGIS 4
+# 3. Deploy directly to your local QGIS 3 / QGIS 4 profile
 npm run deploy:qgis</code></pre>
 						<p class="doc-note">
-							Sur GitHub, activez simplement <strong>Settings &rarr; Pages &rarr; Source: GitHub Actions</strong>. Le workflow
-							<code>.github/workflows/publish-pages.yml</code> compile automatiquement le catalogue SQLite, empaquette le plugin QGIS et déploie ce site web à chaque push sur <code>main</code>.
+							On GitHub, enable <strong>Settings &rarr; Pages &rarr; Source: GitHub Actions</strong>. The
+							<code>.github/workflows/publish-pages.yml</code> workflow automatically compiles the SQLite database, packages the QGIS plugin, and publishes this website on every push to <code>main</code>.
 						</p>
 					</div>
 				</div>
@@ -468,33 +472,33 @@ npm run deploy:qgis</code></pre>
 		<section id="architecture" class="section">
 			<div class="container">
 				<div class="section-header">
-					<h2>Architecture Serverless de bout en bout</h2>
-					<p>Du fichier YAML déclaratif jusqu'au canevas PyQGIS, sans aucun serveur intermédiaire.</p>
+					<h2>End-to-End Serverless Architecture</h2>
+					<p>From declarative YAML files to the PyQGIS map canvas, with zero backend infrastructure.</p>
 				</div>
 
 				<div class="arch-pipeline">
 					<div class="arch-step">
 						<div class="arch-step-num">01</div>
-						<h4>Sources YAML &amp; Ingestion</h4>
-						<p>Fichiers YAML validés par Zod + connecteurs automatiques (OSM Editor Layer Index, IGN Géoplateforme, FieldMaps).</p>
+						<h4>YAML Sources &amp; Ingestion</h4>
+						<p>Zod-validated YAML definitions + automated connectors (OSM Editor Layer Index, IGN Géoplateforme, FieldMaps).</p>
 					</div>
 					<div class="arch-arrow">&rarr;</div>
 					<div class="arch-step">
 						<div class="arch-step-num">02</div>
-						<h4>Compilateur SQLite</h4>
-						<p>Génération de <code>catalog.sqlite</code> avec table d'index spatial <code>sources_rtree</code>, index plein texte <code>sources_fts</code> et synonymes i18n.</p>
+						<h4>SQLite Compiler</h4>
+						<p>Generates <code>catalog.sqlite</code> with <code>sources_rtree</code> spatial index, <code>sources_fts</code> full-text index, and i18n synonyms.</p>
 					</div>
 					<div class="arch-arrow">&rarr;</div>
 					<div class="arch-step">
 						<div class="arch-step-num">03</div>
 						<h4>GitHub Pages CDN</h4>
-						<p>Publication statique de <code>catalog.sqlite.gz</code>, <code>manifest.json</code>, <code>plugins.xml</code>, <code>geostrata.zip</code> et de ce site web.</p>
+						<p>Static hosting of <code>catalog.sqlite.gz</code>, <code>manifest.json</code>, <code>plugins.xml</code>, <code>geostrata.zip</code>, and this web explorer.</p>
 					</div>
 					<div class="arch-arrow">&rarr;</div>
 					<div class="arch-step">
 						<div class="arch-step-num">04</div>
-						<h4>Plugin PyQGIS 3 &amp; 4</h4>
-						<p>Synchronisation différentielle SHA-256 en tâche de fond et requêtes SQLite R-Tree en moins de 5 ms depuis <kbd>Ctrl</kbd>+<kbd>K</kbd>.</p>
+						<h4>PyQGIS 3 &amp; 4 Plugin</h4>
+						<p>Differential SHA-256 background sync and sub-5ms SQLite R-Tree queries directly from <kbd>Ctrl</kbd>+<kbd>K</kbd>.</p>
 					</div>
 				</div>
 			</div>
@@ -508,11 +512,11 @@ npm run deploy:qgis</code></pre>
 				<div class="modal-title-wrap">
 					<img id="modal-icon" src="./icons/geostrata.svg" alt="" class="modal-icon" />
 					<div>
-						<h3 id="modal-title">Détails de la couche</h3>
+						<h3 id="modal-title">Layer details</h3>
 						<span id="modal-id" class="modal-id"></span>
 					</div>
 				</div>
-				<button type="button" id="modal-close-btn" class="modal-close" aria-label="Fermer">&times;</button>
+				<button type="button" id="modal-close-btn" class="modal-close" aria-label="Close">&times;</button>
 			</div>
 			<div class="modal-body" id="modal-body"></div>
 		</div>
@@ -521,9 +525,10 @@ npm run deploy:qgis</code></pre>
 	<footer class="site-footer">
 		<div class="container footer-inner">
 			<div>
-				<strong>Geostrata</strong> — Moteur de catalogue spatial open-source sous licence GPL-2.0-or-later.
+				<strong>Geostrata</strong> — Open-source spatial catalog engine licensed under GPL-2.0-or-later.
 			</div>
 			<div class="footer-links">
+				<a href="https://github.com/lambda2/geostrata" target="_blank" rel="noopener">GitHub</a>
 				<a href="./manifest.json" target="_blank" rel="noopener">manifest.json</a>
 				<a href="./catalog.json" target="_blank" rel="noopener">catalog.json</a>
 				<a href="./plugins.xml" target="_blank" rel="noopener">plugins.xml</a>

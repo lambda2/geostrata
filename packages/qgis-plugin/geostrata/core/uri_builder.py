@@ -22,6 +22,15 @@ class ResolvedLayerSpec:
     display_name: str
 
 
+def _quote_uri_value(value: str) -> str:
+    """Escape a layer or style name for a QGIS provider URI.
+
+    QGIS 3.x does not decode %3A back to ':' in these values, so workspace
+    prefixed names (GeoServer "workspace:layer") must keep their colon.
+    """
+    return urllib.parse.quote(value, safe=":")
+
+
 def _parse_query_params_ci(url: str) -> Tuple[str, Dict[str, str]]:
     """Split a URL into its base endpoint and uppercase-keyed query parameters."""
     parsed = urllib.parse.urlsplit(url)
@@ -125,8 +134,8 @@ def build_provider_uri(
             uri = (
                 f"contextualWMSLegend=0&crs={crs}&dpiMode=7&featureCount=10"
                 f"&format={urllib.parse.quote(img_format, safe='/')}"
-                f"&layers={urllib.parse.quote(layer_name)}"
-                f"&styles={urllib.parse.quote(style_name)}"
+                f"&layers={_quote_uri_value(layer_name)}"
+                f"&styles={_quote_uri_value(style_name)}"
                 f"&tileMatrixSet={urllib.parse.quote(tms)}"
                 f"&url={urllib.parse.quote(capabilities_url, safe=':/?')}"
             )
@@ -134,8 +143,8 @@ def build_provider_uri(
             uri = (
                 f"contextualWMSLegend=0&crs={crs}&dpiMode=7&featureCount=10"
                 f"&format={urllib.parse.quote(img_format, safe='/')}"
-                f"&layers={urllib.parse.quote(layer_name)}"
-                f"&styles={urllib.parse.quote(style_name)}"
+                f"&layers={_quote_uri_value(layer_name)}"
+                f"&styles={_quote_uri_value(style_name)}"
                 f"&url={urllib.parse.quote(base_url, safe=':/')}"
             )
         return ResolvedLayerSpec(

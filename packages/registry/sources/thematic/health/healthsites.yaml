@@ -2,13 +2,16 @@
 # The download URL carries HDX dataset and resource UUIDs, so it cannot be templated: one line per
 # country, the shared fields come from `defaults`. URLs read from the HDX API on 2026-11-14
 # (package_search fq=organization:healthsites, GeoJSON resource without HXL tags).
-# Only countries whose file opens as a point layer in QGIS are listed: where the first feature is a
-# polygon, QGIS types the whole layer as polygons and hides most facilities (46 countries left out).
+# The files mix points and building outlines: `geometry_type: point` (in `defaults`) makes QGIS load
+# the point features whatever the first feature is. The 46 countries whose file starts with a
+# polygon, left out until the plugin supported `geometry_type`, were added back on 2026-11-14,
+# except IOT and NRU whose file holds no point feature at all.
 defaults:
   id: "{iso2}-healthsites-facilities"
   name: "Healthsites.io - Health Facilities - {country}"
   description: "Health facilities of {country} from the Healthsites.io global mapping project, built on OpenStreetMap: hospitals, clinics, doctors, dentists, pharmacies and laboratories, with name, amenity, healthcare speciality, operator, beds, staff counts and opening hours when tagged, plus an attribute completeness score. Points and building outlines are mixed in one GeoJSON and QGIS displays the point features only - facilities drawn as outlines (about 8% in Haiti) are not shown, use the HOT health facility polygon layer for those. The whole file is downloaded at load (from a few KB to about 70 MB). Not an official health ministry register."
   type: geojson
+  geometry_type: point
   category: health
   crs: EPSG:4326
   license: ODbL-1.0
@@ -40,6 +43,8 @@ sources:
     url: https://data.humdata.org/dataset/c84896ed-835f-425c-9c19-beaa5e38e817/resource/25ac1eae-43d9-4879-9598-e9289bfdd8c7/download/afghanistan.geojson
   - for_each_country: [AGO]
     url: https://data.humdata.org/dataset/a36cc6ab-520e-4dab-b91e-7bbe4b3248b4/resource/b249cf97-55c6-4369-ae2d-b29ff0202f2f/download/angola.geojson
+  - for_each_country: [AIA]
+    url: https://data.humdata.org/dataset/b70101a0-ab8e-4743-aa25-11ab44d8097d/resource/13581335-623d-468a-853a-bbe84587e37f/download/anguilla.geojson
   - for_each_country: [ALB]
     url: https://data.humdata.org/dataset/af846cf9-ba66-4c9f-bf79-550b88244a72/resource/caa897ca-e857-404a-b64f-c0acf3bdbbe5/download/albania.geojson
   - for_each_country: [AND]
@@ -50,12 +55,16 @@ sources:
     url: https://data.humdata.org/dataset/620698d2-42e4-4dfb-81af-7065ca3d1b48/resource/b6a8ba13-1ccf-41ed-b86b-88e6e94b0645/download/argentina.geojson
   - for_each_country: [ARM]
     url: https://data.humdata.org/dataset/35658b0b-b25a-4839-992a-7c90d2c1e1fd/resource/4b23b031-ca07-4ad7-8661-64ca29aecedf/download/armenia.geojson
+  - for_each_country: [ATG]
+    url: https://data.humdata.org/dataset/29f99b5b-c4d1-45d0-8e8a-ef0a71ebb059/resource/386f53e5-2a55-471d-bdde-2871950d1ea3/download/antigua-and-barbuda.geojson
   - for_each_country: [AUS]
     url: https://data.humdata.org/dataset/a5221b34-8ed4-4e19-88c9-b195c13502b6/resource/7087dbfd-9277-4324-b81f-2edb0a573a41/download/australia.geojson
   - for_each_country: [AUT]
     url: https://data.humdata.org/dataset/c1a2bb61-db02-4c96-ab11-c796f3ab02de/resource/b176df19-956b-49f2-84ed-b70f966b71b1/download/austria.geojson
   - for_each_country: [AZE]
     url: https://data.humdata.org/dataset/94aab720-6595-4a20-9122-ec22a9474bd8/resource/8d299c87-7801-471e-8018-3d113b57f75b/download/azerbaijan.geojson
+  - for_each_country: [BDI]
+    url: https://data.humdata.org/dataset/9f00207c-d3b2-4328-9d54-8ed505ccc83a/resource/2d1e814a-a391-4504-89ba-f8e0e863a197/download/burundi.geojson
   - for_each_country: [BEL]
     url: https://data.humdata.org/dataset/c2406903-28a9-482d-8085-2ae86d570f24/resource/a2944a2d-4cc6-4540-90a1-59da1c78d34e/download/belgium.geojson
   - for_each_country: [BEN]
@@ -70,12 +79,20 @@ sources:
     url: https://data.humdata.org/dataset/64ffddf1-5aba-492f-842f-33e5d335cd57/resource/f6aeaa07-a167-490b-b721-a4723f13e7d9/download/bahrain.geojson
   - for_each_country: [BIH]
     url: https://data.humdata.org/dataset/18c62446-a183-4071-8286-e5326b689acf/resource/e4fe550e-d385-41e2-941e-44c6271183a2/download/bosnia-and-herzegovina.geojson
+  - for_each_country: [BLR]
+    url: https://data.humdata.org/dataset/cea42e2e-07b2-49de-b30c-d19369ef9134/resource/b23df399-cc90-42c4-8df0-bf5aa0ba4162/download/belarus.geojson
+  - for_each_country: [BLZ]
+    url: https://data.humdata.org/dataset/b9a407cd-fecd-467f-a2a5-c04cdc96473c/resource/f01e8db6-f932-4094-979e-a4dea62e4f20/download/belize.geojson
   - for_each_country: [BMU]
     url: https://data.humdata.org/dataset/95721a63-ad7c-41c1-83f8-43667b3255d9/resource/32feb97b-6611-4d23-b1a4-9a0432933175/download/bermuda.geojson
   - for_each_country: [BOL]
     url: https://data.humdata.org/dataset/02573b51-7b7f-476a-9147-ece038260b31/resource/e52bf186-b1c0-4fb7-a67c-b0278c45afa3/download/bolivia.geojson
   - for_each_country: [BRA]
     url: https://data.humdata.org/dataset/09f9a766-d24c-4376-b923-726bede4059d/resource/be877d08-17d8-45ba-8f82-0dcd70d07abf/download/brazil.geojson
+  - for_each_country: [BRB]
+    url: https://data.humdata.org/dataset/66293f37-4c80-40e7-9a61-4a08282d604d/resource/b3913fcd-6901-4bed-8123-d327f55199da/download/barbados.geojson
+  - for_each_country: [BTN]
+    url: https://data.humdata.org/dataset/dd8712a9-5377-465a-9d25-6cbd248055f5/resource/91dcd096-a2d1-4a3a-a58a-bde3662dd02f/download/bhutan.geojson
   - for_each_country: [BWA]
     url: https://data.humdata.org/dataset/5445b83e-0f7d-42f5-ae00-ea02798017d2/resource/5f940323-2f2c-440c-b0f0-9897db7a6458/download/botswana.geojson
   - for_each_country: [CAF]
@@ -98,26 +115,38 @@ sources:
     url: https://data.humdata.org/dataset/4a748316-21c9-4579-b482-6f05c6a4c053/resource/6db1102f-c787-43df-98f1-f098e2f3f617/download/cook-islands.geojson
   - for_each_country: [COL]
     url: https://data.humdata.org/dataset/4ca96139-21c0-456d-9624-45e6474dd3ea/resource/3d5ceb38-f0bb-49f2-bc55-20a68f355101/download/colombia.geojson
+  - for_each_country: [COM]
+    url: https://data.humdata.org/dataset/d713e963-20ee-4f84-8de8-9de6d2d3b986/resource/b6aec59f-e1e6-46f9-a11a-75f894792d6c/download/comoros.geojson
   - for_each_country: [CRI]
     url: https://data.humdata.org/dataset/f53acfc4-780c-4ea4-bf97-021eff2c9f32/resource/e36bb227-59fa-4c18-9a4a-ad2cfe056b6f/download/costa-rica.geojson
   - for_each_country: [CUB]
     url: https://data.humdata.org/dataset/482acd25-3030-469e-b699-99d4b3edfb42/resource/36043ee0-5231-48b9-9885-2776d47c9775/download/cuba.geojson
+  - for_each_country: [CYM]
+    url: https://data.humdata.org/dataset/ab21056e-35d4-464d-8add-7428e90c7740/resource/c4a6a8dc-d6a4-4ed5-ab57-1bb659740cb5/download/cayman-islands.geojson
   - for_each_country: [CYP]
     url: https://data.humdata.org/dataset/02e656dd-4bd6-4050-9479-64fc0813fbae/resource/2bdde0e7-0bcc-4986-a0f7-2493779894f4/download/cyprus.geojson
   - for_each_country: [CZE]
     url: https://data.humdata.org/dataset/80296bdf-ebc3-469f-a764-4201e14201a4/resource/50827b2a-09ec-40d2-b79d-6d8087532154/download/czechia.geojson
+  - for_each_country: [DJI]
+    url: https://data.humdata.org/dataset/43609174-913d-42e9-8cd5-4a80c78276b2/resource/537719b0-9962-4b04-b559-f19e5f37053e/download/djibouti.geojson
   - for_each_country: [DMA]
     url: https://data.humdata.org/dataset/e6850ed8-9ec8-482d-860b-8146753c284a/resource/d6a61b94-850e-414a-b5de-34251e1f0b3d/download/dominica.geojson
   - for_each_country: [DNK]
     url: https://data.humdata.org/dataset/dfeb1959-302d-45ec-b0be-83607888b063/resource/550dfc5c-521a-4aac-96a3-026312e8463a/download/denmark.geojson
+  - for_each_country: [DOM]
+    url: https://data.humdata.org/dataset/01679aa7-0856-4289-a40e-4058c2cb6cf2/resource/42d27c7a-c4b3-48ab-8ff6-7f4ca5d31bbd/download/dominican-republic.geojson
   - for_each_country: [DZA]
     url: https://data.humdata.org/dataset/1acd7dfd-d797-4922-b0f5-82db92440e30/resource/50bc4a54-ec79-456f-96f4-e17c7af77316/download/algeria.geojson
   - for_each_country: [ECU]
     url: https://data.humdata.org/dataset/48f8ecc1-618b-480e-9903-5bd7391e32bd/resource/408eea9b-dcaf-4116-9b38-b0c3c151f920/download/ecuador.geojson
   - for_each_country: [EGY]
     url: https://data.humdata.org/dataset/fd8b5629-df68-412e-bc93-6e1e91745a5f/resource/3c67bd87-d8ff-4ea9-9680-361c50ed627a/download/egypt.geojson
+  - for_each_country: [ERI]
+    url: https://data.humdata.org/dataset/4856a18b-d426-4ccf-8a1a-9993e7057956/resource/2995498d-3183-4b86-8a60-71f63478c4f9/download/eritrea.geojson
   - for_each_country: [ESP]
     url: https://data.humdata.org/dataset/d343ba76-2110-4d4f-a8af-04e5ed74362e/resource/08749b5d-8fee-498e-b30f-43d3e6367b92/download/spain.geojson
+  - for_each_country: [EST]
+    url: https://data.humdata.org/dataset/38fdae08-2826-47d8-86f8-c2c73c3bf0cf/resource/aeead9e9-761a-4c05-8838-685481c73d40/download/estonia.geojson
   - for_each_country: [ETH]
     url: https://data.humdata.org/dataset/0cc29a44-cc6d-449a-b3b7-d28fb2066c26/resource/f04fbd89-c251-458a-a486-2e929dc533d1/download/ethiopia.geojson
   - for_each_country: [FIN]
@@ -126,6 +155,8 @@ sources:
     url: https://data.humdata.org/dataset/65412512-3281-44e0-ab16-cc6a7499a339/resource/75e1eced-63a4-4a08-9834-fcefae8e0dbe/download/fiji.geojson
   - for_each_country: [FRO]
     url: https://data.humdata.org/dataset/977fecc9-e4de-482f-8110-3871c4aeffb8/resource/e2d99dbd-2dc1-4ea0-ba77-b649df27f513/download/faroe-islands.geojson
+  - for_each_country: [GAB]
+    url: https://data.humdata.org/dataset/a2d11078-9a73-413f-b573-364c50ef3f51/resource/05d452ee-28d0-4da2-ad09-352fb56658a4/download/gabon.geojson
   - for_each_country: [GEO]
     url: https://data.humdata.org/dataset/4345217c-ad92-4fcd-84ca-9b0a48c4bca1/resource/352c7345-d4f1-46de-a984-e1436d1e3518/download/georgia.geojson
   - for_each_country: [GHA]
@@ -140,16 +171,24 @@ sources:
     url: https://data.humdata.org/dataset/b9de787e-1a3f-4d51-9427-aead54de156b/resource/8fb8206c-0e29-4436-9c6e-4c7f0e4ae816/download/equatorial-guinea.geojson
   - for_each_country: [GRC]
     url: https://data.humdata.org/dataset/525dea17-87af-4521-9c0d-ce67994daa38/resource/e4793a1b-c230-4992-98ae-59cf525b422e/download/greece.geojson
+  - for_each_country: [GRD]
+    url: https://data.humdata.org/dataset/b370fa2e-08dd-4218-aabe-17100334bee7/resource/bf2275ab-b1d5-4b53-a04c-d9c7b5661c0b/download/grenada.geojson
   - for_each_country: [GRL]
     url: https://data.humdata.org/dataset/e9fb72ca-ec68-4979-961a-1dafd5036886/resource/7342cc1f-9b65-4e7b-8157-7ed5d208ea4c/download/greenland.geojson
+  - for_each_country: [GTM]
+    url: https://data.humdata.org/dataset/a8d0d34f-88de-41c5-b580-fd208447a381/resource/ef9e97d2-7112-47d9-abbf-d75498e76185/download/guatemala.geojson
   - for_each_country: [GUY]
     url: https://data.humdata.org/dataset/2ea238ac-daa1-480b-84df-acf8654dd80e/resource/e400a6e2-e77c-43da-b282-1abbf9741537/download/guyana.geojson
+  - for_each_country: [HND]
+    url: https://data.humdata.org/dataset/1e39f653-7684-41c2-b088-52037e8dcf69/resource/daccc84f-f7a1-46bf-9109-1356fe4176b2/download/honduras.geojson
   - for_each_country: [HRV]
     url: https://data.humdata.org/dataset/8375ad14-886d-49a8-a22c-8c202048eefa/resource/0890ad29-1b7a-45a9-9e57-92503158682f/download/croatia.geojson
   - for_each_country: [HTI]
     url: https://data.humdata.org/dataset/a5b640b2-13aa-4da2-97df-0473dff1aa97/resource/c4f64a86-65bb-44a5-82f8-a5453da3bfab/download/haiti.geojson
   - for_each_country: [HUN]
     url: https://data.humdata.org/dataset/047e2c3b-cde4-4cd1-af52-4fb7ebde8213/resource/421e912b-1860-4204-b6c3-5ea43f913f4a/download/hungary.geojson
+  - for_each_country: [IDN]
+    url: https://data.humdata.org/dataset/07dc1fd2-0381-46df-920b-643953916590/resource/5dc963e1-f3e4-4799-b02b-98eaa4dc6daa/download/indonesia.geojson
   - for_each_country: [IRL]
     url: https://data.humdata.org/dataset/6f82b840-63cd-4c8a-8851-b40ad9007e1b/resource/1bab2331-b82d-4b74-b8af-2bd1b38361b4/download/ireland.geojson
   - for_each_country: [IRN]
@@ -158,18 +197,28 @@ sources:
     url: https://data.humdata.org/dataset/2d76464e-cbf4-4130-a6d9-182e73310c64/resource/4d1146f2-ff8c-4056-851d-dba6bcdc6175/download/iraq.geojson
   - for_each_country: [ISL]
     url: https://data.humdata.org/dataset/dd9412ca-9094-4dbf-b8a9-5e1eb53ae15b/resource/3925894e-e675-4a3e-93cc-b789aeed9d72/download/iceland.geojson
+  - for_each_country: [ISR]
+    url: https://data.humdata.org/dataset/ebb5983c-efbe-4900-b1ed-229ee8362dc1/resource/f3d59598-324d-4e8a-a3ec-e03b9aee84ed/download/israel.geojson
   - for_each_country: [ITA]
     url: https://data.humdata.org/dataset/1a167aba-84eb-46f3-8d78-dbad626f85ae/resource/24c9e27f-d24c-4f59-af89-83b75411f2a2/download/italy.geojson
   - for_each_country: [JAM]
     url: https://data.humdata.org/dataset/f7b42560-1298-4818-bcf3-d90c3a35f0e3/resource/4484df16-2c59-414b-a865-90666004509e/download/jamaica.geojson
   - for_each_country: [JOR]
     url: https://data.humdata.org/dataset/0fb75d45-b9e4-411e-bbcd-2437ad1fee1e/resource/0567d30a-5aae-47b5-a7b0-c4c148a0c116/download/jordan.geojson
+  - for_each_country: [JPN]
+    url: https://data.humdata.org/dataset/0a5f4d87-686d-44b2-bbd5-de59041514ee/resource/0424aa70-33b7-4237-b78a-13a34bde2153/download/japan.geojson
   - for_each_country: [KAZ]
     url: https://data.humdata.org/dataset/38038fe0-656d-4d83-b13b-60dbfc2ea7de/resource/6d716dbe-2f5c-49a2-926b-aa0f94c3df2b/download/kazakhstan.geojson
+  - for_each_country: [KEN]
+    url: https://data.humdata.org/dataset/df79db22-da00-4c05-bda0-79c14f27132d/resource/a1616a48-1583-4e9f-8f09-7021a63ff5bd/download/kenya.geojson
   - for_each_country: [KGZ]
     url: https://data.humdata.org/dataset/735fdd9b-9633-4ca9-b031-3129ded80109/resource/6dac83b5-a49a-41f6-9a86-fe18e2e6b438/download/kyrgyzstan.geojson
   - for_each_country: [KHM]
     url: https://data.humdata.org/dataset/e3cb08ad-fa21-4311-b0aa-1b9e3ce5109e/resource/b6da86e5-6218-45ec-af17-188c7e94c639/download/cambodia.geojson
+  - for_each_country: [KIR]
+    url: https://data.humdata.org/dataset/92a46cd3-d60f-45c6-b5b9-d516ebb6c7e8/resource/042c95fd-d897-47f4-a5bb-1849828b625d/download/kiribati.geojson
+  - for_each_country: [KNA]
+    url: https://data.humdata.org/dataset/d8a71ccd-1250-4b94-946c-8fc9eb9f2d4a/resource/d2cba745-184a-4b84-8af8-92cb1d1d249a/download/saint-kitts-and-nevis.geojson
   - for_each_country: [KWT]
     url: https://data.humdata.org/dataset/cf3824ac-55e5-4d4d-bd92-9b441c4d9d7c/resource/4617fc1c-56a2-4ab1-ba13-c06b6a7960cb/download/kuwait.geojson
   - for_each_country: [LBN]
@@ -182,6 +231,8 @@ sources:
     url: https://data.humdata.org/dataset/6cee44cd-a05c-43c1-acbd-724574f536a6/resource/f9f34a72-04da-491d-a147-3e59a095cf4e/download/saint-lucia.geojson
   - for_each_country: [LIE]
     url: https://data.humdata.org/dataset/410807ad-492e-4fe6-98f3-589b8d5ff03d/resource/1ecbb6ce-c9c2-407b-8716-758aa439b9ec/download/liechtenstein.geojson
+  - for_each_country: [LKA]
+    url: https://data.humdata.org/dataset/d3d0698a-a5a2-4ad0-9781-7f41a729d870/resource/5e3034e7-3388-4ad7-9d69-92df83cae7e1/download/sri-lanka.geojson
   - for_each_country: [LSO]
     url: https://data.humdata.org/dataset/b6fed87c-9e2b-49e4-8bea-cbfea54238fb/resource/796a0637-697c-4a61-b369-ee1351c77141/download/lesotho.geojson
   - for_each_country: [LTU]
@@ -196,6 +247,8 @@ sources:
     url: https://data.humdata.org/dataset/80b7e8e6-791d-4eb0-88a1-4e613e82a487/resource/a0bf1473-7ffb-483f-84d2-ce57df7e6b0c/download/monaco.geojson
   - for_each_country: [MDG]
     url: https://data.humdata.org/dataset/991f056e-0984-49be-852d-0d72f82f4908/resource/a815abf2-710b-411d-9caf-2bd90fe667e9/download/madagascar.geojson
+  - for_each_country: [MDV]
+    url: https://data.humdata.org/dataset/41b300cf-90e5-4f00-9e6b-ce4800e9f2c5/resource/689925b5-5973-41c8-8c4f-36c384c8d35e/download/maldives.geojson
   - for_each_country: [MEX]
     url: https://data.humdata.org/dataset/03274dce-369d-408e-99eb-92ee1c59b0b4/resource/0716e5d0-e680-4d71-a714-a652b6c5c2ca/download/mexico.geojson
   - for_each_country: [MHL]
@@ -204,6 +257,8 @@ sources:
     url: https://data.humdata.org/dataset/a512111d-9b60-4b8c-9b24-24a64da1506b/resource/8b455114-2fc6-41d1-a62c-d2f2fca298c4/download/mali.geojson
   - for_each_country: [MLT]
     url: https://data.humdata.org/dataset/d2e1ea04-bce0-42e2-ae74-49c73a76d946/resource/94494cf7-9177-44a7-9f75-9f2371158690/download/malta.geojson
+  - for_each_country: [MMR]
+    url: https://data.humdata.org/dataset/45fc5d75-f73f-4048-9b62-8222cbdca155/resource/e2be3dc4-7382-42e4-948c-7558dbd66d1b/download/myanmar.geojson
   - for_each_country: [MNE]
     url: https://data.humdata.org/dataset/20472bf3-e681-4d3c-ab3c-6b043a699199/resource/a27ba2a1-2d04-45fa-bebe-445b486cecf3/download/montenegro.geojson
   - for_each_country: [MNG]
@@ -216,8 +271,12 @@ sources:
     url: https://data.humdata.org/dataset/923456f8-7365-405d-8ecd-d03d642dcdf3/resource/b6f36d3c-840e-4361-a30c-64344f1ccffb/download/montserrat.geojson
   - for_each_country: [MUS]
     url: https://data.humdata.org/dataset/16a16e2b-8007-44ae-9893-046798cfccde/resource/bd87510e-94f3-4617-8e41-572a23748d34/download/mauritius.geojson
+  - for_each_country: [MWI]
+    url: https://data.humdata.org/dataset/2840df95-7873-4181-a553-e631b6a2f52b/resource/57a81453-2651-42be-afe1-df07b1b0fff5/download/malawi.geojson
   - for_each_country: [MYS]
     url: https://data.humdata.org/dataset/3c6544fb-9ec7-49b0-902a-d33ac77ea20d/resource/e52a67da-97a0-44f6-b083-71771e808e58/download/malaysia.geojson
+  - for_each_country: [NAM]
+    url: https://data.humdata.org/dataset/655c7c70-37b8-4b87-a6b4-1529db31b353/resource/66896960-af78-41c2-ade0-a237f7d44b8d/download/namibia.geojson
   - for_each_country: [NER]
     url: https://data.humdata.org/dataset/5de12e13-fa97-4bbc-92a7-7269bd6fff86/resource/6258e5e1-221e-4a0f-90db-a5912ad0fcce/download/niger.geojson
   - for_each_country: [NGA]
@@ -242,12 +301,20 @@ sources:
     url: https://data.humdata.org/dataset/10a04919-cf29-4772-a475-c18daa4ef26b/resource/62f9304a-6925-4b30-8c6f-658e33dcbdda/download/peru.geojson
   - for_each_country: [PHL]
     url: https://data.humdata.org/dataset/20e5069f-1eb8-465b-98c8-3442a62cd3f0/resource/eb4fb617-0de3-4932-b0a6-6eb0988f75ea/download/philippines.geojson
+  - for_each_country: [PLW]
+    url: https://data.humdata.org/dataset/51347f5d-987e-41b4-a292-a5218645741c/resource/82dffd86-fd85-4ec9-9c29-d19bc4342a9b/download/palau.geojson
+  - for_each_country: [PNG]
+    url: https://data.humdata.org/dataset/2e7a7464-696c-4776-9ff2-20b4d425c230/resource/b9ea26f7-5520-4e37-a9df-801ad71dff3a/download/papua-new-guinea.geojson
   - for_each_country: [POL]
     url: https://data.humdata.org/dataset/0f470bf5-c7b4-4cdd-922d-6d78460875ca/resource/c33177f6-ef83-41af-965a-f9eac61aab2c/download/poland.geojson
   - for_each_country: [PRT]
     url: https://data.humdata.org/dataset/4cad854d-426c-42bd-a35b-4a31ca139049/resource/e24f77c0-15c2-4bbd-a37e-ebf7c743f353/download/portugal.geojson
   - for_each_country: [PRY]
     url: https://data.humdata.org/dataset/06de1605-2bd0-46eb-939b-58f4fdcda270/resource/21ebb51f-6e77-41dc-80ca-8a51c5954b66/download/paraguay.geojson
+  - for_each_country: [PSE]
+    url: https://data.humdata.org/dataset/b73187f1-79c6-4d05-83a3-467a5ffe9a32/resource/e456e100-ed75-4970-87a8-a6a0e086efa0/download/palestinian-territories.geojson
+  - for_each_country: [QAT]
+    url: https://data.humdata.org/dataset/8155bcb7-a818-49de-ac36-3b9fee2a2e5a/resource/76638a7e-5243-453a-9cb5-26bc82467253/download/qatar.geojson
   - for_each_country: [RWA]
     url: https://data.humdata.org/dataset/67ca8390-678a-4eb0-8c06-a12d86df1033/resource/64be7983-aaa2-4b9c-ae5c-3b4a7fff66aa/download/rwanda.geojson
   - for_each_country: [SAU]
@@ -258,8 +325,12 @@ sources:
     url: https://data.humdata.org/dataset/c0137f69-bf61-4991-8ed6-50bf603beed5/resource/d40f84d2-4780-4c82-a67a-f0c31ecd561c/download/senegal.geojson
   - for_each_country: [SGP]
     url: https://data.humdata.org/dataset/e1219f26-b91b-4916-92ef-f7248af4f33f/resource/25e4051b-a251-4bb5-858d-6d2d7c42c36a/download/singapore.geojson
+  - for_each_country: [SLB]
+    url: https://data.humdata.org/dataset/72accb72-541e-44b3-9492-bfcb2cdcb8b0/resource/d68d30f2-a257-4180-ab6e-47613187ee2b/download/solomon-islands.geojson
   - for_each_country: [SLE]
     url: https://data.humdata.org/dataset/7cf66396-0514-43c7-b750-bbc584a17919/resource/8f0f370d-3548-425f-9473-7908427f61a7/download/sierra-leone.geojson
+  - for_each_country: [SLV]
+    url: https://data.humdata.org/dataset/049c577f-aae0-4ba0-9156-b968a980260f/resource/fce73468-348e-4dd1-9181-03339d61dd97/download/el-savador.geojson
   - for_each_country: [SMR]
     url: https://data.humdata.org/dataset/0f3e5ac1-2478-45ce-96f9-f04421411eac/resource/7483ce14-a0e0-44d9-b932-e7f81c1db089/download/san-marino.geojson
   - for_each_country: [SOM]
@@ -268,12 +339,24 @@ sources:
     url: https://data.humdata.org/dataset/ebf8bb66-1726-43ab-a6c2-4547b953a28a/resource/65e68bfc-129e-463d-a55d-5cd39e628383/download/serbia.geojson
   - for_each_country: [SSD]
     url: https://data.humdata.org/dataset/e3184d68-b883-4fc4-b06a-cf2e5cfd7d69/resource/e47b28f7-4ba8-4f40-a024-f467e384b6c7/download/south-sudan.geojson
+  - for_each_country: [SUR]
+    url: https://data.humdata.org/dataset/862b91ac-0bd7-4f11-b7db-b838c4e4ac50/resource/19477534-1aef-4c7c-ac1e-2518d879a99c/download/suriname.geojson
   - for_each_country: [SVK]
     url: https://data.humdata.org/dataset/5d850ee5-4342-4942-838b-1abf461650a2/resource/b17ee34c-ed63-49c4-87c7-9fe8fba741be/download/slovakia.geojson
+  - for_each_country: [SVN]
+    url: https://data.humdata.org/dataset/4ed9154f-44f4-4307-875e-b3d3127015f8/resource/e8902542-d2b0-4672-aeca-2c4e5b3d7269/download/slovenia.geojson
+  - for_each_country: [SWE]
+    url: https://data.humdata.org/dataset/7aaf6a1b-cde6-4a7c-8e12-4aeeee410f4d/resource/a0948d3e-4705-453e-b51c-ce245655b26e/download/sweden.geojson
   - for_each_country: [SYC]
     url: https://data.humdata.org/dataset/f616880b-61de-412d-b1e1-318eacb16a70/resource/3643471f-a490-41eb-9e3e-45549016de0a/download/seychelles.geojson
+  - for_each_country: [TCA]
+    url: https://data.humdata.org/dataset/957548bd-585d-4174-afd2-5d583b45819a/resource/d14edcaa-d0d4-4940-9282-87a3974cb08f/download/turks-and-caicos.geojson
+  - for_each_country: [TCD]
+    url: https://data.humdata.org/dataset/9ae842b2-5d50-4350-bdb5-f9e21261ae66/resource/5792af15-1886-40f5-ac37-ee8560239471/download/chad.geojson
   - for_each_country: [TGO]
     url: https://data.humdata.org/dataset/bfd67f3e-7b03-42c2-a1ce-abb5a229c5d9/resource/0047fcb7-a367-43ec-ba75-64b665dd7c17/download/togo.geojson
+  - for_each_country: [THA]
+    url: https://data.humdata.org/dataset/83ce6e9f-cbaf-4300-9dcd-14ec1802770d/resource/4b23f4b7-db5b-4199-b9f4-30e8bec68a0c/download/thailand.geojson
   - for_each_country: [TJK]
     url: https://data.humdata.org/dataset/ef14d06a-30bf-483d-9550-7210dfa7a535/resource/b638fa6d-f164-4250-bb82-8c9f43a99ebf/download/tajikistan.geojson
   - for_each_country: [TKM]
@@ -288,6 +371,8 @@ sources:
     url: https://data.humdata.org/dataset/2e45ecbd-7940-4775-a1da-57603118390c/resource/368e4abc-d45d-4d17-9880-7c74260acdcb/download/turkey.geojson
   - for_each_country: [TUV]
     url: https://data.humdata.org/dataset/1f2ef2d4-4daa-4638-8804-087d56abff92/resource/a3165037-2f09-4906-a207-bb8777fa69e7/download/tuvalu.geojson
+  - for_each_country: [TZA]
+    url: https://data.humdata.org/dataset/eac6c9b4-5d0d-48cc-8914-a667c716c4c5/resource/64aa3921-b61e-425e-9d91-44f89227e18c/download/tanzania.geojson
   - for_each_country: [UGA]
     url: https://data.humdata.org/dataset/eaeaf616-7629-476e-a908-bf50a2d6b440/resource/d89a39ed-4871-4808-9c9d-0cafc657ba01/download/uganda.geojson
   - for_each_country: [URY]
@@ -296,12 +381,18 @@ sources:
     url: https://data.humdata.org/dataset/9fe156bb-0c80-4c7d-b2a6-c4c4167a96e4/resource/09edc7b2-8ff0-44ce-87d3-debe59c9364a/download/uzbekistan.geojson
   - for_each_country: [VCT]
     url: https://data.humdata.org/dataset/b9c49dbd-bc89-4e00-adb5-611358ae9c54/resource/2281a984-a61d-41bf-ad65-eb2246010b48/download/saint-vincent-and-the-grenadines.geojson
+  - for_each_country: [VEN]
+    url: https://data.humdata.org/dataset/82308822-d74a-492e-a3e4-5bfd6413eedb/resource/51d50ead-8095-4c1d-b105-889ab624f62f/download/venezuela.geojson
   - for_each_country: [VGB]
     url: https://data.humdata.org/dataset/4d141854-964a-4d34-97ea-c45b9a8cf3dd/resource/c6a4493c-bfb4-4c47-a149-abc0a52c8699/download/british-virgin-islands.geojson
   - for_each_country: [VUT]
     url: https://data.humdata.org/dataset/f30385be-f9a4-4ecf-8cb4-0e87b926a2a0/resource/2db1383f-2bdb-4bcb-8052-d7bc034b43da/download/vanuatu.geojson
+  - for_each_country: [WSM]
+    url: https://data.humdata.org/dataset/d4d91057-8f68-44ff-8027-25f301bf9c05/resource/084ed535-5b52-4696-8d88-e3c2bb9af9a9/download/samoa.geojson
   - for_each_country: [YEM]
     url: https://data.humdata.org/dataset/8ed6967a-13c0-4b57-9873-563970a1a35f/resource/6da0958d-9597-4158-bca2-313e14457dde/download/yemen.geojson
+  - for_each_country: [ZAF]
+    url: https://data.humdata.org/dataset/2868920e-94ea-472b-a153-e3766e8d68f9/resource/a4d76cfe-798d-4db7-ba8f-110282d613b2/download/south-africa.geojson
   - for_each_country: [ZMB]
     url: https://data.humdata.org/dataset/117402aa-bd50-47c9-8f58-4f6a04f287c6/resource/008ab9ae-1786-495c-a984-e5fb0e1ba767/download/zambia.geojson
   - for_each_country: [ZWE]

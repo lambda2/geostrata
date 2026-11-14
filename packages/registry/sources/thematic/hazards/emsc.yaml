@@ -1,0 +1,45 @@
+# EMSC (European-Mediterranean Seismological Centre) FDSN event web service on seismicportal.eu.
+# The answer is generated on request (GeoJSON, 3D points): the plugin downloads it in the
+# background and keeps it five minutes. `starttime` is filled by the `time` block (30 days back).
+# Licence read on https://www.seismicportal.eu/fdsn-wsevent.html (results under CC BY 4.0).
+- id: global-emsc-earthquakes-month
+  name: EMSC - Earthquakes M4+ (Past 30 Days)
+  description: Earthquakes of magnitude 4 and above located by the
+    European-Mediterranean Seismological Centre during the past 30 days,
+    worldwide (about 1,500 events), with origin time, magnitude and magnitude
+    type, depth, region name and contributing agency. EMSC is usually faster
+    and denser than USGS for Europe, the Mediterranean, the Middle East and
+    Central Asia. Limited to the 5,000 most recent events.
+  type: geojson
+  category: hazard
+  url: https://www.seismicportal.eu/fdsnws/event/1/query?format=json&minmag=4&limit=5000&starttime={time}
+  time:
+    offset_days: -30
+    format: YYYY-MM-DD
+  license: CC-BY-4.0
+  attribution: © EMSC-CSEM (European-Mediterranean Seismological Centre),
+    seismicportal.eu
+  data_date: live catalogue, updated within minutes of each event
+  tags:
+    - emsc
+    - csem
+    - earthquake
+    - seismicity
+    - alerts
+    - europe
+    - mediterranean
+    - seisme
+    - tremblement de terre
+    - sismicite
+    - alertes
+    - mediterranee
+  i18n:
+    fr:
+      name: CSEM - Séismes de magnitude 4 et plus (30 derniers jours)
+      description: Séismes de magnitude 4 et plus localisés par le Centre
+        sismologique euro-méditerranéen (CSEM/EMSC) au cours des 30 derniers
+        jours, dans le monde entier (environ 1 500 événements), avec heure
+        d'origine, magnitude et type de magnitude, profondeur, nom de la région
+        et agence contributrice. Le CSEM est en général plus rapide et plus
+        dense que l'USGS pour l'Europe, la Méditerranée, le Moyen-Orient et
+        l'Asie centrale. Limité aux 5 000 événements les plus récents.

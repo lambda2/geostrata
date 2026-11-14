@@ -1,0 +1,73 @@
+# NOAA NCEI / World Data Service for Geophysics - Global Historical Natural Hazards databases,
+# read from the layers of one ArcGIS MapServer (each layer supports Query, so QGIS loads it as
+# vector features): https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer
+# Left out after testing: layer 6 (significant volcanic eruptions). Its OBJECTID is the volcano,
+# not the eruption (903 rows, 279 distinct ids), so QGIS keeps one eruption per volcano.
+# Layer ids and counts read on 2026-11-14. The server returns 2,000 features per request.
+defaults:
+  type: arcgisfeatureserver
+  category: hazard
+  license: Public domain (US Government work, NOAA National Centers for
+    Environmental Information) - no licence is stated on the map service; NCEI
+    asks to be cited
+  attribution: NOAA National Centers for Environmental Information (NCEI) /
+    World Data Service for Geophysics
+  data_date: historical catalogue from 2150 BC to today, updated by NCEI as
+    events are reviewed
+  tags:
+    - noaa
+    - ncei
+    - ngdc
+    - natural hazards
+    - historical
+    - risques naturels
+    - catastrophes
+    - historique
+sources:
+  - id: global-ncei-significant-earthquakes
+    name: NOAA NCEI - Significant Earthquakes (2150 BC to Present)
+    description: About 6,600 destructive earthquakes since antiquity - events
+      with 10 or more deaths, damage of about 1 million dollars or more, magnitude 7.5 or
+      greater, intensity X or greater, or a tsunami - with date, location,
+      magnitude, depth, deaths, injuries, houses destroyed and damage
+      estimates. Shows the seismic history of an area, which the live USGS
+      feeds do not. Global layer, fetched for the visible extent.
+    url: https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/5
+    priority: 2
+    tags:
+      - earthquake
+      - significant earthquakes
+      - seismic history
+      - seisme
+      - tremblement de terre
+      - sismicite historique
+    i18n:
+      fr:
+        name: NOAA NCEI - Séismes significatifs (de 2150 av. J.-C. à aujourd'hui)
+        description: Environ 6 600 séismes destructeurs depuis l'Antiquité -
+          événements ayant causé au moins 10 morts, au moins un million de dollars de
+          dégâts environ, de magnitude 7,5 ou plus, d'intensité X ou plus, ou
+          accompagnés d'un tsunami - avec date, lieu, magnitude, profondeur,
+          morts, blessés, maisons détruites et estimation des dégâts. Montre
+          l'histoire sismique d'une zone, ce que les flux USGS en direct ne
+          donnent pas. Couche mondiale, chargée pour l'emprise visible.
+  - id: global-ncei-tsunami-events
+    name: NOAA NCEI - Tsunami Source Events (2000 BC to Present)
+    description: About 2,600 tsunami source events since antiquity, one point
+      at the origin of each tsunami, with date, cause (earthquake, volcano,
+      landslide), event validity, earthquake magnitude, maximum water height,
+      deaths and damage. Use it to see which coasts have a tsunami history.
+    url: https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/1
+    tags:
+      - tsunami
+      - tsunami history
+      - raz de maree
+      - submersion
+    i18n:
+      fr:
+        name: NOAA NCEI - Événements sources de tsunamis (de 2000 av. J.-C. à aujourd'hui)
+        description: Environ 2 600 événements sources de tsunamis depuis
+          l'Antiquité, un point à l'origine de chaque tsunami, avec date, cause
+          (séisme, volcan, glissement de terrain), validité de l'événement,
+          magnitude du séisme, hauteur d'eau maximale, morts et dégâts. Permet
+          de voir quelles côtes ont un passé de tsunamis.

@@ -1,0 +1,139 @@
+# UN OCHA Common Operational Datasets - Administrative Boundaries (COD-AB), global feature services
+# hosted by OCHA (gis.unocha.org, folder COD). One service per administrative level, all countries
+# in one layer: the services cannot be filtered by country from the catalog, so there is one entry
+# per level and no per-country template.
+# Read on 2026-11-14: 25 countries (AFG BFA CAF CMR COD COL ETH GTM HND HTI LBN MLI MMR MOZ NER NGA
+# SDN SLV SOM SSD SYR TCD UKR VEN YEM) at levels 0 to 2, 17 of them at level 3.
+# The former per-country ITOS services (codgis.itos.uga.edu/arcgis/rest/services/COD_External)
+# no longer answer (connection refused on 2026-11-14), so they are not listed.
+defaults:
+  type: arcgisfeatureserver
+  category: admin
+  bbox: [-92.3, -26.9, 101.2, 52.4]
+  style_file: admin.qml
+  license: No licence is stated on the OCHA map service. The COD-AB datasets it
+    is built from are published per country on HDX, most under CC BY-IGO, a
+    few with other terms - check the country page on data.humdata.org before
+    redistributing
+  attribution: © UN OCHA - Common Operational Datasets (COD-AB), national
+    authorities and partners
+  data_date: one version per country, dated 2015 to 2025 (field version_no)
+  tags:
+    - ocha
+    - cod
+    - cod-ab
+    - common operational dataset
+    - pcode
+    - p-code
+    - boundaries
+    - administrative boundaries
+    - limites administratives
+    - decoupage administratif
+    - humanitarian
+    - humanitaire
+sources:
+  - id: global-ocha-cod-adm0
+    name: OCHA COD - Country Boundaries (Admin 0), 25 Humanitarian Response Countries
+    description: Reference country outlines used by the humanitarian community
+      (Common Operational Datasets) for 25 countries with a humanitarian
+      response - Afghanistan, Burkina Faso, Cameroon, CAR, Chad, Colombia, DRC,
+      El Salvador, Ethiopia, Guatemala, Haiti, Honduras, Lebanon, Mali,
+      Mozambique, Myanmar, Niger, Nigeria, Somalia, South Sudan, Sudan, Syria,
+      Ukraine, Venezuela, Yemen - with country name, ISO codes and P-code.
+      Islands are separate polygons (about 800 features). Served by an ArcGIS
+      feature service, 2,000 features per request, fetched for the visible
+      extent.
+    url: https://gis.unocha.org/server/rest/services/COD/GBL_COD_Admin0/FeatureServer/0
+    tags:
+      - adm0
+      - admin0
+      - country
+      - pays
+    i18n:
+      fr:
+        name: OCHA COD - Frontières nationales (Admin 0), 25 pays de réponse humanitaire
+        description: Contours nationaux de référence de la communauté humanitaire
+          (Common Operational Datasets) pour 25 pays faisant l'objet d'une réponse
+          humanitaire - Afghanistan, Burkina Faso, Cameroun, Colombie, Éthiopie,
+          Guatemala, Haïti, Honduras, Liban, Mali, Mozambique, Myanmar, Niger,
+          Nigéria, RCA, RDC, Salvador, Somalie, Soudan, Soudan du Sud, Syrie,
+          Tchad, Ukraine, Venezuela, Yémen - avec nom du pays, codes ISO et
+          P-code. Les îles sont des polygones distincts (environ 800 entités).
+          Service d'entités ArcGIS, 2 000 entités par requête, chargées pour
+          l'emprise visible.
+  - id: global-ocha-cod-adm1
+    name: OCHA COD - Admin 1 Boundaries with P-codes, 25 Humanitarian Response Countries
+    description: First-level administrative units (provinces, regions, states,
+      departments) of the Common Operational Datasets for 25 countries with a
+      humanitarian response, with names in up to four languages and the
+      P-codes used in humanitarian reporting (3W, needs assessments, HDX
+      figures). About 1,240 polygons. Countries outside the 25 are not in this
+      service - use geoBoundaries or GADM for them. ArcGIS feature service,
+      2,000 features per request.
+    url: https://gis.unocha.org/server/rest/services/COD/GBL_COD_Admin1/FeatureServer/0
+    priority: 2
+    tags:
+      - adm1
+      - admin1
+      - province
+      - region
+      - departement
+    i18n:
+      fr:
+        name: OCHA COD - Limites Admin 1 avec P-codes, 25 pays de réponse humanitaire
+        description: Unités administratives de premier niveau (provinces, régions,
+          États, départements) des Common Operational Datasets pour 25 pays
+          faisant l'objet d'une réponse humanitaire, avec les noms en quatre
+          langues au plus et les P-codes utilisés dans les rapports humanitaires
+          (3W, évaluations des besoins, chiffres HDX). Environ 1 240 polygones.
+          Les autres pays ne figurent pas dans ce service - utiliser
+          geoBoundaries ou GADM. Service d'entités ArcGIS, 2 000 entités par
+          requête.
+  - id: global-ocha-cod-adm2
+    name: OCHA COD - Admin 2 Boundaries with P-codes, 25 Humanitarian Response Countries
+    description: Second-level administrative units (districts, departments,
+      communes, localities) of the Common Operational Datasets for 25
+      countries with a humanitarian response, with names, parent Admin 1 and
+      P-codes. About 6,000 polygons. ArcGIS feature service, 2,000 features
+      per request, fetched for the visible extent.
+    url: https://gis.unocha.org/server/rest/services/COD/GLB_COD_Admin2/FeatureServer/0
+    priority: 2
+    tags:
+      - adm2
+      - admin2
+      - district
+      - commune
+      - cercle
+    i18n:
+      fr:
+        name: OCHA COD - Limites Admin 2 avec P-codes, 25 pays de réponse humanitaire
+        description: Unités administratives de deuxième niveau (districts,
+          départements, communes, localités) des Common Operational Datasets pour
+          25 pays faisant l'objet d'une réponse humanitaire, avec noms, Admin 1 de
+          rattachement et P-codes. Environ 6 000 polygones. Service d'entités
+          ArcGIS, 2 000 entités par requête, chargées pour l'emprise visible.
+  - id: global-ocha-cod-adm3
+    name: OCHA COD - Admin 3 Boundaries with P-codes, 17 Humanitarian Response Countries
+    description: Third-level administrative units of the Common Operational
+      Datasets, available for 17 countries only - Burkina Faso, Cameroon, CAR,
+      Chad, El Salvador, Ethiopia, Haiti, Lebanon, Mali, Mozambique, Myanmar,
+      Niger, Nigeria, South Sudan, Syria, Ukraine, Venezuela - with names,
+      parent units and P-codes. About 10,800 polygons. ArcGIS feature service,
+      2,000 features per request, fetched for the visible extent.
+    url: https://gis.unocha.org/server/rest/services/COD/GBL_COD_Admin3/FeatureServer/0
+    tags:
+      - adm3
+      - admin3
+      - commune
+      - section communale
+      - township
+    i18n:
+      fr:
+        name: OCHA COD - Limites Admin 3 avec P-codes, 17 pays de réponse humanitaire
+        description: Unités administratives de troisième niveau des Common
+          Operational Datasets, disponibles pour 17 pays seulement - Burkina Faso,
+          Cameroun, Éthiopie, Haïti, Liban, Mali, Mozambique, Myanmar, Niger,
+          Nigéria, RCA, Salvador, Soudan du Sud, Syrie, Tchad, Ukraine, Venezuela -
+          avec noms, unités de rattachement et P-codes. Environ 10 800 polygones.
+          Service d'entités ArcGIS, 2 000 entités par requête, chargées pour
+          l'emprise visible.

@@ -1,0 +1,74 @@
+# IOM Displacement Tracking Matrix (DTM) - global public feature services published by the DTM
+# team on ArcGIS Online (owner mbakr_dtm). Counts and licence text read on 2026-11-14.
+# These are the public aggregates behind the DTM global story maps; the detailed DTM API
+# (dtmapi.iom.int) needs a subscription key and is not listed.
+defaults:
+  type: arcgisfeatureserver
+  category: crisis
+  style_file: crisis.qml
+  license: IOM DTM terms - may be viewed, downloaded and printed for
+    non-commercial use only, with no right to sell, resell, redistribute or
+    create derivative works; credit "International Organization for Migration
+    (IOM), [month, year], Displacement Tracking Matrix (DTM)"
+  attribution: © International Organization for Migration (IOM), Displacement
+    Tracking Matrix (DTM)
+  data_date: latest DTM round per country (field Snapshot_Date), service
+    updated 2025-2026
+  tags:
+    - iom
+    - oim
+    - dtm
+    - displacement tracking matrix
+    - idp
+    - internally displaced
+    - displacement
+    - deplaces internes
+    - pdi
+    - deplacement
+    - population
+sources:
+  - id: global-iom-dtm-idps-adm1
+    name: IOM DTM - Internally Displaced Persons by Admin 1 (Latest Round)
+    description: Number of internally displaced persons recorded by the IOM
+      Displacement Tracking Matrix in each first-level administrative unit,
+      one point per unit (about 450 points in the countries where DTM
+      operates), with country, unit name, P-code, IDP total and the date of
+      the snapshot. Dates differ between countries - check Snapshot_Date
+      before comparing. Non-commercial use only.
+    url: https://services5.arcgis.com/QYf5PkPqzJKVzrmF/arcgis/rest/services/Global_DTM_Data_Admin1/FeatureServer/0
+    priority: 2
+    tags:
+      - adm1
+      - admin1
+    i18n:
+      fr:
+        name: OIM DTM - Personnes déplacées internes par Admin 1 (dernier cycle)
+        description: Nombre de personnes déplacées internes recensées par la
+          Matrice de suivi des déplacements (DTM) de l'OIM dans chaque unité
+          administrative de premier niveau, un point par unité (environ 450
+          points dans les pays où la DTM opère), avec pays, nom de l'unité,
+          P-code, total de déplacés et date du relevé. Les dates diffèrent selon
+          les pays - vérifier Snapshot_Date avant de comparer. Usage non
+          commercial uniquement.
+  - id: global-iom-dtm-idps-adm2
+    name: IOM DTM - Internally Displaced Persons by Admin 2 (Latest Round)
+    description: Number of internally displaced persons recorded by the IOM
+      Displacement Tracking Matrix in each second-level administrative unit,
+      one point per unit (about 2,700 points), with country, Admin 1 and
+      Admin 2 names, P-codes, IDP total and the date of the snapshot. Not
+      every DTM country reports at this level. Non-commercial use only.
+      The server returns 2,000 features per request.
+    url: https://services5.arcgis.com/QYf5PkPqzJKVzrmF/arcgis/rest/services/Global_DTM_Data_Admin2/FeatureServer/0
+    tags:
+      - adm2
+      - admin2
+    i18n:
+      fr:
+        name: OIM DTM - Personnes déplacées internes par Admin 2 (dernier cycle)
+        description: Nombre de personnes déplacées internes recensées par la
+          Matrice de suivi des déplacements (DTM) de l'OIM dans chaque unité
+          administrative de deuxième niveau, un point par unité (environ 2 700
+          points), avec pays, noms Admin 1 et Admin 2, P-codes, total de déplacés
+          et date du relevé. Tous les pays DTM ne publient pas ce niveau. Usage
+          non commercial uniquement. Le serveur renvoie 2 000 entités par
+          requête.

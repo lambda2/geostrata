@@ -561,6 +561,20 @@ def instantiate_layer(spec: ResolvedLayerSpec) -> Any:
     return QgsVectorLayer(spec.uri, spec.display_name, spec.provider)
 
 
+def _assign_declared_crs_if_missing(layer: Any, entry: CatalogSourceRecord) -> None:
+    """Give a file without CRS information (shapefile lacking its .prj) the CRS declared in the catalog."""
+    try:
+        if layer.crs().isValid() or not entry.crs:
+            return
+        from qgis.core import QgsCoordinateReferenceSystem
+
+        declared = QgsCoordinateReferenceSystem(entry.crs)
+        if declared.isValid():
+            layer.setCrs(declared)
+    except Exception:
+        pass
+
+
 def create_qgis_layer(
     entry: CatalogSourceRecord,
     canvas_bbox_4326: Optional[Tuple[float, float, float, float]] = None,
@@ -600,6 +614,7 @@ def create_qgis_layer(
                     )
 
     if layer.isValid():
+        _assign_declared_crs_if_missing(layer, entry)
         apply_layer_metadata_and_style(layer, entry)
 
     return layer, spec

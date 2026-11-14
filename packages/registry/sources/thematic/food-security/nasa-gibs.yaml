@@ -1,0 +1,84 @@
+# NASA GIBS layers used for drought and crop monitoring (pre-rendered tiles, no values).
+defaults:
+  type: xyz
+  crs: EPSG:3857
+  license: CC0-1.0 (NASA open data policy, no restriction; acknowledgement requested)
+  attribution: NASA EOSDIS Global Imagery Browse Services (GIBS)
+  tags:
+    - nasa
+    - gibs
+    - satellite
+    - drought
+    - secheresse
+    - food security
+    - securite alimentaire
+    - agriculture
+sources:
+  - id: global-gibs-ndvi-8day
+    name: NASA GIBS - Vegetation Index NDVI, Rolling 8-Day (MODIS Terra, 250 m)
+    description: Greenness of the vegetation (NDVI) from MODIS on Terra at
+      250 m, best observation of the last 8 days, recomputed every day. Dark
+      green is dense healthy vegetation, pale tones sparse or stressed
+      vegetation - compare with the season to spot drought or crop failure.
+      Published the next day; this layer shows the composite ending 3 days ago
+      (UTC) to keep a margin. Colour image, not values; tiles stop at zoom 9.
+    category: landuse
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/{time}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png
+    max_zoom: 9
+    time:
+      offset_days: -3
+    data_date: rolling 8-day composite updated daily, the one ending 3 days ago shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - greenness
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - modis
+    i18n:
+      fr:
+        name: NASA GIBS - Indice de végétation NDVI, 8 jours glissants (MODIS Terra, 250 m)
+        description: Verdeur de la végétation (NDVI) d'après MODIS (Terra) à
+          250 m, meilleure observation des 8 derniers jours, recalculée chaque
+          jour. En vert foncé une végétation dense et saine, en tons pâles une
+          végétation clairsemée ou en stress, à comparer à la saison pour
+          repérer sécheresse ou perte de récolte. Publié le lendemain, la
+          couche affiche la synthèse se terminant il y a 3 jours (UTC) pour
+          garder une marge. Image colorée et non des valeurs, tuiles limitées
+          au zoom 9.
+  - id: global-gibs-smap-root-zone-soil-moisture
+    name: NASA GIBS - Root Zone Soil Moisture (SMAP L4, 9 km)
+    description: Water held in the top metre of soil, where crop roots feed,
+      from the SMAP satellite combined with a land model (Level 4 analysis,
+      9 km, 12 UTC). Orange and yellow are dry, green and blue wet. Shows the latest day published,
+      about 4 days behind; no fixed date is requested because some days are
+      missing from the archive. Colour image, not values; tiles stop at
+      zoom 6.
+    category: weather
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/SMAP_L4_Analyzed_Root_Zone_Soil_Moisture/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png
+    max_zoom: 6
+    data_date: daily, latest day shown (about 4 days behind)
+    tags:
+      - soil moisture
+      - humidite du sol
+      - root zone
+      - zone racinaire
+      - smap
+      - crop
+      - cultures
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Humidité du sol en zone racinaire (SMAP L4, 9 km)
+        description: Eau contenue dans le premier mètre de sol, là où
+          s'alimentent les racines des cultures, d'après le satellite SMAP
+          combiné à un modèle de surface (analyse de niveau 4, 9 km, 12 UTC).
+          En orange et jaune sec, en vert et bleu humide. Affiche le dernier jour publié, environ
+          4 jours de retard, aucune date fixe n'est demandée car certains jours
+          manquent dans l'archive. Image colorée et non des valeurs, tuiles
+          limitées au zoom 6.

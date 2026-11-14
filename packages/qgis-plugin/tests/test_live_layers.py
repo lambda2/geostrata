@@ -47,7 +47,9 @@ import sys
 import tempfile
 import threading
 import time
+import urllib.error
 import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
@@ -583,6 +585,16 @@ def tile_content_ok(source_type: str, content_type: str, body: bytes) -> Tuple[b
 # --------------------------------------------------------------------------
 
 
+def _resolved_template(entry: Any) -> str:
+    """Tile template with the `{time}` placeholder resolved the way the plugin does it."""
+    try:
+        from geostrata.core.uri_builder import resolved_entry_url
+
+        return resolved_entry_url(entry)
+    except Exception:
+        return entry.url.strip()
+
+
 def _emit(payload: Dict[str, Any]) -> None:
     sys.stdout.write(RESULT_MARK + json.dumps(payload, ensure_ascii=False) + "\n")
     sys.stdout.flush()
@@ -605,6 +617,7 @@ class LayerChecker:
 
         from geostrata.core import db_client, uri_builder
 
+        self._db_client_module = db_client
         self._record_cls = db_client.CatalogSourceRecord
         self._uri_builder = uri_builder
         self._http_status_attr = _scoped(
@@ -643,6 +656,10 @@ class LayerChecker:
             "tags": parse_json(row.get("tags_json"), []),
             "i18n": parse_json(row.get("i18n_json"), {}),
         }
+        # `time_json` is decoded by the plugin's own parser so `{time}` resolves exactly as in QGIS.
+        time_parser = getattr(self._db_client_module, "_optional_time_spec", None)
+        if time_parser is not None and row.get("time_json"):
+            derived["time"] = time_parser(row.get("time_json"))
         text_defaults = {"description": "", "crs": "EPSG:4326", "health_status": "ok"}
         kwargs: Dict[str, Any] = {}
         for field in dataclasses.fields(self._record_cls):
@@ -830,7 +847,7 @@ class LayerChecker:
         result["checks"].append("fetch_tile")
         outcomes: List[Tuple[str, str, Optional[int], str]] = []
         for zoom, x, y in tiles:
-            url = fill_tile_template(entry.url.strip(), zoom, x, y)
+            url = fill_tile_template(_resolved_template(entry), zoom, x, y)
             if url is None:
                 result["status"] = STATUS_SKIPPED
                 result["reason"] = "unknown_placeholder"
@@ -1076,6 +1093,24 @@ def worker_main(http_timeout_s: int) -> int:
 # --------------------------------------------------------------------------
 
 
+def _probe_after_crash(row: Dict[str, Any]) -> Tuple[str, str]:
+    """Ask the endpoint of a layer that crashed its worker whether it answers at all."""
+    target = probe_url_for(str(row["type"]).lower(), str(row["url"]))
+    if not target or "{" in target:
+        return STATUS_BROKEN, "worker_crash"
+    request = urllib.request.Request(
+        target,
+        headers={"User-Agent": "Geostrata-LiveTest/1.0", "Range": "bytes=0-1023"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return classify_http(int(response.status), "")
+    except urllib.error.HTTPError as exc:
+        return classify_http(int(exc.code), "")
+    except Exception as exc:  # DNS failure, timeout, connection reset
+        return classify_http(None, str(exc))
+
+
 class WorkerProcess:
     """One QGIS subprocess, restarted transparently when it hangs or dies."""
 
@@ -1182,6 +1217,19 @@ class WorkerProcess:
         base["duration_s"] = round(time.time() - started, 2)
         if answer is None:
             self.kill()
+            # Old GDAL builds (QGIS 3.28) can crash on a streamed archive when the
+            # server refuses the request (403 from a CI runner). The plugin itself
+            # downloads such files and reports a clean error, so a crash on an
+            # endpoint that does not answer right now is "unreachable", not "broken".
+            probe_status, probe_reason = _probe_after_crash(row)
+            if probe_status == STATUS_UNREACHABLE:
+                return {
+                    **base,
+                    "status": STATUS_UNREACHABLE,
+                    "reason": probe_reason,
+                    "detail": f"QGIS crashed while loading this layer and the endpoint answers {probe_reason}",
+                    "retryable": True,
+                }
             return {
                 **base,
                 "status": STATUS_BROKEN,

@@ -1,0 +1,49 @@
+# Water Point Data Exchange (WPdx+), Socrata open data API of data.waterpointdata.org
+# (dataset eqje-vguj). One GeoJSON request per country, filtered on clean_country_id and limited
+# to the useful columns with $select (the full record weighs four times more).
+# Countries listed are those holding data on 2026-11-14 ($group=clean_country_id): 19 countries,
+# from 442 points (Guatemala) to 99,245 (Nigeria, about 60 MB). The file is downloaded in the
+# background and cached by the plugin.
+# Licence: the Socrata metadata has an empty licence field and no licence text was found on
+# waterpointdata.org on 2026-11-14 - stated as such below.
+- id: "{iso2}-wpdx-water-points"
+  for_each_country: [
+    BGD, CAF, ETH, GHA, GTM, HTI, IND, KEN, LBR, MWI, NGA, RWA, SLE, SSD, SWZ, TZA, UGA, ZMB, ZWE
+  ]
+  name: "WPdx - Water Points - {country}"
+  description: "Water points of {country} shared by governments, NGOs and researchers through the Water Point Data Exchange: boreholes, wells, springs, taps and kiosks as points, with water source and technology, functional status (status_id, status_clean), management, installation year, date of the last report, population served and the organisation that reported. Coverage depends on which surveys were shared - a district without points is not a district without water points - and many reports are several years old (check report_date). The file is downloaded once (from under 1 MB to about 60 MB for Nigeria and Uganda)."
+  type: geojson
+  category: utilities
+  url: "https://data.waterpointdata.org/resource/eqje-vguj.geojson?$where=clean_country_id=%27{ISO3}%27&$limit=500000&$select=new_georeferenced_column_,wpdx_id,clean_adm1,clean_adm2,clean_adm3,water_source_clean,water_tech_clean,facility_type,status_id,status_clean,management_clean,install_year,report_date,source,is_urban,served_population,local_population,pay_clean,subjective_quality_clean"
+  style_file: hydrography.qml
+  license: No licence stated - the WPdx dataset metadata carries no licence
+    field and none was found on waterpointdata.org; WPdx presents itself as an
+    open data platform. Credit WPdx and the original data provider (field
+    source) and confirm before redistributing
+  attribution: Water Point Data Exchange (WPdx), Global Water Challenge, and
+    the data providers named in the source field
+  data_date: updated continuously as providers share surveys; report dates
+    range from the 2000s to today
+  priority: 2
+  tags:
+    - wpdx
+    - water points
+    - wash
+    - water supply
+    - borehole
+    - well
+    - handpump
+    - functionality
+    - points d eau
+    - eha
+    - approvisionnement en eau
+    - forage
+    - puits
+    - pompe manuelle
+    - fonctionnalite
+    - "{country}"
+    - "{country_fr}"
+  i18n:
+    fr:
+      name: "WPdx - Points d'eau - {country_fr}"
+      description: "Points d'eau du pays ({country_fr}) partagés par des gouvernements, ONG et chercheurs via le Water Point Data Exchange : forages, puits, sources, bornes-fontaines et kiosques en points, avec type de source et de technologie, état de fonctionnement (status_id, status_clean), gestion, année d'installation, date du dernier relevé, population desservie et organisation ayant fourni la donnée. La couverture dépend des enquêtes partagées - un district sans points n'est pas un district sans points d'eau - et beaucoup de relevés datent de plusieurs années (vérifier report_date). Le fichier est téléchargé une fois (de moins de 1 Mo à environ 60 Mo pour le Nigéria et l'Ouganda)."

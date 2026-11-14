@@ -1,0 +1,49 @@
+# Sentinel-2 10 m Land Use / Land Cover time series (Impact Observatory, Microsoft, Esri), served
+# by a dynamic ArcGIS ImageServer (no tile cache: every view is rendered by the server with its
+# default "Cartographic Renderer" colours). Licence read on the ArcGIS item
+# cfcb7609de5f478eb7666240902d4d3d: source data CC BY 4.0, service under the Esri Master Licence.
+- id: global-esri-land-cover-10m
+  name: Esri / Impact Observatory - Sentinel-2 10 m Land Use and Land Cover (Latest Year)
+  description: Global land use and land cover map at 10 m derived from
+    Sentinel-2 imagery by Impact Observatory - nine classes (water, trees,
+    flooded vegetation, crops, built area, bare ground, snow and ice, clouds,
+    rangeland). The service holds one map per year since 2017 and draws the
+    most recent year by default. Good to see built-up areas, cropland and
+    forest around a site at village scale. Each view is rendered by the
+    server (a few seconds); pixel values cannot be queried as classes from
+    this image.
+  type: arcgismapserver
+  category: landuse
+  url: https://ic.imagery1.arcgis.com/arcgis/rest/services/Sentinel2_10m_LandCover/ImageServer
+  license: Source data CC-BY-4.0 (Impact Observatory, Microsoft, Esri) - the
+    image service itself is provided under the Esri Master License Agreement
+  attribution: Impact Observatory, Microsoft, and Esri - Sentinel-2 10 m Land
+    Use / Land Cover
+  data_date: annual maps from 2017, latest year 2025
+  tags:
+    - land cover
+    - land use
+    - lulc
+    - sentinel-2
+    - esri
+    - impact observatory
+    - cropland
+    - built area
+    - forest
+    - occupation du sol
+    - couverture du sol
+    - cultures
+    - zones baties
+    - foret
+  i18n:
+    fr:
+      name: Esri / Impact Observatory - Occupation du sol Sentinel-2 à 10 m (dernière année)
+      description: Carte mondiale d'occupation et d'usage du sol à 10 m dérivée
+        de l'imagerie Sentinel-2 par Impact Observatory - neuf classes (eau,
+        arbres, végétation inondée, cultures, zones bâties, sol nu, neige et
+        glace, nuages, parcours). Le service contient une carte par an depuis
+        2017 et affiche par défaut l'année la plus récente. Utile pour voir le
+        bâti, les cultures et la forêt autour d'un site à l'échelle du village.
+        Chaque vue est calculée par le serveur (quelques secondes) ; les
+        valeurs de pixel ne peuvent pas être interrogées comme classes depuis
+        cette image.

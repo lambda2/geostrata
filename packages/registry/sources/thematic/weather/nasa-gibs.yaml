@@ -1,17 +1,11 @@
 defaults:
   category: weather
   license: CC0-1.0 (NASA open data policy, no restriction; acknowledgement requested)
-  attribution: NASA GPM / EOSDIS Global Imagery Browse Services (GIBS)
+  attribution: NASA EOSDIS Global Imagery Browse Services (GIBS)
   tags:
     - nasa
     - gibs
-    - gpm
-    - imerg
-    - rain
-    - pluie
-    - rainfall
-    - precipitation
-    - precipitations
+    - satellite
     - meteo
     - weather
 sources:
@@ -26,7 +20,15 @@ sources:
     crs: EPSG:3857
     max_zoom: 6
     data_date: daily, latest day shown (about one day behind)
+    attribution: NASA GPM / EOSDIS Global Imagery Browse Services (GIBS)
     tags:
+      - gpm
+      - imerg
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
       - daily
       - quotidien
     i18n:
@@ -48,7 +50,15 @@ sources:
     crs: EPSG:3857
     max_zoom: 6
     data_date: every 30 minutes, latest step shown (a few hours behind real time)
+    attribution: NASA GPM / EOSDIS Global Imagery Browse Services (GIBS)
     tags:
+      - gpm
+      - imerg
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
       - live
       - temps reel
     i18n:
@@ -58,3 +68,230 @@ sources:
           satellite (GPM IMERG) pour le dernier pas de 30 minutes disponible,
           avec quelques heures de retard sur le temps réel, résolution d'environ
           10 km. Image colorée et non des valeurs, tuiles limitées au zoom 6.
+  # Dated layers. For these products the "default" date of GIBS is the day in progress,
+  # which is only partly filled (or not rendered yet): `{time}` asks for a complete day.
+  # A date later than the last published day answers 404, so the offset keeps a margin.
+  - id: global-gibs-land-surface-temperature-day
+    name: NASA GIBS - Land Surface Temperature, Day (VIIRS NOAA-20, Yesterday)
+    description: Daytime temperature of the ground surface (not the air)
+      measured by VIIRS on NOAA-20 at 750 m, early afternoon overpass.
+      Shows where the ground is hottest during a heatwave. Cloudy areas are
+      empty. Shows yesterday (UTC), the last complete day; available a few
+      hours after the overpass. Colour image, not values; tiles stop at zoom 7.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_Land_Surface_Temp_Day/default/{time}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 7
+    time:
+      offset_days: -1
+    data_date: daily, yesterday shown
+    tags:
+      - temperature
+      - land surface temperature
+      - temperature de surface
+      - lst
+      - heat
+      - heatwave
+      - chaleur
+      - canicule
+      - viirs
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Température de surface du sol, jour (VIIRS NOAA-20, hier)
+        description: Température diurne de la surface du sol (et non de l'air)
+          mesurée par VIIRS (NOAA-20) à 750 m, passage de début
+          d'après-midi. Montre où le sol est le plus chaud lors d'une canicule.
+          Les zones nuageuses sont vides. Affiche hier (UTC), dernier jour
+          complet, disponible quelques heures après le passage. Image colorée
+          et non des valeurs, tuiles limitées au zoom 7.
+  - id: global-gibs-land-surface-temperature-night
+    name: NASA GIBS - Land Surface Temperature, Night (VIIRS NOAA-20, Yesterday)
+    description: Night-time temperature of the ground surface (not the air)
+      measured by VIIRS on NOAA-20 at 750 m, overpass after midnight.
+      Warm nights are what makes a heatwave dangerous; also shows frost.
+      Cloudy areas are empty. Shows yesterday (UTC), the last complete day.
+      Colour image, not values; tiles stop at zoom 7.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_Land_Surface_Temp_Night/default/{time}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 7
+    time:
+      offset_days: -1
+    data_date: daily, yesterday shown
+    tags:
+      - temperature
+      - land surface temperature
+      - temperature de surface
+      - lst
+      - heat
+      - heatwave
+      - chaleur
+      - canicule
+      - frost
+      - gel
+      - night
+      - nuit
+      - viirs
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Température de surface du sol, nuit (VIIRS NOAA-20, hier)
+        description: Température nocturne de la surface du sol (et non de l'air)
+          mesurée par VIIRS (NOAA-20) à 750 m, passage après minuit. Les
+          nuits chaudes font le danger d'une canicule, la couche montre aussi
+          le gel. Les zones nuageuses sont vides. Affiche hier (UTC), dernier
+          jour complet. Image colorée et non des valeurs, tuiles limitées au
+          zoom 7.
+  - id: global-gibs-snow-cover
+    name: NASA GIBS - Snow Cover (VIIRS NOAA-20, Yesterday)
+    description: Snow on the ground seen by VIIRS on NOAA-20 at 375 m
+      (Normalised Difference Snow Index, share of each pixel covered). Useful
+      for winter access and cold-wave response in mountain areas. Optical
+      sensor - cloudy and night areas are empty. Shows yesterday (UTC), the
+      last complete day. Colour image, not values; tiles stop at zoom 8.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_NDSI_Snow_Cover/default/{time}/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 8
+    time:
+      offset_days: -1
+    data_date: daily, yesterday shown
+    tags:
+      - snow
+      - neige
+      - snow cover
+      - couverture neigeuse
+      - enneigement
+      - ndsi
+      - winter
+      - hiver
+      - cold wave
+      - vague de froid
+      - viirs
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Couverture neigeuse (VIIRS NOAA-20, hier)
+        description: Neige au sol vue par VIIRS (NOAA-20) à 375 m (indice de
+          neige NDSI, part de chaque pixel couverte). Utile pour l'accès
+          hivernal et la réponse aux vagues de froid en montagne. Capteur
+          optique, les zones nuageuses ou de nuit sont vides. Affiche hier
+          (UTC), dernier jour complet. Image colorée et non des valeurs, tuiles
+          limitées au zoom 8.
+  - id: global-gibs-aerosol-optical-depth
+    name: NASA GIBS - Aerosol Optical Depth (MODIS Terra + Aqua, 2 Days Ago)
+    description: How much dust, smoke and haze is in the air column, from
+      MODIS on Terra and Aqua combined (value-added aerosol optical depth,
+      0.5 degree grid). High values mark dust storms, wildfire smoke plumes
+      and heavy pollution. Areas without a valid measurement are empty.
+      Published the next day; this layer shows the day before yesterday (UTC)
+      to be sure the image exists. Colour image, not values; tiles stop at
+      zoom 6.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Combined_Value_Added_AOD/default/{time}/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 6
+    time:
+      offset_days: -2
+    data_date: daily, published one day later, the day before yesterday shown
+    tags:
+      - aerosol
+      - aerosols
+      - dust
+      - poussiere
+      - sand storm
+      - tempete de sable
+      - smoke
+      - fumee
+      - air quality
+      - qualite de l'air
+      - pollution
+      - aod
+      - modis
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Épaisseur optique des aérosols (MODIS Terra + Aqua, avant-hier)
+        description: Quantité de poussière, de fumée et de brume dans la colonne
+          d'air, d'après MODIS (Terra et Aqua combinés, épaisseur optique des
+          aérosols à valeur ajoutée, grille de 0,5 degré). Les fortes valeurs
+          signalent tempêtes de poussière, panaches de fumée d'incendie et
+          forte pollution. Les zones sans mesure valide sont vides. Publiée le lendemain, la couche affiche avant-hier
+          (UTC) pour être sûre que l'image existe. Image colorée et non des
+          valeurs, tuiles limitées au zoom 6.
+  - id: global-gibs-sea-surface-temperature
+    name: NASA GIBS - Sea Surface Temperature (GHRSST MUR, 3 Days Ago)
+    description: Temperature of the sea surface, gap-free daily analysis
+      merging several satellites and buoys (GHRSST Level 4 MUR, 1 km grid).
+      Warm water above about 26.5 °C feeds tropical cyclones. Published one
+      day later; this layer shows the day 3 days ago (UTC) to keep a margin.
+      Colour image, not values; tiles stop at zoom 7.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GHRSST_L4_MUR_Sea_Surface_Temperature/default/{time}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 7
+    time:
+      offset_days: -3
+    data_date: daily, published one day later, the day 3 days ago shown
+    tags:
+      - sea surface temperature
+      - temperature de surface de la mer
+      - sst
+      - ocean
+      - sea
+      - mer
+      - cyclone
+      - ghrsst
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: NASA GIBS - Température de surface de la mer (GHRSST MUR, il y a 3 jours)
+        description: Température de la surface de la mer, analyse quotidienne
+          sans trous combinant plusieurs satellites et des bouées (GHRSST
+          niveau 4 MUR, grille de 1 km). Une eau à plus de 26,5 °C environ
+          alimente les cyclones tropicaux. Publiée le lendemain, la couche
+          affiche le jour d'il y a 3 jours (UTC) pour garder une marge. Image
+          colorée et non des valeurs, tuiles limitées au zoom 7.
+  - id: global-gibs-sea-surface-temperature-anomaly
+    name: NASA GIBS - Sea Surface Temperature Anomaly (GHRSST MUR, 3 Days Ago)
+    description: Difference between the sea surface temperature of the day and
+      the long-term average for that date (GHRSST Level 4 MUR). Red is warmer
+      than usual, blue colder - marine heatwaves, El Niño and La Niña. Shows
+      the day 3 days ago (UTC), the product being published one day later.
+      Colour image, not values; tiles stop at zoom 7.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GHRSST_L4_MUR_Sea_Surface_Temperature_Anomalies/default/{time}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 7
+    time:
+      offset_days: -3
+    data_date: daily, published one day later, the day 3 days ago shown
+    tags:
+      - sea surface temperature
+      - temperature de surface de la mer
+      - sst
+      - anomaly
+      - anomalie
+      - ocean
+      - sea
+      - mer
+      - el nino
+      - la nina
+      - marine heatwave
+      - canicule marine
+      - ghrsst
+    i18n:
+      fr:
+        name: NASA GIBS - Anomalie de température de surface de la mer (GHRSST MUR, il y a 3 jours)
+        description: Écart entre la température de surface de la mer du jour et
+          la moyenne de long terme pour cette date (GHRSST niveau 4 MUR). En
+          rouge plus chaud que la normale, en bleu plus froid, canicules
+          marines, El Niño et La Niña. Affiche le jour d'il y a 3 jours (UTC),
+          le produit étant publié le lendemain. Image colorée et non des
+          valeurs, tuiles limitées au zoom 7.

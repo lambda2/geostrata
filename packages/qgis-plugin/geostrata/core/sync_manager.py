@@ -13,6 +13,8 @@ from typing import Callable, Dict, List, Optional, Sequence
 
 from ..i18n import tr
 
+from .net import https_context
+
 DEFAULT_MANIFEST_URL = (
     "https://raw.githubusercontent.com/lambda2/geostrata/"
     "main/packages/registry/dist/manifest.json"
@@ -184,7 +186,7 @@ class SyncManager:
             manifest_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=timeout_sec) as response:
+        with urllib.request.urlopen(req, timeout=timeout_sec, context=https_context()) as response:
             manifest_bytes = response.read()
 
         manifest_data = json.loads(manifest_bytes.decode("utf-8"))
@@ -205,7 +207,7 @@ class SyncManager:
             gzip_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(gz_req, timeout=timeout_sec) as gz_response:
+        with urllib.request.urlopen(gz_req, timeout=timeout_sec, context=https_context()) as gz_response:
             compressed_bytes = gz_response.read()
 
         remote_gzip_sha256 = str(manifest_data.get("gzip_sha256", ""))

@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from ..i18n import tr
+from .net import build_direct_opener
 from .db_client import CatalogSourceRecord
 from .extractor_task import resolve_extraction_output_dir
 from .uri_builder import apply_layer_metadata_and_style
@@ -655,7 +656,7 @@ def fetch_overpass_with_failover(
     encoded_body = urllib.parse.urlencode({"data": ql_query}).encode("utf-8")
     errors: List[str] = []
     # Bypass macOS _scproxy in background worker threads to prevent CFNetwork segfaults
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    opener = build_direct_opener()
 
     for mirror_url in target_mirrors:
         req = urllib.request.Request(

@@ -52,6 +52,8 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from ..i18n import tr
 
+from .net import build_direct_opener
+
 SETTINGS_CACHE_DIR_KEY = "geostrata/file_cache_dir"
 SETTINGS_CACHE_MAX_GB_KEY = "geostrata/file_cache_max_gb"
 
@@ -289,7 +291,7 @@ def download_to_file(
     """
     part_meta_path = part_path.with_name(part_path.name + ".json")
     # ProxyHandler({}) avoids the macOS _scproxy lookup, which is not thread-safe.
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    opener = build_direct_opener()
     last_error = ""
 
     for attempt in range(MAX_DOWNLOAD_ATTEMPTS):

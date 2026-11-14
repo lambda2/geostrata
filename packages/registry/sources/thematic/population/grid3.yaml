@@ -1,0 +1,483 @@
+# GRID3 (Geo-Referenced Infrastructure and Demographic Data for Development, CIESIN - Columbia
+# University) hosted feature services: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services
+# Service list, feature counts and licence texts read on 2026-11-14 (FeatureServer/info/itemInfo).
+# Every service returns at most 2,000 features per request; QGIS pages through them for the visible
+# extent, so zoom in before loading the settlement extents of a large country.
+# Two licences coexist: CC BY-SA 4.0 (settlement extents, Nigeria wards) and CC BY 4.0
+# (health facilities, health zones and areas, schools, settlement names, Nigeria points of interest).
+# Mayotte and Réunion also have a v3.0 settlement service but are not in the country index.
+# Left out after testing: the settlement extents v4 of DRC (1.15 million features) and Nigeria
+# (2.5 million) and the DRC and Nigeria road layers. Those services cap the list of object ids at
+# 400,000 or 1,000,000 (exceededTransferLimit), and the QGIS ArcGIS provider builds its feature
+# index from that list: the layer would silently show a fraction of the data (42 of 452 polygons
+# in a test window around Bukavu).
+# Not listed: the GRID3 gridded population rasters (no public map service on this server).
+defaults:
+  type: arcgisfeatureserver
+  attribution: © GRID3 / CIESIN, Columbia University, and national partners
+  tags:
+    - grid3
+    - ciesin
+    - africa
+    - afrique
+sources:
+  - id: "{iso2}-grid3-settlement-extents"
+    for_each_country: [
+      AGO, BDI, BEN, BFA, BWA, CAF, CIV, CMR, COG, COM, CPV, DJI, ERI, ETH, GAB, GHA, GIN, GMB,
+      GNB, GNQ, KEN, LBR, LSO, MDG, MLI, MOZ, MRT, MUS, MWI, NAM, NER, RWA, SDN, SEN, SHN, SLE,
+      SOM, SSD, STP, SWZ, SYC, TCD, TGO, TZA, UGA, ZAF, ZMB, ZWE
+    ]
+    name: "GRID3 - Settlement Extents v3.0 - {country}"
+    description: "Outlines of every settlement of {country} derived from building footprints: built-up areas, small settlement areas and hamlets as polygons, with settlement type, building count, building area and detection probability. Shows where people live, including villages missing from OpenStreetMap, which helps to plan assessments and count settlements in an area. From a few hundred polygons (islands) to more than 900,000 (Ethiopia): the server returns 2,000 features per request, so zoom to a district before loading a large country."
+    category: population
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_{ISO3}_Settlement_Extents_v3_0/FeatureServer/0
+    style_file: buildings.qml
+    license: CC-BY-SA-4.0
+    data_date: version 3.0, published 2024
+    priority: 2
+    tags:
+      - settlement
+      - settlement extents
+      - built-up area
+      - villages
+      - hamlets
+      - localites
+      - zones baties
+      - tache urbaine
+      - villages
+      - hameaux
+      - population
+      - "{country}"
+      - "{country_fr}"
+    i18n:
+      fr:
+        name: "GRID3 - Emprises des localités v3.0 - {country_fr}"
+        description: "Contours de toutes les localités du pays ({country_fr}) dérivés des empreintes de bâtiments : zones bâties, petites localités et hameaux en polygones, avec type de localité, nombre et surface de bâtiments et probabilité de détection. Montre où vivent les habitants, y compris dans les villages absents d'OpenStreetMap, utile pour planifier des évaluations et dénombrer les localités d'une zone. De quelques centaines de polygones (îles) à plus de 900 000 (Éthiopie) : le serveur renvoie 2 000 entités par requête, zoomer sur un district avant de charger un grand pays."
+  - id: cd-grid3-settlement-names
+    name: GRID3 - Settlement Names v9.0 - Democratic Republic of the Congo
+    description: About 128,000 named settlement points for the 26 provinces of
+      the Democratic Republic of the Congo, with settlement name and
+      alternative name, type, province, health zone and health area, and a
+      flag for landlocked (enclavé) localities. The reference gazetteer of
+      villages for health campaigns. 2,000 features per request.
+    category: population
+    country_iso: CD
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_COD_settlement_names_v9_0/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 9.0, 2026
+    tags:
+      - settlement names
+      - villages
+      - gazetteer
+      - localites
+      - noms de villages
+      - toponymes
+      - drc
+      - rdc
+      - congo
+    i18n:
+      fr:
+        name: GRID3 - Noms des localités v9.0 - République démocratique du Congo
+        description: Environ 128 000 points de localités nommées pour les 26
+          provinces de la République démocratique du Congo, avec nom et nom
+          alternatif, type, province, zone de santé et aire de santé, et un
+          indicateur d'enclavement. Le répertoire de référence des villages pour
+          les campagnes de santé. 2 000 entités par requête.
+  - id: ng-grid3-settlement-names
+    name: GRID3 - Settlement Names - Nigeria
+    description: About 292,000 named settlement points of Nigeria with
+      settlement name, alternative name, ward, local government area and
+      state, collected by eHealth Africa and partners. 2,000 features per
+      request, so zoom to a local government area before loading.
+    category: population
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Settlements_in_Nigeria/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: collected up to 2020, service updated 2025
+    tags:
+      - settlement names
+      - villages
+      - gazetteer
+      - localites
+      - noms de villages
+      - toponymes
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Noms des localités - Nigéria
+        description: Environ 292 000 points de localités nommées du Nigéria avec
+          nom, nom alternatif, ward, collectivité locale (LGA) et État, collectés
+          par eHealth Africa et ses partenaires. 2 000 entités par requête,
+          zoomer sur une LGA avant de charger.
+  - id: sl-grid3-settlement-names
+    name: GRID3 - Settlement Names v1.0 - Sierra Leone
+    description: About 16,000 named settlement points of Sierra Leone with
+      settlement name, alternative name and district. 2,000 features per
+      request.
+    category: population
+    country_iso: SL
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_SLE_settlement_names_v1_0/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 1.0, 2023
+    tags:
+      - settlement names
+      - villages
+      - gazetteer
+      - localites
+      - noms de villages
+      - toponymes
+      - sierra leone
+    i18n:
+      fr:
+        name: GRID3 - Noms des localités v1.0 - Sierra Leone
+        description: Environ 16 000 points de localités nommées de Sierra Leone
+          avec nom, nom alternatif et district. 2 000 entités par requête.
+  - id: cd-grid3-health-facilities
+    name: GRID3 - Health Facilities v9.0 - Democratic Republic of the Congo
+    description: About 39,000 health facility points for the 26 provinces of
+      the Democratic Republic of the Congo, compiled with the Ministry of
+      Health - facility name, type, category, health zone and health area,
+      DHIS2 identifier, fixed vaccination site and cold chain (fridge present,
+      working). More complete than OpenStreetMap for rural health centres.
+      2,000 features per request.
+    category: health
+    country_iso: CD
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_COD_health_facilities_v9_0/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 9.0, 2026
+    priority: 2
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - health centre
+      - cold chain
+      - vaccination
+      - sante
+      - structures de sante
+      - formations sanitaires
+      - hopital
+      - centre de sante
+      - chaine du froid
+      - drc
+      - rdc
+      - congo
+    i18n:
+      fr:
+        name: GRID3 - Structures de santé v9.0 - République démocratique du Congo
+        description: Environ 39 000 points de formations sanitaires pour les 26
+          provinces de la République démocratique du Congo, compilés avec le
+          ministère de la Santé - nom, type, catégorie, zone et aire de santé,
+          identifiant DHIS2, site fixe de vaccination et chaîne du froid
+          (réfrigérateur présent, fonctionnel). Plus complet qu'OpenStreetMap
+          pour les centres de santé ruraux. 2 000 entités par requête.
+  - id: cd-grid3-health-zones
+    name: GRID3 - Health Zone Boundaries v9.0 - Democratic Republic of the Congo
+    description: Boundaries of the 519 health zones (zones de santé) of the
+      Democratic Republic of the Congo, the operational unit of the health
+      system and of most humanitarian health reporting, with name, province
+      and identifiers.
+    category: health
+    country_iso: CD
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_COD_health_zones_v9_0/FeatureServer/0
+    style_file: admin.qml
+    license: CC-BY-4.0
+    data_date: version 9.0, 2026
+    priority: 2
+    tags:
+      - health
+      - health zones
+      - health boundaries
+      - sante
+      - zones de sante
+      - decoupage sanitaire
+      - drc
+      - rdc
+      - congo
+    i18n:
+      fr:
+        name: GRID3 - Limites des zones de santé v9.0 - République démocratique du Congo
+        description: Limites des 519 zones de santé de la République démocratique
+          du Congo, unité opérationnelle du système de santé et de la plupart des
+          rapports humanitaires de santé, avec nom, province et identifiants.
+  - id: cd-grid3-health-areas
+    name: GRID3 - Health Area Boundaries v9.0 - Democratic Republic of the Congo
+    description: Boundaries of about 9,700 health areas (aires de santé) of
+      the Democratic Republic of the Congo, the subdivision of health zones
+      served by one health centre, with name, health zone and province. 2,000
+      features per request.
+    category: health
+    country_iso: CD
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_COD_health_areas_v9_0/FeatureServer/0
+    style_file: admin.qml
+    license: CC-BY-4.0
+    data_date: version 9.0, 2026
+    tags:
+      - health
+      - health areas
+      - health boundaries
+      - sante
+      - aires de sante
+      - decoupage sanitaire
+      - drc
+      - rdc
+      - congo
+    i18n:
+      fr:
+        name: GRID3 - Limites des aires de santé v9.0 - République démocratique du Congo
+        description: Limites d'environ 9 700 aires de santé de la République
+          démocratique du Congo, subdivision des zones de santé desservie par un
+          centre de santé, avec nom, zone de santé et province. 2 000 entités
+          par requête.
+  - id: ng-grid3-health-facilities
+    name: GRID3 - Health Facilities v4.0 - Nigeria
+    description: About 70,000 operational health facility points for the 36
+      states of Nigeria and the Federal Capital Territory, with facility name,
+      level (primary, secondary, tertiary), type, ownership, functional
+      status, ward, local government area and national health facility
+      registry code. 2,000 features per request.
+    category: health
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Health_Facilities_v4_0/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 4.0, 2026
+    priority: 2
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - primary health care
+      - sante
+      - structures de sante
+      - hopital
+      - centre de sante
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Structures de santé v4.0 - Nigéria
+        description: Environ 70 000 points de structures de santé opérationnelles
+          pour les 36 États du Nigéria et le Territoire de la capitale fédérale,
+          avec nom, niveau (primaire, secondaire, tertiaire), type, propriété,
+          état de fonctionnement, ward, LGA et code du registre national.
+          2 000 entités par requête.
+  - id: zm-grid3-health-facilities
+    name: GRID3 - Operational Health Facilities v01 beta - Zambia
+    description: About 2,800 health facility points of Zambia compiled from the
+      Ministry of Health and the Zambia Statistics Agency, with name, type,
+      sub-type, province and district. Beta version dated 2020.
+    category: health
+    country_iso: ZM
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_ZMB_HealthFac_v01beta/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 01 beta, 2020
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - sante
+      - structures de sante
+      - hopital
+      - centre de sante
+      - zambia
+      - zambie
+    i18n:
+      fr:
+        name: GRID3 - Structures de santé opérationnelles v01 bêta - Zambie
+        description: Environ 2 800 points de structures de santé de Zambie
+          compilés à partir du ministère de la Santé et de l'agence statistique
+          zambienne, avec nom, type, sous-type, province et district. Version
+          bêta de 2020.
+  - id: sl-grid3-health-facilities
+    name: GRID3 - Health Facilities v1.0 - Sierra Leone
+    description: About 1,600 health facility points of Sierra Leone compiled
+      with the Ministry of Health and Sanitation, with facility name, type,
+      ownership, functional status, district and DHIS2 identifier.
+    category: health
+    country_iso: SL
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/sle_htlfac_grid3_v01/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 1.0, 2023
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - sante
+      - structures de sante
+      - hopital
+      - centre de sante
+      - sierra leone
+    i18n:
+      fr:
+        name: GRID3 - Structures de santé v1.0 - Sierra Leone
+        description: Environ 1 600 points de structures de santé de Sierra Leone
+          compilés avec le ministère de la Santé et de l'Assainissement, avec
+          nom, type, propriété, état de fonctionnement, district et identifiant
+          DHIS2.
+  - id: cd-grid3-schools
+    name: GRID3 - Schools v1.0 - Democratic Republic of the Congo (5 Provinces)
+    description: About 11,600 school points with name and type in five
+      provinces of the Democratic Republic of the Congo only - Haut-Katanga,
+      Kasaï, Kasaï-Oriental, Kinshasa and Lomami - with health zone and health
+      area. Other provinces are not covered. 2,000 features per request.
+    category: buildings
+    country_iso: CD
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_COD_schools_v1_0/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 1.0, 2024
+    tags:
+      - schools
+      - education
+      - ecoles
+      - enseignement
+      - drc
+      - rdc
+      - congo
+    i18n:
+      fr:
+        name: GRID3 - Écoles v1.0 - République démocratique du Congo (5 provinces)
+        description: Environ 11 600 points d'écoles avec nom et type dans cinq
+          provinces seulement de la République démocratique du Congo -
+          Haut-Katanga, Kasaï, Kasaï-Oriental, Kinshasa et Lomami - avec zone et
+          aire de santé. Les autres provinces ne sont pas couvertes. 2 000
+          entités par requête.
+  - id: ng-grid3-schools
+    name: GRID3 - Schools - Nigeria
+    description: About 108,000 school points of Nigeria with name, education
+      level, management (public or private), student and teacher counts, ward,
+      local government area and state, collected by eHealth Africa and
+      partners. 2,000 features per request, so zoom in before loading.
+    category: buildings
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Schools_in_Nigeria/FeatureServer/0
+    license: Attribution required - free to use, copy, distribute and adapt for
+      commercial and non-commercial purposes (GRID3 terms of use, no Creative
+      Commons licence named on the service)
+    data_date: collected up to 2020, service updated 2025
+    tags:
+      - schools
+      - education
+      - ecoles
+      - enseignement
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Écoles - Nigéria
+        description: Environ 108 000 points d'écoles du Nigéria avec nom, niveau
+          d'enseignement, gestion (publique ou privée), effectifs d'élèves et
+          d'enseignants, ward, LGA et État, collectés par eHealth Africa et ses
+          partenaires. 2 000 entités par requête, zoomer avant de charger.
+  - id: zm-grid3-schools
+    name: GRID3 - Operational Schools v1.0 - Zambia
+    description: About 8,500 school points of Zambia compiled from the Zambia
+      Statistics Agency and the Ministry of General Education, with name,
+      type, sub-type, province and district. Dated 2020. 2,000 features per
+      request.
+    category: buildings
+    country_iso: ZM
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_ZMB_School_v01beta/FeatureServer/0
+    license: CC-BY-4.0
+    data_date: version 1.0, 2020
+    tags:
+      - schools
+      - education
+      - ecoles
+      - enseignement
+      - zambia
+      - zambie
+    i18n:
+      fr:
+        name: GRID3 - Écoles opérationnelles v1.0 - Zambie
+        description: Environ 8 500 points d'écoles de Zambie compilés à partir de
+          l'agence statistique zambienne et du ministère de l'Éducation générale,
+          avec nom, type, sous-type, province et district. Données de 2020.
+          2 000 entités par requête.
+  - id: ng-grid3-operational-wards
+    name: GRID3 - Operational Ward Boundaries v4.0 - Nigeria
+    description: Boundaries of about 9,300 operational wards of Nigeria, the
+      unit below the local government area used for vaccination campaigns and
+      health microplanning, with ward, LGA and state names and codes. Small
+      gaps remain along the borders of Benue, Cross River, Ebonyi, Plateau and
+      Taraba states. 2,000 features per request.
+    category: admin
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_operational_wards_v4_0/FeatureServer/0
+    style_file: admin.qml
+    license: CC-BY-SA-4.0
+    data_date: version 4.0, 2026
+    tags:
+      - wards
+      - boundaries
+      - administrative boundaries
+      - microplanning
+      - limites administratives
+      - quartiers
+      - microplanification
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Limites des wards opérationnels v4.0 - Nigéria
+        description: Limites d'environ 9 300 wards opérationnels du Nigéria,
+          l'unité inférieure à la collectivité locale (LGA) utilisée pour les
+          campagnes de vaccination et la microplanification sanitaire, avec noms
+          et codes du ward, de la LGA et de l'État. De petits vides subsistent
+          le long des limites des États de Benue, Cross River, Ebonyi, Plateau
+          et Taraba. 2 000 entités par requête.
+  - id: ng-grid3-water-points
+    name: GRID3 - Water Points - Nigeria
+    description: About 29,000 water points of Nigeria (boreholes, wells, taps)
+      with type, name, ward, local government area and state, collected by
+      eHealth Africa and partners up to 2020. Coverage is uneven between
+      states and no functional status is recorded. 2,000 features per request.
+    category: utilities
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Water_points_in_Nigeria/FeatureServer/0
+    style_file: hydrography.qml
+    license: Attribution required - free to use, copy, distribute and adapt for
+      commercial and non-commercial purposes (GRID3 terms of use, no Creative
+      Commons licence named on the service)
+    data_date: collected up to 2020, service updated 2025
+    tags:
+      - water points
+      - wash
+      - borehole
+      - well
+      - points d eau
+      - eha
+      - forage
+      - puits
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Points d'eau - Nigéria
+        description: Environ 29 000 points d'eau du Nigéria (forages, puits,
+          bornes) avec type, nom, ward, LGA et État, collectés par eHealth Africa
+          et ses partenaires jusqu'en 2020. Couverture inégale selon les États,
+          état de fonctionnement non renseigné. 2 000 entités par requête.
+  - id: ng-grid3-markets
+    name: GRID3 - Markets - Nigeria
+    description: About 11,000 market points of Nigeria with name, type, market
+      days, frequency and main goods, ward, local government area and state,
+      collected by eHealth Africa and partners up to 2020. Useful for cash
+      and market assessments. 2,000 features per request.
+    category: buildings
+    country_iso: NG
+    url: https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Markets_in_Nigeria/FeatureServer/0
+    license: Attribution required - free to use, copy, distribute and adapt for
+      commercial and non-commercial purposes (GRID3 terms of use, no Creative
+      Commons licence named on the service)
+    data_date: collected up to 2020, service updated 2025
+    tags:
+      - markets
+      - marketplace
+      - cash
+      - marches
+      - commerce
+      - nigeria
+    i18n:
+      fr:
+        name: GRID3 - Marchés - Nigéria
+        description: Environ 11 000 points de marchés du Nigéria avec nom, type,
+          jours et fréquence de marché, principaux produits, ward, LGA et État,
+          collectés par eHealth Africa et ses partenaires jusqu'en 2020. Utile
+          pour les évaluations de marché et les transferts monétaires. 2 000
+          entités par requête.

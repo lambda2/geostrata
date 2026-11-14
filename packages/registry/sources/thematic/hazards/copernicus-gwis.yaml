@@ -1,0 +1,151 @@
+defaults:
+  category: hazard
+  type: wms
+  license: Copernicus Emergency Management Service information - free, full
+    and open access under Regulation (EU) 2021/696, source must be credited
+  attribution: © European Union, Copernicus Emergency Management Service - Global Wildfire Information System (GWIS)
+  tags:
+    - copernicus
+    - gwis
+    - effis
+    - fire
+    - feu
+    - incendie
+    - wildfire
+    - feu de foret
+    - hotspot
+    - point chaud
+    - active fire
+    - feux actifs
+sources:
+  - id: global-gwis-active-fires-viirs
+    name: Copernicus GWIS - Active Fire Hotspots, VIIRS
+    description: Pre-rendered map of recent active fire hotspots detected by
+      VIIRS (375 m), as published in the Global Wildfire Information System
+      viewer. The service picks its own recent time window when no TIME is
+      given. Image only, no attributes; use the FIRMS layers for point data.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=viirs.hs&STYLES=default&FORMAT=image/png
+    data_date: near real time, updated several times a day
+    tags:
+      - viirs
+    i18n:
+      fr:
+        name: Copernicus GWIS - Points chauds de feux actifs, VIIRS
+        description: Carte pré-rendue des points chauds de feux actifs récents
+          détectés par VIIRS (375 m), telle que publiée dans le visualiseur du
+          Global Wildfire Information System. Le service choisit lui-même sa
+          fenêtre temporelle récente si aucun paramètre TIME n'est fourni. Image
+          seule, sans attributs, utiliser les couches FIRMS pour des données
+          ponctuelles.
+  - id: global-gwis-active-fires-modis
+    name: Copernicus GWIS - Active Fire Hotspots, MODIS
+    description: Pre-rendered map of recent active fire hotspots detected by
+      MODIS (1 km), as published in the Global Wildfire Information System
+      viewer. The service picks its own recent time window when no TIME is
+      given. Image only, no attributes.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=modis.hs&STYLES=default&FORMAT=image/png
+    data_date: near real time, updated several times a day
+    tags:
+      - modis
+    i18n:
+      fr:
+        name: Copernicus GWIS - Points chauds de feux actifs, MODIS
+        description: Carte pré-rendue des points chauds de feux actifs récents
+          détectés par MODIS (1 km), telle que publiée dans le visualiseur du
+          Global Wildfire Information System. Le service choisit lui-même sa
+          fenêtre temporelle récente si aucun paramètre TIME n'est fourni. Image
+          seule, sans attributs.
+  # Fire danger forecast (ECMWF). TIME is the day the forecast is valid for; the service
+  # holds every day up to about 8 days ahead and answers a blank image beyond.
+  - id: global-gwis-fire-weather-index
+    name: Copernicus GWIS - Fire Weather Index (Today)
+    description: Fire danger for today from the Canadian Fire Weather Index
+      (FWI), computed from the ECMWF weather forecast (temperature, humidity,
+      wind, rain), about 8 km. Six classes from low (light green) to extreme
+      (very dark red). It rates how easily a fire would start and spread, not
+      whether one is burning. Forecast of the day, no delay. Colour image, not
+      values.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=ecmwf.fwi&STYLES=default&FORMAT=image/png&TIME={time}
+    time:
+      offset_days: 0
+    data_date: daily forecast, today shown
+    tags:
+      - fire danger
+      - danger de feu
+      - risque incendie
+      - fire weather index
+      - fwi
+      - ifm
+      - forecast
+      - prevision
+      - ecmwf
+      - daily
+      - quotidien
+    i18n:
+      fr:
+        name: Copernicus GWIS - Indice forêt météo (aujourd'hui)
+        description: Danger de feu du jour d'après l'indice forêt météo canadien
+          (IFM, en anglais FWI), calculé à partir de la prévision météo ECMWF
+          (température, humidité, vent, pluie), environ 8 km. Six classes de
+          faible (vert clair) à extrême (rouge très foncé). Il indique la facilité
+          avec laquelle un feu démarrerait et se propagerait, pas la présence
+          d'un feu. Prévision du jour, sans délai. Image colorée et non des
+          valeurs.
+  - id: global-gwis-fire-weather-index-3-days
+    name: Copernicus GWIS - Fire Weather Index (Forecast for 3 Days Ahead)
+    description: Fire danger expected in 3 days from the Canadian Fire Weather
+      Index (FWI), computed from the ECMWF weather forecast, about 8 km. Same
+      six classes as the layer for today, from low (green) to extreme. Colour
+      image, not values.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=ecmwf.fwi&STYLES=default&FORMAT=image/png&TIME={time}
+    time:
+      offset_days: 3
+    data_date: daily forecast, the day 3 days from now shown
+    tags:
+      - fire danger
+      - danger de feu
+      - risque incendie
+      - fire weather index
+      - fwi
+      - ifm
+      - forecast
+      - prevision
+      - ecmwf
+    i18n:
+      fr:
+        name: Copernicus GWIS - Indice forêt météo (prévision à 3 jours)
+        description: Danger de feu attendu dans 3 jours d'après l'indice forêt
+          météo canadien (IFM, en anglais FWI), calculé à partir de la prévision
+          météo ECMWF, environ 8 km. Mêmes six classes que la couche du jour, de
+          faible (vert) à extrême. Image colorée et non des valeurs.
+  - id: global-gwis-fire-weather-anomaly
+    name: Copernicus GWIS - Fire Weather Index Anomaly (Today)
+    description: How far today's Fire Weather Index is from what is normal at
+      that place and time of year, from the ECMWF forecast. Highlights where
+      fire danger is unusually high, which a raw index does not show in
+      regions that are always dry. Forecast of the day. Colour image, not
+      values.
+    url: https://maps.effis.emergency.copernicus.eu/gwis?SERVICE=WMS&VERSION=1.3.0&LAYERS=ecmwf.anomaly&STYLES=default&FORMAT=image/png&TIME={time}
+    time:
+      offset_days: 0
+    data_date: daily forecast, today shown
+    tags:
+      - fire danger
+      - danger de feu
+      - risque incendie
+      - fire weather index
+      - fwi
+      - ifm
+      - anomaly
+      - anomalie
+      - forecast
+      - prevision
+      - ecmwf
+    i18n:
+      fr:
+        name: Copernicus GWIS - Anomalie de l'indice forêt météo (aujourd'hui)
+        description: Écart entre l'indice forêt météo du jour et la normale du
+          lieu à cette période de l'année, d'après la prévision ECMWF. Fait
+          ressortir les zones où le danger de feu est inhabituellement élevé, ce
+          qu'un indice brut ne montre pas dans les régions toujours sèches.
+          Prévision du jour. Image colorée et non des valeurs.

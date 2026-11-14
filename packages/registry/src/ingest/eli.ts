@@ -2,6 +2,7 @@ import { stringify as stringifyYaml } from 'yaml'
 import {
 	type BoundingBox,
 	type CatalogEntry,
+	type CatalogEntryInput,
 	CatalogEntrySchema,
 	type SourceCategory,
 	type SourceType,
@@ -219,8 +220,10 @@ export function convertEliFeatureToCatalogEntry(
 			? Math.floor(props.max_zoom)
 			: undefined
 
-	const candidate: CatalogEntry = {
+	const candidate: CatalogEntryInput = {
 		id: slugId,
+		// Community imagery index: listed after the curated sources of the same relevance.
+		priority: -1,
 		name: props.name,
 		description: props.description
 			? props.description

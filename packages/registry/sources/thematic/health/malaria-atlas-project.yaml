@@ -1,0 +1,136 @@
+# Malaria Atlas Project (MAP) GeoServer: accessibility and malaria surfaces, pre-styled WMS.
+defaults:
+  type: wms
+  category: health
+  crs: EPSG:3857
+  license: CC-BY-3.0 (Malaria Atlas Project open access policy, citation required)
+  tags:
+    - malaria atlas project
+    - map
+    - health
+    - sante
+    - wms
+sources:
+  - id: global-map-travel-time-healthcare-motorized
+    name: MAP - Motorized Travel Time to Nearest Healthcare Facility (2020)
+    description: Estimated travel time in minutes from every 1 km cell to the nearest
+      hospital or clinic using motorized transport where roads exist (Weiss et al.
+      2020). Shows which areas are hours away from care. Modelled with optimal travel
+      speeds and the facilities known in 2019 (OSM and Google), so real travel times
+      are longer in the rainy season or where facilities are missing. Pre-styled WMS
+      picture, 60°S to 85°N.
+    url: https://data.malariaatlas.org/geoserver/ows?SERVICE=WMS&LAYERS=Accessibility:202001_Global_Motorized_Travel_Time_to_Healthcare&STYLES=Accessibility:Global_Travel_Time_Paper&FORMAT=image/png
+    attribution: Malaria Atlas Project; Weiss et al. 2020, Nature Medicine
+    priority: 2
+    data_date: "2019-2020 (published 2020)"
+    tags:
+      - travel time
+      - accessibility
+      - access to healthcare
+      - hospital
+      - isochrone
+      - temps de trajet
+      - accessibilite
+      - acces aux soins
+      - hopital
+    i18n:
+      fr:
+        name: MAP - Temps de trajet motorisé jusqu'à la structure de santé la plus proche (2020)
+        description: Temps de trajet estimé en minutes depuis chaque cellule de 1 km
+          jusqu'à l'hôpital ou la clinique le plus proche, en transport motorisé là où
+          des routes existent (Weiss et al. 2020). Montre les zones situées à plusieurs
+          heures des soins. Modèle fondé sur des vitesses optimales et sur les
+          structures connues en 2019 (OSM et Google) - les temps réels sont plus longs
+          en saison des pluies ou là où des structures manquent. Image WMS préstylée,
+          de 60°S à 85°N.
+  - id: global-map-travel-time-healthcare-walking
+    name: MAP - Walking-only Travel Time to Nearest Healthcare Facility (2020)
+    description: Estimated travel time in minutes from every 1 km cell to the nearest
+      hospital or clinic on foot only, without any motorized transport (Weiss et al.
+      2020). The relevant picture for populations without vehicles or when roads are
+      cut. Modelled with optimal walking speeds and the facilities known in 2019, so
+      treat it as a lower bound. Pre-styled WMS picture, 60°S to 85°N.
+    url: https://data.malariaatlas.org/geoserver/ows?SERVICE=WMS&LAYERS=Accessibility:202001_Global_Walking_Only_Travel_Time_To_Healthcare&STYLES=Accessibility:Global_Travel_Time_Paper&FORMAT=image/png
+    attribution: Malaria Atlas Project; Weiss et al. 2020, Nature Medicine
+    data_date: "2019-2020 (published 2020)"
+    tags:
+      - travel time
+      - walking
+      - accessibility
+      - access to healthcare
+      - temps de trajet
+      - a pied
+      - marche
+      - accessibilite
+      - acces aux soins
+    i18n:
+      fr:
+        name: MAP - Temps de trajet à pied jusqu'à la structure de santé la plus proche (2020)
+        description: Temps de trajet estimé en minutes depuis chaque cellule de 1 km
+          jusqu'à l'hôpital ou la clinique le plus proche, uniquement à pied, sans
+          aucun transport motorisé (Weiss et al. 2020). L'image pertinente pour les
+          populations sans véhicule ou lorsque les routes sont coupées. Modèle fondé
+          sur des vitesses de marche optimales et sur les structures connues en 2019 -
+          à considérer comme une borne basse. Image WMS préstylée, de 60°S à 85°N.
+  - id: global-map-travel-time-cities-2015
+    name: MAP - Travel Time to Nearest City (2015)
+    description: Estimated travel time in minutes from every 1 km cell to the nearest
+      urban centre of 50,000 inhabitants or more, by the fastest land or water
+      transport (Weiss et al. 2018). A proxy for remoteness and access to markets and
+      services. Based on 2015 roads and optimal speeds. Pre-styled WMS picture,
+      60°S to 85°N.
+    url: https://data.malariaatlas.org/geoserver/ows?SERVICE=WMS&LAYERS=Accessibility:201501_Global_Travel_Time_to_Cities&STYLES=Accessibility:Global_Travel_Time_Paper&FORMAT=image/png
+    attribution: Malaria Atlas Project; Weiss et al. 2018, Nature
+    category: transport
+    data_date: "2015 (published 2018)"
+    tags:
+      - travel time
+      - accessibility
+      - remoteness
+      - cities
+      - markets
+      - temps de trajet
+      - accessibilite
+      - enclavement
+      - villes
+      - marches
+    i18n:
+      fr:
+        name: MAP - Temps de trajet jusqu'à la ville la plus proche (2015)
+        description: Temps de trajet estimé en minutes depuis chaque cellule de 1 km
+          jusqu'au centre urbain de 50 000 habitants ou plus le plus proche, par le
+          moyen terrestre ou fluvial le plus rapide (Weiss et al. 2018). Indicateur
+          d'enclavement et d'accès aux marchés et aux services. Fondé sur le réseau
+          routier de 2015 et des vitesses optimales. Image WMS préstylée, de 60°S à
+          85°N.
+  - id: global-map-pf-parasite-rate
+    name: MAP - Plasmodium falciparum Parasite Rate in Children 2-10 (latest year)
+    description: Modelled proportion of children aged 2 to 10 carrying Plasmodium
+      falciparum malaria parasites (PfPR2-10) on a 5 km grid, for malaria-endemic
+      countries. The layer holds one map per year from 2000 to 2025 and shows the
+      latest year by default. Model output with wide uncertainty where surveys are
+      scarce - not a case count. The layer name changes with each yearly MAP release
+      (here the August 2026 release), so this entry may need updating.
+    url: https://data.malariaatlas.org/geoserver/ows?SERVICE=WMS&LAYERS=Malaria:202608_Global_Pf_Parasite_Rate&STYLES=Malaria:Global_Pf_Parasite_Rate_OrRd_masked&FORMAT=image/png
+    attribution: Malaria Atlas Project (malariaatlas.org), 2026 release
+    data_date: "2000-2025, release 2026-08"
+    tags:
+      - malaria
+      - plasmodium falciparum
+      - prevalence
+      - epidemiology
+      - disease
+      - paludisme
+      - malaria prevalence
+      - epidemiologie
+      - maladie
+    i18n:
+      fr:
+        name: MAP - Taux de parasitémie à Plasmodium falciparum chez les enfants de 2 à 10 ans (dernière année)
+        description: Proportion modélisée d'enfants de 2 à 10 ans porteurs du parasite
+          du paludisme Plasmodium falciparum (PfPR2-10) sur une grille de 5 km, pour
+          les pays d'endémie palustre. La couche contient une carte par an de 2000 à
+          2025 et affiche par défaut la dernière année. Sortie de modèle, très
+          incertaine là où les enquêtes sont rares - ce n'est pas un nombre de cas. Le
+          nom de la couche change à chaque version annuelle de MAP (ici la version
+          d'août 2026) - cette entrée devra peut-être être mise à jour.

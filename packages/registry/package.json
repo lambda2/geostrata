@@ -10,6 +10,8 @@
 		"deploy:qgis": "tsx src/ingest/run-ingest.ts && tsx src/build.ts && python3 ../qgis-plugin/scripts/deploy_qgis.py",
 		"healthcheck": "tsx src/healthcheck.ts",
 		"ingest": "tsx src/ingest/run-ingest.ts",
+		"refresh:countries": "tsx src/ingest/country-index.ts",
+		"test": "tsx --test src/test/*.test.ts",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
@@ -20,6 +22,7 @@
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.6.12",
 		"@types/node": "^22.13.4",
+		"jsts": "^2.12.1",
 		"tsx": "^4.19.3",
 		"typescript": "^5.7.3"
 	},

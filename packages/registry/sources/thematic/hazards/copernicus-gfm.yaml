@@ -1,0 +1,87 @@
+# Copernicus EMS Global Flood Monitoring (GFM): flood mapping of every Sentinel-1 radar
+# scene, served by EODC. The layers only draw the scenes acquired on the TIME day and
+# the server answers an exception for a date in the future.
+defaults:
+  category: hazard
+  type: wms
+  license: Copernicus Emergency Management Service information - free, full
+    and open access under Regulation (EU) 2021/696, source must be credited
+  attribution: © European Union, Copernicus Emergency Management Service - Global Flood Monitoring (GFM)
+  tags:
+    - copernicus
+    - gfm
+    - flood
+    - inondation
+    - crue
+    - sentinel-1
+    - radar
+    - sar
+    - satellite
+    - daily
+    - quotidien
+sources:
+  - id: global-gfm-observed-flood-extent
+    name: Copernicus GFM - Observed Flood Extent, Sentinel-1 (Yesterday)
+    description: Flooded areas detected by radar (Sentinel-1, 20 m) in the
+      scenes acquired yesterday (UTC), together with the outlines of those
+      scenes (red where flooding was found, green otherwise) - where no
+      outline is drawn the satellite did not look that day, as each place is
+      only revisited every few days. Zoom in to a region to see the flooded
+      pixels. Radar sees through cloud.
+      Water under dense vegetation or between buildings is missed, and
+      permanent and seasonal water is not shown. Products are ready a few
+      hours after the satellite pass, so the previous day is complete.
+    url: https://geoserver.gfm.eodc.eu/geoserver/gfm/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=observed_flood_extent_group_layer&STYLES=default-style-observed_flood_extent_group_layer&FORMAT=image/png&TIME={time}
+    time:
+      offset_days: -1
+    priority: 2
+    data_date: daily, scenes of yesterday shown (products ready a few hours after acquisition)
+    tags:
+      - flood extent
+      - emprise inondation
+      - zone inondee
+      - observed
+      - observe
+      - near real time
+      - temps quasi reel
+    i18n:
+      fr:
+        name: Copernicus GFM - Emprise d'inondation observée, Sentinel-1 (hier)
+        description: Zones inondées détectées par radar (Sentinel-1, 20 m) dans
+          les scènes acquises hier (UTC), avec le contour de ces scènes (rouge
+          si une inondation y a été détectée, vert sinon), là où aucun contour
+          n'est tracé le satellite n'a pas observé ce jour-là, chaque lieu
+          n'étant revu que tous les quelques jours. Zoomer sur une région pour
+          voir les pixels inondés. Le radar traverse les nuages. L'eau sous une végétation dense ou entre les bâtiments n'est
+          pas détectée, l'eau permanente et saisonnière n'est pas affichée. Les
+          produits sont prêts quelques heures après le passage du satellite, la
+          veille est donc complète.
+  - id: global-gfm-observed-water-extent
+    name: Copernicus GFM - Observed Water Extent, Sentinel-1 (Yesterday)
+    description: All open water detected by radar (Sentinel-1, 20 m) in the
+      scenes acquired yesterday (UTC) - flood water plus permanent and
+      seasonal water. Only drawn when zoomed in to about a 2 degree wide
+      view or closer (blank at country or continental scale) and only where
+      the satellite passed that day.
+    url: https://geoserver.gfm.eodc.eu/geoserver/gfm/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=observed_water_extent&STYLES=gfm_observed_water_extent&FORMAT=image/png&TIME={time}
+    time:
+      offset_days: -1
+    data_date: daily, scenes of yesterday shown (products ready a few hours after acquisition)
+    tags:
+      - water
+      - eau
+      - water extent
+      - surface en eau
+      - observed
+      - observe
+      - near real time
+      - temps quasi reel
+    i18n:
+      fr:
+        name: Copernicus GFM - Surfaces en eau observées, Sentinel-1 (hier)
+        description: Toutes les eaux libres détectées par radar (Sentinel-1,
+          20 m) dans les scènes acquises hier (UTC), eau d'inondation ainsi
+          qu'eau permanente et saisonnière. Tracée seulement en zoomant sur une
+          vue large d'environ 2 degrés ou plus serrée (vide à l'échelle d'un
+          pays ou d'un continent) et uniquement là où le satellite est passé
+          ce jour-là.

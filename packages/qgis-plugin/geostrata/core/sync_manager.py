@@ -11,6 +11,10 @@ import urllib.request
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence
 
+from ..i18n import tr
+
+from .net import https_context
+
 DEFAULT_MANIFEST_URL = (
     "https://raw.githubusercontent.com/lambda2/geostrata/"
     "main/packages/registry/dist/manifest.json"
@@ -151,7 +155,7 @@ class SyncManager:
             info: Dict[str, str] = {
                 "url": url,
                 "sqlite_path": str(sqlite_path),
-                "cached": "yes" if sqlite_path.is_file() else "no",
+                "cached": tr("yes") if sqlite_path.is_file() else tr("no"),
                 "source_count": "-",
                 "generated_at": "-",
                 "sha256": "-",
@@ -182,7 +186,7 @@ class SyncManager:
             manifest_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=timeout_sec) as response:
+        with urllib.request.urlopen(req, timeout=timeout_sec, context=https_context()) as response:
             manifest_bytes = response.read()
 
         manifest_data = json.loads(manifest_bytes.decode("utf-8"))
@@ -203,7 +207,7 @@ class SyncManager:
             gzip_url,
             headers={"User-Agent": "Geostrata-QGIS-Plugin/1.0"},
         )
-        with urllib.request.urlopen(gz_req, timeout=timeout_sec) as gz_response:
+        with urllib.request.urlopen(gz_req, timeout=timeout_sec, context=https_context()) as gz_response:
             compressed_bytes = gz_response.read()
 
         remote_gzip_sha256 = str(manifest_data.get("gzip_sha256", ""))
@@ -247,7 +251,7 @@ class SyncManager:
 
             def __init__(self) -> None:
                 super().__init__(
-                    "Geostrata : Synchronisation des catalogues",
+                    tr("Geostrata: catalog synchronization"),
                     QgsTask.CanCancel,
                 )
                 self.synced_paths: List[Path] = []
@@ -270,7 +274,7 @@ class SyncManager:
                 manager_ref._active_task = None
                 for err in self.errors:
                     QgsMessageLog.logMessage(
-                        f"Synchronisation distante ignorée ({err})",
+                        tr("Remote synchronization skipped ({error})", error=err),
                         "Geostrata",
                         Qgis.MessageLevel.Warning,
                     )

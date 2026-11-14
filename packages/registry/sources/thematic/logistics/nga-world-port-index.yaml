@@ -1,0 +1,46 @@
+# World Port Index (NGA Publication 150) as a feature service hosted by UN OCHA
+# (gis.unocha.org, folder Hosted). OCHA's item says the table was downloaded from the NGA
+# ArcGIS Hub on 2025-11-05; the service name carries the vintage (202511), so the URL will
+# change when OCHA publishes a newer copy. Count and fields read on 2026-11-14.
+- id: global-nga-world-port-index
+  name: World Port Index (NGA Pub 150) - Ports and Terminals
+  description: About 3,700 major ports and terminals of the world from the
+    World Port Index of the US National Geospatial-Intelligence Agency, with
+    port name, country, harbour size and type, shelter, channel, anchorage
+    and cargo pier depths, maximum vessel size, pilotage, tugs, cranes and
+    lifts, supplies (fuel, water, provisions), repairs, dry dock and railway
+    connection. The reference to judge whether a port can receive a relief
+    vessel. Copy hosted by UN OCHA, dated November 2025.
+  type: arcgisfeatureserver
+  category: transport
+  url: https://gis.unocha.org/server/rest/services/Hosted/global_world_seaport_index_202511/FeatureServer/0
+  style_file: transport-point.qml
+  license: Public domain (US Government work, National Geospatial-Intelligence
+    Agency) - no licence is stated on the OCHA service that hosts this copy
+  attribution: National Geospatial-Intelligence Agency (NGA), World Port Index
+    Pub 150 - service hosted by UN OCHA
+  data_date: NGA table downloaded by OCHA on 2025-11-05
+  tags:
+    - ports
+    - sea ports
+    - harbour
+    - world port index
+    - wpi
+    - nga
+    - shipping
+    - logistics
+    - ports maritimes
+    - havres
+    - transport maritime
+    - logistique
+  i18n:
+    fr:
+      name: World Port Index (NGA Pub 150) - Ports et terminaux
+      description: Environ 3 700 grands ports et terminaux du monde issus du
+        World Port Index de l'agence américaine NGA, avec nom du port, pays,
+        taille et type de havre, abri, profondeurs du chenal, du mouillage et
+        des quais, taille maximale des navires, pilotage, remorqueurs, grues et
+        capacités de levage, avitaillement (carburant, eau, vivres),
+        réparations, cale sèche et desserte ferroviaire. La référence pour
+        juger si un port peut recevoir un navire de secours. Copie hébergée par
+        OCHA, datée de novembre 2025.

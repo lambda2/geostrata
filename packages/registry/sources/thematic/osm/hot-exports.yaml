@@ -1,0 +1,455 @@
+# HOT OSM per-country exports (Humanitarian OpenStreetMap Team raw-data-api bucket, also published on HDX).
+# One templated entry per theme, expanded for every country whose file answered an HTTP range
+# request on 2026-11-14 and holds at least one feature (empty exports are left out).
+# Archives above 1 GB are left out. Smaller ones are downloaded in the background by the plugin
+# and kept in its local file cache, so a 500 MB country is slow the first time only.
+# To refresh the lists, re-probe the URL for every ISO3 of assets/polygons/country-index.json.
+defaults:
+  type: archive
+  crs: EPSG:4326
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors, exported by the Humanitarian OpenStreetMap Team (HOT)
+  data_date: periodic OSM snapshot by HOT, most files exported May 2026 (a few date from 2024-2025)
+  tags:
+    - osm
+    - openstreetmap
+    - hot
+    - hotosm
+    - hdx
+    - humanitarian
+    - humanitaire
+    - export
+sources:
+  - id: "{iso2}-hotosm-roads"
+    name: "HOT OSM Export - Roads - {country}"
+    description: "All OpenStreetMap roads, tracks and paths of {country} (highway=*) as lines, with name, class, surface, smoothness, width, lanes, oneway and bridge attributes. Country-wide snapshot exported by the Humanitarian OpenStreetMap Team, usable offline once loaded; completeness depends on local OSM mapping. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: transport
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/roads/lines/hotosm_{iso3}_roads_lines_gpkg.zip
+    archive_target: hotosm_{iso3}_roads_lines_gpkg.gpkg
+    style_file: transport.qml
+    priority: 2
+    tags:
+      - roads
+      - road network
+      - highway
+      - tracks
+      - routes
+      - reseau routier
+      - pistes
+      - acces
+      - logistics
+      - logistique
+    i18n:
+      fr:
+        name: "Export HOT OSM - Routes - {country_fr}"
+        description: "Toutes les routes, pistes et sentiers OpenStreetMap du pays ({country_fr}) (highway=*) en lignes, avec nom, classe, revêtement, état, largeur, voies, sens unique et ponts. Instantané national exporté par le Humanitarian OpenStreetMap Team ; l'exhaustivité dépend de la cartographie OSM locale. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CIV,
+      CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DJI, DMA, DNK, DOM, DZA, ECU,
+      EGY, ERI, EST, ETH, FIN, FJI, FLK, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN, GMB, GNB, GNQ, GRC,
+      GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IOT, IRL, IRN, IRQ, ISL, ISR, ITA, JAM,
+      JEY, JOR, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU,
+      LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR,
+      MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN, PAK, PAN, PCN, PER,
+      PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SGS, SHN,
+      SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA,
+      TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT, VCT, VEN, VGB, VIR,
+      VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-buildings"
+    name: "HOT OSM Export - Building Footprints - {country}"
+    description: "All OpenStreetMap building footprints of {country} (building=*) as polygons, with name, type, levels, materials and address attributes. Country-wide snapshot exported by the Humanitarian OpenStreetMap Team; coverage is uneven outside areas mapped by mapathons. Very large layer. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: buildings
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/buildings/polygons/hotosm_{iso3}_buildings_polygons_gpkg.zip
+    archive_target: hotosm_{iso3}_buildings_polygons_gpkg.gpkg
+    style_file: buildings.qml
+    tags:
+      - buildings
+      - footprints
+      - batiments
+      - bati
+      - emprises
+      - habitations
+      - settlements
+    i18n:
+      fr:
+        name: "Export HOT OSM - Emprises de bâtiments - {country_fr}"
+        description: "Toutes les emprises de bâtiments OpenStreetMap du pays ({country_fr}) (building=*) en polygones, avec nom, type, niveaux, matériaux et adresse. Instantané national exporté par le Humanitarian OpenStreetMap Team ; couverture inégale hors des zones cartographiées lors de mapathons. Couche très volumineuse. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRO, FSM, GAB, GEO, GGY, GHA, GIN, GMB, GNB,
+      GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IMN, IOT, IRL, IRN, IRQ, ISL, ISR, JAM,
+      JEY, JOR, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU,
+      LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR,
+      MUS, MWI, MYS, NAM, NCL, NER, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN, PAK, PAN, PCN, PER, PHL,
+      PLW, PNG, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SGS, SHN, SLB, SLE,
+      SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM,
+      TLS, TON, TTO, TUN, TUR, TUV, TWN, UGA, UKR, URY, UZB, VAT, VCT, VEN, VGB, VIR, VNM, VUT, WLF,
+      WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-health-facilities"
+    name: "HOT OSM Export - Health Facilities (points) - {country}"
+    description: "OpenStreetMap health facilities of {country} mapped as points: hospitals, clinics, doctors, dentists, pharmacies and other healthcare=* features, with name, facility type, speciality, operator type, capacity and address attributes. Facilities drawn as building outlines are in the separate polygon layer. Not an official health ministry register. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: health
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/health_facilities/points/hotosm_{iso3}_health_facilities_points_gpkg.zip
+    archive_target: hotosm_{iso3}_health_facilities_points_gpkg.gpkg
+    style_file: crisis.qml
+    priority: 3
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - clinic
+      - pharmacy
+      - sante
+      - hopital
+      - hopitaux
+      - clinique
+      - pharmacie
+      - centre de sante
+      - dispensaire
+    i18n:
+      fr:
+        name: "Export HOT OSM - Structures de santé (points) - {country_fr}"
+        description: "Structures de santé OpenStreetMap du pays ({country_fr}) saisies en points : hôpitaux, cliniques, médecins, dentistes, pharmacies et autres objets healthcare=*, avec nom, type de structure, spécialité, type d'opérateur, capacité et adresse. Les structures dessinées en bâtiments sont dans la couche polygones distincte. Ce n'est pas un registre officiel du ministère de la santé. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK,
+      DOM, DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA,
+      GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IRL, IRN,
+      IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR,
+      LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT,
+      MMR, MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NZL, OMN,
+      PAK, PAN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN,
+      SGP, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD,
+      TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT, VCT, VEN,
+      VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-health-facilities-polygons"
+    name: "HOT OSM Export - Health Facilities (polygons) - {country}"
+    description: "OpenStreetMap health facilities of {country} mapped as building or site outlines (hospitals, clinics, pharmacies, healthcare=*), with name, facility type, speciality, operator type, capacity and address attributes. Complements the point layer: load both to see every facility. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: health
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/health_facilities/polygons/hotosm_{iso3}_health_facilities_polygons_gpkg.zip
+    archive_target: hotosm_{iso3}_health_facilities_polygons_gpkg.gpkg
+    style_file: buildings.qml
+    tags:
+      - health
+      - health facilities
+      - hospital
+      - clinic
+      - sante
+      - hopital
+      - hopitaux
+      - clinique
+      - centre de sante
+    i18n:
+      fr:
+        name: "Export HOT OSM - Structures de santé (polygones) - {country_fr}"
+        description: "Structures de santé OpenStreetMap du pays ({country_fr}) saisies en contours de bâtiments ou d'emprises (hôpitaux, cliniques, pharmacies, healthcare=*), avec nom, type de structure, spécialité, type d'opérateur, capacité et adresse. Complète la couche de points : charger les deux pour voir toutes les structures. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK,
+      DOM, DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA,
+      GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL,
+      IRN, IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN,
+      LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI,
+      MLT, MMR, MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL,
+      NZL, OMN, PAK, PAN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU,
+      SDN, SEN, SGP, SHN, SLB, SLE, SLV, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA,
+      TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TWN, TZA, UGA, UKR, URY, UZB, VAT, VCT, VEN,
+      VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-education-facilities"
+    name: "HOT OSM Export - Education Facilities (points) - {country}"
+    description: "OpenStreetMap schools, kindergartens, colleges and universities of {country} mapped as points, with name, type, operator type, capacity and address attributes. Schools drawn as building or compound outlines are in the separate polygon layer. Often used to locate potential collective shelters. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: buildings
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/education_facilities/points/hotosm_{iso3}_education_facilities_points_gpkg.zip
+    archive_target: hotosm_{iso3}_education_facilities_points_gpkg.gpkg
+    style_file: transport-point.qml
+    tags:
+      - education
+      - school
+      - schools
+      - university
+      - kindergarten
+      - ecole
+      - ecoles
+      - college
+      - lycee
+      - universite
+      - enseignement
+    i18n:
+      fr:
+        name: "Export HOT OSM - Établissements d'enseignement (points) - {country_fr}"
+        description: "Écoles, maternelles, collèges, lycées et universités OpenStreetMap du pays ({country_fr}) saisis en points, avec nom, type, type d'opérateur, capacité et adresse. Les établissements dessinés en contours sont dans la couche polygones distincte. Souvent utilisé pour repérer des abris collectifs potentiels. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA, BGD,
+      BGR, BHR, BHS, BIH, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CHN, CIV,
+      CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM, DZA,
+      ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN, GMB,
+      GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IRL, IRN, IRQ, ISL,
+      ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA,
+      LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE,
+      MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NZL, OMN, PAK, PAN,
+      PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SHN,
+      SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA,
+      TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT, VCT, VEN, VGB, VIR,
+      VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-education-facilities-polygons"
+    name: "HOT OSM Export - Education Facilities (polygons) - {country}"
+    description: "OpenStreetMap schools, kindergartens, colleges and universities of {country} mapped as building or compound outlines, with name, type, operator type, capacity and address attributes. Complements the point layer: load both to see every school. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: buildings
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/education_facilities/polygons/hotosm_{iso3}_education_facilities_polygons_gpkg.zip
+    archive_target: hotosm_{iso3}_education_facilities_polygons_gpkg.gpkg
+    style_file: buildings.qml
+    tags:
+      - education
+      - school
+      - schools
+      - university
+      - ecole
+      - ecoles
+      - college
+      - lycee
+      - universite
+      - enseignement
+    i18n:
+      fr:
+        name: "Export HOT OSM - Établissements d'enseignement (polygones) - {country_fr}"
+        description: "Écoles, maternelles, collèges, lycées et universités OpenStreetMap du pays ({country_fr}) saisis en contours de bâtiments ou d'enceintes, avec nom, type, type d'opérateur, capacité et adresse. Complète la couche de points : charger les deux pour voir tous les établissements. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA, BGD,
+      BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CHN,
+      CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN,
+      GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IRL, IRN, IRQ,
+      ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY,
+      LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR,
+      MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL, NRU, NZL,
+      OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU,
+      SDN, SEN, SGP, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR,
+      TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT,
+      VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-waterways"
+    name: "HOT OSM Export - Waterways - {country}"
+    description: "OpenStreetMap rivers, streams, canals, drains and ditches of {country} (waterway=*) as lines, with name, type, width, depth and tunnel/covered attributes. Lakes and wide river surfaces are not included (line features only). The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: hydrography
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/waterways/lines/hotosm_{iso3}_waterways_lines_gpkg.zip
+    archive_target: hotosm_{iso3}_waterways_lines_gpkg.gpkg
+    style_file: hydrography-line.qml
+    tags:
+      - waterways
+      - rivers
+      - streams
+      - canals
+      - hydrography
+      - cours d eau
+      - rivieres
+      - fleuves
+      - ruisseaux
+      - canaux
+      - hydrographie
+    i18n:
+      fr:
+        name: "Export HOT OSM - Cours d'eau - {country_fr}"
+        description: "Rivières, ruisseaux, canaux, drains et fossés OpenStreetMap du pays ({country_fr}) (waterway=*) en lignes, avec nom, type, largeur, profondeur et passages couverts. Les lacs et les surfaces des grands fleuves ne sont pas inclus (objets linéaires uniquement). Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CHE, CHL, CHN,
+      CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN,
+      GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN,
+      IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR,
+      LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MKD, MLI, MLT, MMR,
+      MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NZL, OMN, PAK,
+      PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN,
+      SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA,
+      TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VCT, VEN,
+      VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-airports"
+    name: "HOT OSM Export - Airports and Airfields (points) - {country}"
+    description: "OpenStreetMap aviation features of {country} mapped as points: aerodromes, airstrips, helipads, terminals and related aeroway=* objects, with name, aeroway type and operator type when tagged (no IATA/ICAO codes in this export). Runways and aprons drawn as lines or areas are not in this layer. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: transport
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/airports/points/hotosm_{iso3}_airports_points_gpkg.zip
+    archive_target: hotosm_{iso3}_airports_points_gpkg.gpkg
+    style_file: transport-point.qml
+    tags:
+      - airports
+      - airfields
+      - airstrip
+      - helipad
+      - aerodrome
+      - aeroports
+      - aerodromes
+      - piste
+      - helistation
+      - logistics
+      - logistique
+    i18n:
+      fr:
+        name: "Export HOT OSM - Aéroports et aérodromes (points) - {country_fr}"
+        description: "Objets aéronautiques OpenStreetMap du pays ({country_fr}) saisis en points : aérodromes, pistes sommaires, hélistations, terminaux et autres objets aeroway=*, avec nom, type d'objet et type d'exploitant lorsqu'ils sont renseignés (pas de codes IATA/OACI dans cet export). Les pistes et aires dessinées en lignes ou surfaces ne sont pas dans cette couche. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA, BGD,
+      BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CHN,
+      CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN,
+      GMB, GNB, GNQ, GRC, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN, IRQ,
+      ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY,
+      LCA, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE,
+      MNG, MOZ, MRT, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN, PAK,
+      PAN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP,
+      SHN, SLB, SLE, SLV, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA,
+      TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VCT, VEN, VGB, VIR, VNM,
+      VUT, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-sea-ports"
+    name: "HOT OSM Export - Sea Ports and Ferry Terminals (points) - {country}"
+    description: "OpenStreetMap port features of {country} mapped as points: harbours, ports, ferry terminals and landing sites, with name, port type and operator type when tagged. Sparse in most countries; ports drawn as areas are not in this layer. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: transport
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/sea_ports/points/hotosm_{iso3}_sea_ports_points_gpkg.zip
+    archive_target: hotosm_{iso3}_sea_ports_points_gpkg.gpkg
+    style_file: transport-point.qml
+    tags:
+      - ports
+      - sea ports
+      - harbour
+      - ferry
+      - ferry terminal
+      - port
+      - ports maritimes
+      - gare maritime
+      - debarcadere
+      - logistics
+      - logistique
+    i18n:
+      fr:
+        name: "Export HOT OSM - Ports maritimes et gares maritimes (points) - {country_fr}"
+        description: "Objets portuaires OpenStreetMap du pays ({country_fr}) saisis en points : ports, havres, gares maritimes et débarcadères, avec nom, type de port et type d'exploitant lorsqu'ils sont renseignés. Peu dense dans la plupart des pays ; les ports dessinés en surfaces ne sont pas dans cette couche. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA, BGD,
+      BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CHN, CIV,
+      CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM, DZA,
+      ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, GAB, GBR, GEO, GGY, GHA, GIN, GMB, GNB,
+      GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IRL, IRN, IRQ, ISL, ISR,
+      ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBR, LBY, LCA, LKA, LSO,
+      LTU, LUX, LVA, MAC, MAR, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR,
+      MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NZL, OMN, PAK, PAN, PCN, PER, PHL, PLW,
+      PNG, POL, PRI, PRK, PRT, PRY, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SHN, SLB, SLE, SLV, SOM,
+      SRB, SSD, STP, SUR, SVK, SVN, SWE, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN,
+      TUR, TWN, TZA, UGA, UKR, URY, UZB, VCT, VEN, VGB, VIR, VNM, VUT, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-railways"
+    name: "HOT OSM Export - Railways - {country}"
+    description: "OpenStreetMap railway lines of {country} (railway=rail, light rail, subway, tram, narrow gauge, disused and abandoned tracks) as lines, with name, railway type, operator type and layer attributes. Stations are not included. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: transport
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/railways/lines/hotosm_{iso3}_railways_lines_gpkg.zip
+    archive_target: hotosm_{iso3}_railways_lines_gpkg.gpkg
+    style_file: transport.qml
+    tags:
+      - railways
+      - rail
+      - train
+      - tracks
+      - voies ferrees
+      - chemin de fer
+      - ferroviaire
+      - logistics
+      - logistique
+    i18n:
+      fr:
+        name: "Export HOT OSM - Voies ferrées - {country_fr}"
+        description: "Voies ferrées OpenStreetMap du pays ({country_fr}) (railway=rail, métro léger, métro, tramway, voie étroite, voies désaffectées ou abandonnées) en lignes, avec nom, type de voie, type d'exploitant et niveau. Les gares ne sont pas incluses. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      AFG, AGO, ALB, ARE, ARG, ARM, AUS, AUT, AZE, BEL, BEN, BFA, BGD, BGR, BIH, BLR, BOL, BRA, BWA,
+      CAN, CHE, CHL, CHN, CIV, CMR, COD, COG, COL, CRI, CUB, CYP, CZE, DEU, DJI, DNK, DOM, DZA, ECU,
+      EGY, ERI, ESP, EST, ETH, FIN, FJI, FRA, GAB, GBR, GEO, GGY, GHA, GIN, GRC, GTM, HKG, HRV, HUN,
+      IDN, IMN, IND, IRL, IRN, IRQ, ISR, ITA, JAM, JOR, JPN, KAZ, KEN, KGZ, KHM, KNA, KOR, LAO, LBR,
+      LBY, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MEX, MKD, MLI, MMR, MNE, MNG, MOZ,
+      MRT, MWI, MYS, NAM, NCL, NER, NGA, NLD, NOR, NPL, NZL, OMN, PAK, PAN, PER, PHL, POL, PRI, PRK,
+      PRT, PRY, PSE, ROU, SAU, SDN, SEN, SGP, SLE, SLV, SRB, SSD, SVK, SVN, SWE, SWZ, SYR, TCD, TGO,
+      THA, TJK, TKM, TUN, TUR, TWN, TZA, UGA, UKR, URY, UZB, VAT, VEN, VNM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-populated-places"
+    name: "HOT OSM Export - Populated Places (points) - {country}"
+    description: "OpenStreetMap populated places of {country} as points: cities, towns, villages, hamlets and isolated dwellings (place=*), with name, place type and population (when tagged). Useful as a locality gazetteer where no official one is available; names follow local OSM conventions. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: admin
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/populated_places/points/hotosm_{iso3}_populated_places_points_gpkg.zip
+    archive_target: hotosm_{iso3}_populated_places_points_gpkg.gpkg
+    style_file: transport-point.qml
+    tags:
+      - populated places
+      - settlements
+      - villages
+      - towns
+      - cities
+      - localities
+      - gazetteer
+      - localites
+      - villes
+      - hameaux
+      - lieux habites
+      - toponymes
+    i18n:
+      fr:
+        name: "Export HOT OSM - Lieux habités (points) - {country_fr}"
+        description: "Lieux habités OpenStreetMap du pays ({country_fr}) en points : villes, bourgs, villages, hameaux et habitations isolées (place=*), avec nom, type de lieu et population (si renseignée). Utile comme répertoire de localités en l'absence de référentiel officiel ; les noms suivent les usages OSM locaux. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK,
+      DOM, DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA,
+      GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL,
+      IRN, IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN,
+      LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT,
+      MMR, MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL, NRU,
+      NZL, OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA,
+      SAU, SDN, SEN, SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ,
+      SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY,
+      UZB, VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-hotosm-financial-services"
+    name: "HOT OSM Export - Financial Services (points) - {country}"
+    description: "OpenStreetMap banks, ATMs, bureaux de change, money transfer and mobile money agents of {country} mapped as points, with name, type, operator and network when tagged. Useful for cash-based assistance planning; coverage is very uneven. The whole zipped GeoPackage is streamed: a few seconds for small countries, slow first load and slow pan for large ones (archives exceed 1 GB for the largest countries)."
+    category: utilities
+    url: https://s3.dualstack.us-east-1.amazonaws.com/production-raw-data-api/ISO3/{ISO3}/financial_services/points/hotosm_{iso3}_financial_services_points_gpkg.zip
+    archive_target: hotosm_{iso3}_financial_services_points_gpkg.gpkg
+    style_file: transport-point.qml
+    tags:
+      - bank
+      - banks
+      - atm
+      - money transfer
+      - mobile money
+      - cash
+      - banque
+      - banques
+      - distributeur
+      - transfert d argent
+      - assistance monetaire
+    i18n:
+      fr:
+        name: "Export HOT OSM - Services financiers (points) - {country_fr}"
+        description: "Banques, distributeurs de billets, bureaux de change, agences de transfert d'argent et de mobile money OpenStreetMap du pays ({country_fr}) saisis en points, avec nom, type, opérateur et réseau lorsqu'ils sont renseignés. Utile pour planifier une assistance monétaire ; couverture très inégale. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK,
+      DOM, DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA,
+      GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL,
+      IRN, IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN,
+      LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI,
+      MLT, MMR, MNE, MNG, MOZ, MRT, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NRU, NZL,
+      OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU,
+      SDN, SEN, SGP, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR,
+      TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT,
+      VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+    ]

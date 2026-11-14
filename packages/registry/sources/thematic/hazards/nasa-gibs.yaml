@@ -1,0 +1,144 @@
+defaults:
+  category: hazard
+  license: CC0-1.0 (NASA open data policy, no restriction; acknowledgement requested)
+  attribution: NASA EOSDIS Global Imagery Browse Services (GIBS)
+  tags:
+    - nasa
+    - gibs
+    - satellite
+    - daily
+    - quotidien
+sources:
+  - id: global-gibs-thermal-anomalies-viirs-noaa20
+    name: NASA GIBS - Fires and Thermal Anomalies, VIIRS NOAA-20 (375 m)
+    description: Pre-rendered picture of the day's fire and thermal anomaly
+      detections from VIIRS on NOAA-20, day and night, drawn as red dots at
+      375 m resolution. Shows the most recent day by default (no TIME value
+      needed). Image only; use the FIRMS shapefile layers for attributes.
+    type: wms
+    url: https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&LAYERS=VIIRS_NOAA20_Thermal_Anomalies_375m_All&STYLES=default&FORMAT=image/png
+    data_date: daily, most recent day shown by default
+    tags:
+      - fire
+      - feu
+      - incendie
+      - wildfire
+      - feu de foret
+      - hotspot
+      - point chaud
+      - viirs
+    i18n:
+      fr:
+        name: NASA GIBS - Feux et anomalies thermiques, VIIRS NOAA-20 (375 m)
+        description: Image pré-rendue des détections de feux et d'anomalies
+          thermiques du jour par VIIRS (NOAA-20), de jour comme de nuit, en
+          points rouges à 375 m de résolution. Affiche par défaut le jour le plus
+          récent (aucun paramètre TIME requis). Image seule, utiliser les couches
+          shapefile FIRMS pour les attributs.
+  - id: global-gibs-thermal-anomalies-modis
+    name: NASA GIBS - Fires and Thermal Anomalies, MODIS Terra + Aqua (1 km)
+    description: Pre-rendered picture of the day's fire and thermal anomaly
+      detections from MODIS on Terra and Aqua, day and night, drawn as red dots
+      at 1 km resolution. Shows the most recent day by default. Image only.
+    type: wms
+    url: https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&LAYERS=MODIS_Combined_Thermal_Anomalies_All&STYLES=default&FORMAT=image/png
+    data_date: daily, most recent day shown by default
+    tags:
+      - fire
+      - feu
+      - incendie
+      - wildfire
+      - feu de foret
+      - hotspot
+      - point chaud
+      - modis
+    i18n:
+      fr:
+        name: NASA GIBS - Feux et anomalies thermiques, MODIS Terra + Aqua (1 km)
+        description: Image pré-rendue des détections de feux et d'anomalies
+          thermiques du jour par MODIS (Terra et Aqua), de jour comme de nuit, en
+          points rouges à 1 km de résolution. Affiche par défaut le jour le plus
+          récent. Image seule.
+  - id: global-gibs-modis-flood-2day
+    name: NASA GIBS - MODIS Near Real-Time Flood, 2-Day Composite (250 m)
+    description: Near real-time flood map from MODIS (Terra + Aqua) at 250 m,
+      2-day composite - flood water in red, unusual water, permanent surface
+      water and insufficient-data areas in other classes. Latest day shown.
+      Optical sensor, so cloud cover leaves gaps and terrain or cloud shadow
+      causes false positives; the 2-day window is the usual compromise. Tiles
+      stop at zoom 9.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Combined_Flood_2-Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 9
+    data_date: daily, latest day shown
+    tags:
+      - flood
+      - inondation
+      - crue
+      - water
+      - eau
+      - modis
+      - lance
+    i18n:
+      fr:
+        name: NASA GIBS - Inondations MODIS en temps quasi réel, composite 2 jours (250 m)
+        description: Carte des inondations en temps quasi réel issue de MODIS
+          (Terra + Aqua) à 250 m, composite sur 2 jours, eau d'inondation en
+          rouge, eau inhabituelle, eau permanente et zones sans données
+          suffisantes dans d'autres classes. Dernier jour affiché. Capteur
+          optique, la couverture nuageuse laisse des trous et les ombres de
+          relief ou de nuages créent des faux positifs, la fenêtre de 2 jours est
+          le compromis habituel. Tuiles limitées au zoom 9.
+  - id: global-gibs-modis-flood-3day
+    name: NASA GIBS - MODIS Near Real-Time Flood, 3-Day Composite (250 m)
+    description: Near real-time flood map from MODIS (Terra + Aqua) at 250 m,
+      3-day composite. Fewer cloud gaps and false positives than the 2-day
+      product, at the cost of a slower response to new flooding. Latest day
+      shown. Tiles stop at zoom 9.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Combined_Flood_3-Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 9
+    data_date: daily, latest day shown
+    tags:
+      - flood
+      - inondation
+      - crue
+      - water
+      - eau
+      - modis
+      - lance
+    i18n:
+      fr:
+        name: NASA GIBS - Inondations MODIS en temps quasi réel, composite 3 jours (250 m)
+        description: Carte des inondations en temps quasi réel issue de MODIS
+          (Terra + Aqua) à 250 m, composite sur 3 jours. Moins de trous nuageux
+          et de faux positifs que le produit 2 jours, au prix d'une réaction plus
+          lente aux nouvelles inondations. Dernier jour affiché. Tuiles limitées
+          au zoom 9.
+  - id: global-gibs-viirs-flood-2day
+    name: NASA GIBS - VIIRS Near Real-Time Flood, 2-Day Composite
+    description: Near real-time flood map from VIIRS (Suomi NPP + NOAA-20),
+      2-day composite, same legend as the MODIS flood product. Latest day shown.
+      Optical sensor, so cloud leaves gaps. Tiles stop at zoom 9.
+    type: xyz
+    url: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Combined_Flood_2-Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png
+    crs: EPSG:3857
+    max_zoom: 9
+    data_date: daily, latest day shown
+    tags:
+      - flood
+      - inondation
+      - crue
+      - water
+      - eau
+      - viirs
+      - lance
+    i18n:
+      fr:
+        name: NASA GIBS - Inondations VIIRS en temps quasi réel, composite 2 jours
+        description: Carte des inondations en temps quasi réel issue de VIIRS
+          (Suomi NPP + NOAA-20), composite sur 2 jours, même légende que le
+          produit MODIS. Dernier jour affiché. Capteur optique, les nuages
+          laissent des trous. Tuiles limitées au zoom 9.

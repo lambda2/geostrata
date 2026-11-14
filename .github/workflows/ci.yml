@@ -6,12 +6,18 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Full history: the live test diffs the sources against the base commit.
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,7 +39,11 @@ jobs:
         working-directory: packages/registry
         run: npm run typecheck
 
-      - name: Run FieldMaps/HDX ingestion & Build catalog.sqlite
+      - name: Run registry unit tests
+        working-directory: packages/registry
+        run: npm test
+
+      - name: Run geoBoundaries/ELI ingestion & Build catalog.sqlite
         working-directory: packages/registry
         run: npm run ingest && npm run build
 
@@ -52,3 +62,93 @@ jobs:
             packages/registry/dist/catalog.sqlite.gz
             packages/registry/dist/manifest.json
             packages/qgis-plugin/dist/geostrata.zip
+
+      # Entries this change adds or modifies, plus two entries per source type
+      # (the URI builder smoke set). Resolved here because git and the base
+      # commit are available on the runner, not inside the QGIS image.
+      # sources/_generated is not committed: its entries are only reached
+      # through --smoke and --families.
+      - name: Select layers for the live QGIS test
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          python3 -m pip install --quiet pyyaml
+          # A changed per-country template expands to hundreds of entries: 10 of each family is enough.
+          args=(--smoke 2 --sample-families 10)
+          if [ -n "$BASE_SHA" ] && git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            args+=(--changed "${BASE_SHA}...HEAD")
+            # Compiler, ingestion or URI builder touched: also sample every generated family.
+            if git diff --name-only "${BASE_SHA}...HEAD" | grep -qE '^packages/(registry/src|qgis-plugin/geostrata/core)/'; then
+              args+=(--families)
+            fi
+          else
+            echo "::warning::No base commit to diff against: live test limited to the smoke set"
+          fi
+          python3 packages/qgis-plugin/tests/test_live_layers.py "${args[@]}" --list > live-ids.txt
+          echo "Selected $(wc -l < live-ids.txt) layer(s) for the live test"
+
+      - name: Upload live test input
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-test-input
+          retention-days: 3
+          path: |
+            packages/registry/dist/catalog.sqlite
+            live-ids.txt
+
+  live-layers:
+    name: Live layers (QGIS ${{ matrix.qgis.label }})
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # A brand-new QGIS release must not block a pull request; the LTR leg does.
+    continue-on-error: ${{ matrix.qgis.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        qgis:
+          - label: minimum 3.28
+            tag: release-3_28
+            experimental: false
+          - label: LTR 3.44
+            tag: 3.44-noble
+            experimental: false
+          - label: latest release
+            tag: stable
+            experimental: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download catalog.sqlite and the selected ids
+        uses: actions/download-artifact@v4
+        with:
+          name: live-test-input
+          path: .
+
+      - name: Load the selected layers in headless QGIS
+        run: |
+          packages/qgis-plugin/tests/run_live_in_docker.sh "${{ matrix.qgis.tag }}" \
+            --ids-file live-ids.txt \
+            --jobs 6 \
+            --json live-result.json \
+            --markdown live-summary.md
+
+      - name: Publish summary
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f live-summary.md ]; then
+            cat live-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Live layer test produced no summary (QGIS did not start?)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload live test result
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-result-${{ matrix.qgis.tag }}
+          if-no-files-found: ignore
+          path: |
+            live-result.json
+            live-summary.md

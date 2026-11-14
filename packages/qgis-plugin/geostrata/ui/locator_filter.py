@@ -8,42 +8,43 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from qgis.core import (
-    Qgis,
     QgsApplication,
-    QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform,
     QgsFeedback,
-    QgsGeometry,
     QgsLocatorContext,
     QgsLocatorFilter,
     QgsLocatorResult,
-    QgsMessageLog,
-    QgsProject,
-    QgsRectangle,
     QgsSettings,
 )
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QApplication
 
-from ..core.db_client import CatalogDatabaseClient, CatalogSourceRecord, parse_search_query
-from ..core.extractor_task import launch_offline_extraction_task
-from ..core.overpass_task import launch_overpass_fetch_task
-from ..core.uri_builder import create_qgis_layer
+from ..core.db_client import (
+    GLOBAL_GROUP_AREA_DEG2,
+    CatalogDatabaseClient,
+    CatalogSourceRecord,
+    global_group_leads,
+    parse_search_query,
+)
+from ..i18n import tr
+from .actions import (  # noqa: F401  (SETTINGS_INCLUDE_ELI_KEY re-exported for the settings dialog)
+    SETTINGS_INCLUDE_ELI_KEY,
+    capture_canvas_bbox_4326,
+    load_entry,
+    make_intersection_filter,
+    read_include_eli_setting,
+    show_entry_coverage,
+)
+from .coverage_preview import CoveragePreview
 
 ACTION_STREAM_ID = 1
 ACTION_EXTRACT_OFFLINE_ID = 2
+ACTION_SHOW_COVERAGE_ID = 3
+ACTION_ZOOM_TO_COVERAGE_ID = 4
 
-DENSE_WFS_KEYWORDS: Tuple[str, ...] = (
-    "batiment",
-    "parcelle",
-    "troncon_de_route",
-    "zone_de_vegetation",
-)
-
+MAX_LOCATOR_RESULTS = 50
 
 SETTINGS_ICON_MODE_KEY = "geostrata/icon_mode"
-SETTINGS_INCLUDE_ELI_KEY = "geostrata/include_eli"
 
 
 def get_user_custom_icons_dir() -> Path:
@@ -90,7 +91,7 @@ def _resolve_entry_icon(entry: CatalogSourceRecord) -> Any:
 
         # 3. Technical QGIS icons
         src_type = entry.type.lower()
-        if src_type in ("xyz", "tms", "wms", "wmts", "cog", "vrt"):
+        if src_type in ("xyz", "tms", "wms", "wmts", "cog", "vrt", "arcgismapserver"):
             return QgsApplication.getThemeIcon("/mIconRaster.svg")
         if src_type == "vectortile":
             return QgsApplication.getThemeIcon("/mIconVectorTileLayer.svg")
@@ -117,10 +118,12 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
         self,
         iface: Any,
         db_client: CatalogDatabaseClient,
+        coverage_preview: Optional[CoveragePreview] = None,
     ) -> None:
         super().__init__()
         self._iface = iface
         self._db_client = db_client
+        self._coverage_preview = coverage_preview
         self._prepared_bbox_4326: Optional[Tuple[float, float, float, float]] = None
         self._active_extraction_task: Optional[Any] = None
         self._emitted_results: List[QgsLocatorResult] = []
@@ -131,7 +134,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
 
     def displayName(self) -> str:
         """Return user-visible filter title in Ctrl+K."""
-        return "Geostrata (Couches locales & mondiales)"
+        return tr("Geostrata (local & global layers)")
 
     def prefix(self) -> str:
         """Return filter prefix shortcut (minimum 3 chars in QGIS)."""
@@ -143,47 +146,16 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
 
     def clone(self) -> GeostrataLocatorFilter:
         """Return a thread-safe clone of this filter for worker threads."""
-        cloned = GeostrataLocatorFilter(self._iface, self._db_client)
+        cloned = GeostrataLocatorFilter(
+            self._iface, self._db_client, self._coverage_preview
+        )
         cloned._prepared_bbox_4326 = self._prepared_bbox_4326
         return cloned
 
     def prepare(self, string: str, context: QgsLocatorContext) -> List[str]:
         """Capture and reproject current map canvas extent on the main UI thread."""
-        self._prepared_bbox_4326 = self._capture_canvas_bbox_4326()
+        self._prepared_bbox_4326 = capture_canvas_bbox_4326(self._iface)
         return []
-
-    def _capture_canvas_bbox_4326(
-        self,
-    ) -> Optional[Tuple[float, float, float, float]]:
-        """Read mapCanvas extent on the main thread and transform to EPSG:4326."""
-        if self._iface is None or self._iface.mapCanvas() is None:
-            return None
-
-        try:
-            canvas = self._iface.mapCanvas()
-            extent: QgsRectangle = canvas.extent()
-            if extent.isEmpty() or not extent.isFinite():
-                return None
-
-            src_crs = canvas.mapSettings().destinationCrs()
-            wgs84_crs = QgsCoordinateReferenceSystem("EPSG:4326")
-
-            if src_crs.isValid() and src_crs != wgs84_crs:
-                transform = QgsCoordinateTransform(
-                    src_crs, wgs84_crs, QgsProject.instance()
-                )
-                extent = transform.transformBoundingBox(extent)
-
-            min_x = max(-180.0, min(180.0, extent.xMinimum()))
-            min_y = max(-90.0, min(90.0, extent.yMinimum()))
-            max_x = max(-180.0, min(180.0, extent.xMaximum()))
-            max_y = max(-90.0, min(90.0, extent.yMaximum()))
-
-            if min_x > max_x or min_y > max_y:
-                return None
-            return (min_x, min_y, max_x, max_y)
-        except Exception:
-            return None
 
     def fetchResults(
         self,
@@ -191,7 +163,12 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
         context: QgsLocatorContext,
         feedback: QgsFeedback,
     ) -> None:
-        """Execute 2-step search (SQLite R-Tree + FTS5 -> PyQGIS WKT geometry check)."""
+        """Run the ranked catalog search and emit one locator result per source.
+
+        Runs on a worker thread. The SQLite client returns candidates already ranked
+        (text relevance + locality + priority, see core/db_client.py) and applies the
+        ELI filter and the exact WKT/canvas intersection test *before* its limit.
+        """
         query_text = string.strip()
         if not context.usingPrefix and len(query_text) < 2:
             return
@@ -200,78 +177,76 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             return
 
         _, is_global = parse_search_query(query_text)
-        bbox_4326 = self._prepared_bbox_4326
+        bbox_4326 = None if is_global else self._prepared_bbox_4326
 
-        # Step 1: SQLite R-Tree + FTS5 (< 1 ms)
-        candidates = self._db_client.search_sources(
+        scored_entries = self._db_client.search_sources_scored(
             raw_query=query_text,
             canvas_bbox_4326=bbox_4326,
-            limit=50,
+            limit=MAX_LOCATOR_RESULTS,
+            include_eli=read_include_eli_setting(),
+            accept=make_intersection_filter(bbox_4326, feedback.isCanceled),
         )
 
-        if feedback.isCanceled() or not candidates:
+        if feedback.isCanceled() or not scored_entries:
             return
 
-        # Step 2: Exact geometry intersection in PyQGIS (< 2 ms)
-        canvas_geom: Optional[QgsGeometry] = None
-        if (not is_global) and (bbox_4326 is not None):
-            min_x, min_y, max_x, max_y = bbox_4326
-            rect = QgsRectangle(min_x, min_y, max_x, max_y)
-            canvas_geom = QgsGeometry.fromRect(rect)
-
         self._emitted_results.clear()
-        include_eli = True
-        try:
-            raw_eli = QgsSettings().value(SETTINGS_INCLUDE_ELI_KEY, True)
-            include_eli = str(raw_eli).lower() not in ("false", "0", "no")
-        except Exception:
-            include_eli = True
 
-        for idx, entry in enumerate(candidates):
+        # Translate once: tr() reads QgsSettings.
+        global_badge = tr("Global")
+        hint = tr("Enter: load · Shift+Enter: extract offline")
+        degraded_note = tr("link degraded")
+        # Groups are sorted by groupScore (QGIS >= 3.40), then by name: hence the numbers.
+        global_first = global_group_leads(scored_entries)
+        local_group = (
+            tr("2. Local & national layers")
+            if global_first
+            else tr("1. Local & national layers")
+        )
+        global_group = tr("1. Global layers") if global_first else tr("2. Global layers")
+        action_labels = [
+            (ACTION_STREAM_ID, tr("Load layer (Enter)")),
+            (
+                ACTION_EXTRACT_OFFLINE_ID,
+                tr("Extract offline to GeoPackage/GeoTIFF (Shift+Enter)"),
+            ),
+            (ACTION_SHOW_COVERAGE_ID, tr("Show coverage on map")),
+            (ACTION_ZOOM_TO_COVERAGE_ID, tr("Zoom to coverage")),
+        ]
+
+        for idx, (entry, _rank_score) in enumerate(scored_entries):
             if feedback.isCanceled():
                 return
 
-            if not include_eli and "-eli-" in entry.id:
-                continue
-
-            if canvas_geom is not None and entry.geom_wkt:
-                source_geom = QgsGeometry.fromWkt(entry.geom_wkt)
-                if not source_geom.isNull() and not canvas_geom.intersects(
-                    source_geom
-                ):
-                    continue
-
-            scope_badge = entry.country_iso if entry.country_iso else "Global"
+            scope_badge = entry.country_iso if entry.country_iso else global_badge
             type_badge = entry.type.upper()
-            title_str = entry.localized_name()
-            display_title = f"[{type_badge} · {scope_badge}] {title_str}"
+            display_title = f"[{type_badge} · {scope_badge}] {entry.localized_name()}"
             payload_json = json.dumps(asdict(entry))
 
             result = QgsLocatorResult(self, display_title, payload_json)
             icon = _resolve_entry_icon(entry)
             if icon is not None:
                 result.icon = icon
-            result.description = (
-                f"{entry.category} | {entry.attribution} "
-                f"(Entrée: Streaming · Maj+Entrée: Extraire hors-ligne)"
-            )
-            result.group = (
-                "1. Couches locales & nationales"
-                if entry.area_deg2 < 10000.0
-                else "2. Couches mondiales"
-            )
+
+            facts = [entry.category, entry.attribution]
+            if entry.data_date:
+                facts.append(entry.data_date)
+            if entry.health_status == "degraded":
+                facts.append(degraded_note)
+            result.description = f"{' | '.join(f for f in facts if f)} ({hint})"
+            is_local = entry.area_deg2 < GLOBAL_GROUP_AREA_DEG2
+            result.group = local_group if is_local else global_group
+            try:
+                result.groupScore = 2.0 if is_local != global_first else 1.0
+            except Exception:
+                pass  # QGIS < 3.40: the numbered group names give the order
+            # Entries arrive ranked: keep that order inside each group.
             result.score = max(0.1, 1.0 - (idx * 0.015))
 
             try:
                 result.actions = [
-                    QgsLocatorResult.ResultAction(
-                        ACTION_STREAM_ID,
-                        "Charger en streaming (Entrée)",
-                    ),
-                    QgsLocatorResult.ResultAction(
-                        ACTION_EXTRACT_OFFLINE_ID,
-                        "Extraire hors-ligne en GeoPackage/GeoTIFF (Maj + Entrée)",
-                    ),
+                    QgsLocatorResult.ResultAction(action_id, label)
+                    for action_id, label in action_labels
                 ]
             except Exception:
                 pass
@@ -280,7 +255,7 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
             self.resultFetched.emit(result)
 
     def triggerResult(self, result: QgsLocatorResult) -> None:
-        """Handle result activation on main thread (Entrée vs Maj + Entrée)."""
+        """Handle result activation on main thread (Enter vs Shift+Enter)."""
         modifiers = QApplication.keyboardModifiers()
         shift_pressed = bool(modifiers & Qt.KeyboardModifier.ShiftModifier)
         action_id = ACTION_EXTRACT_OFFLINE_ID if shift_pressed else ACTION_STREAM_ID
@@ -291,8 +266,13 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
         result: QgsLocatorResult,
         actionId: int,
     ) -> None:
-        """Execute streaming load or offline extraction based on actionId."""
+        """Run the chosen action: load, extract offline, show coverage or zoom to coverage."""
         raw_data = result.userData
+        if callable(raw_data):  # QGIS >= 3.36 exposes userData as a method
+            try:
+                raw_data = raw_data()
+            except Exception:
+                return
         if isinstance(raw_data, str):
             try:
                 raw_data = json.loads(raw_data)
@@ -301,117 +281,29 @@ class GeostrataLocatorFilter(QgsLocatorFilter):
         if not isinstance(raw_data, dict):
             return
 
-        entry = self._dict_to_record(raw_data)
-        title_str = entry.localized_name()
-        bbox_4326 = self._capture_canvas_bbox_4326() or (
-            entry.min_x,
-            entry.min_y,
-            entry.max_x,
-            entry.max_y,
-        )
+        try:
+            entry = self._dict_to_record(raw_data)
+        except (KeyError, TypeError, ValueError):
+            return
 
-        if entry.type.lower() == "overpass":
-            self._active_extraction_task = launch_overpass_fetch_task(
+        if actionId in (ACTION_SHOW_COVERAGE_ID, ACTION_ZOOM_TO_COVERAGE_ID):
+            show_entry_coverage(
                 self._iface,
+                self._coverage_preview,
                 entry,
-                bbox_4326,
-                is_offline_extract=(actionId == ACTION_EXTRACT_OFFLINE_ID),
+                zoom=(actionId == ACTION_ZOOM_TO_COVERAGE_ID),
             )
-            if self._iface is not None and self._iface.messageBar() is not None:
-                self._iface.messageBar().pushMessage(
-                    "Geostrata",
-                    f"Requête Overpass lancée en tâche de fond (multi-miroirs) : {title_str}",
-                    level=Qgis.MessageLevel.Info,
-                    duration=4,
-                )
             return
 
-        if actionId == ACTION_EXTRACT_OFFLINE_ID:
-            self._active_extraction_task = launch_offline_extraction_task(
-                self._iface, entry, bbox_4326
-            )
-            if self._iface is not None and self._iface.messageBar() is not None:
-                self._iface.messageBar().pushMessage(
-                    "Geostrata",
-                    f"Extraction hors-ligne démarrée en tâche de fond : {title_str}",
-                    level=Qgis.MessageLevel.Info,
-                    duration=4,
-                )
-            return
-
-        # Default action: Streaming load
-        is_dense_wfs = entry.type.lower() == "wfs" and any(
-            kw in entry.url.lower() for kw in DENSE_WFS_KEYWORDS
+        task = load_entry(
+            self._iface,
+            entry,
+            offline_extract=(actionId == ACTION_EXTRACT_OFFLINE_ID),
         )
-        canvas_area = (bbox_4326[2] - bbox_4326[0]) * (
-            bbox_4326[3] - bbox_4326[1]
-        )
-
-        layer, spec = create_qgis_layer(entry, bbox_4326)
-        if layer is not None and layer.isValid():
-            if is_dense_wfs and canvas_area > 0.25:
-                try:
-                    layer.setScaleBasedVisibility(True)
-                    layer.setMinimumScale(50000.0)
-                except Exception:
-                    pass
-                if self._iface is not None and self._iface.messageBar() is not None:
-                    self._iface.messageBar().pushMessage(
-                        "Geostrata",
-                        f"Couche WFS dense ajoutée ({title_str}) : zoomez à 1:50 000 pour afficher les entités.",
-                        level=Qgis.MessageLevel.Info,
-                        duration=6,
-                    )
-            else:
-                if self._iface is not None and self._iface.messageBar() is not None:
-                    self._iface.messageBar().pushMessage(
-                        "Geostrata",
-                        f"Couche chargée en streaming : {title_str} ({entry.attribution})",
-                        level=Qgis.MessageLevel.Success,
-                        duration=4,
-                    )
-            QgsProject.instance().addMapLayer(layer)
-        else:
-            err_msg = (
-                f"Impossible de charger le flux '{title_str}' "
-                f"(provider={spec.provider}, uri={spec.uri})"
-            )
-            QgsMessageLog.logMessage(
-                err_msg, "Geostrata", Qgis.MessageLevel.Warning
-            )
-            if self._iface is not None and self._iface.messageBar() is not None:
-                self._iface.messageBar().pushMessage(
-                    "Geostrata",
-                    err_msg,
-                    level=Qgis.MessageLevel.Warning,
-                    duration=6,
-                )
+        if task is not None:
+            self._active_extraction_task = task
 
     @staticmethod
     def _dict_to_record(data: Dict[str, Any]) -> CatalogSourceRecord:
         """Reconstruct a CatalogSourceRecord from QgsLocatorResult.userData."""
-        return CatalogSourceRecord(
-            id=str(data["id"]),
-            name=str(data["name"]),
-            description=str(data.get("description") or ""),
-            type=str(data["type"]),
-            category=str(data["category"]),
-            url=str(data["url"]),
-            crs=str(data.get("crs") or "EPSG:4326"),
-            country_iso=data.get("country_iso"),
-            min_x=float(data["min_x"]),
-            min_y=float(data["min_y"]),
-            max_x=float(data["max_x"]),
-            max_y=float(data["max_y"]),
-            area_deg2=float(data["area_deg2"]),
-            geom_wkt=str(data["geom_wkt"]),
-            tags=list(data.get("tags") or []),
-            license=str(data.get("license") or ""),
-            attribution=str(data.get("attribution") or ""),
-            style_qml=data.get("style_qml"),
-            min_zoom=data.get("min_zoom"),
-            max_zoom=data.get("max_zoom"),
-            archive_target=data.get("archive_target"),
-            health_status=str(data.get("health_status") or "ok"),
-            i18n=dict(data.get("i18n") or {}),
-        )
+        return CatalogSourceRecord.from_dict(data)

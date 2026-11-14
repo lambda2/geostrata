@@ -1,0 +1,89 @@
+# Natural Earth 1:10m transport themes (small-scale reference data, NACIS CDN).
+defaults:
+  type: archive
+  category: transport
+  crs: EPSG:4326
+  license: Public domain (Natural Earth terms of use)
+  attribution: Made with Natural Earth
+  data_date: Natural Earth 5.x (compiled from sources of the 2000s-2010s, rarely updated)
+  tags:
+    - natural earth
+    - ne
+    - 10m
+    - small scale
+    - petite echelle
+    - logistics
+    - logistique
+sources:
+  - id: global-ne-roads
+    name: Natural Earth - Major Roads (1:10m)
+    description: Generalised worldwide network of major highways, main and secondary
+      roads plus ferry routes, with road class and route numbers. Made for
+      country and continent overview maps (1:10,000,000) - too coarse and too old
+      for route planning; use OSM roads at local scale. Small file (9 MB), loads
+      fast.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_roads.zip
+    archive_target: ne_10m_roads.shp
+    style_file: transport.qml
+    tags:
+      - roads
+      - highways
+      - road network
+      - routes
+      - autoroutes
+      - reseau routier
+      - overview
+    i18n:
+      fr:
+        name: Natural Earth - Routes principales (1:10m)
+        description: Réseau mondial généralisé des autoroutes, routes principales et
+          secondaires et des lignes de ferry, avec classe de route et numéros
+          d'itinéraire. Conçu pour des cartes de synthèse à l'échelle d'un pays ou
+          d'un continent (1:10 000 000) - trop grossier et trop ancien pour préparer
+          un itinéraire ; utiliser les routes OSM à l'échelle locale. Petit fichier
+          (9 Mo), chargement rapide.
+  - id: global-ne-airports
+    name: Natural Earth - Airports (1:10m)
+    description: About 890 of the world's main airports as points, with name, IATA
+      and ICAO codes, type (major, mid, military) and a scale rank for labelling.
+      Good for overview maps; small airfields and airstrips are missing - use OSM
+      or OurAirports for those.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_airports.zip
+    archive_target: ne_10m_airports.shp
+    style_file: transport-point.qml
+    tags:
+      - airports
+      - iata
+      - icao
+      - aeroports
+      - aviation
+    i18n:
+      fr:
+        name: Natural Earth - Aéroports (1:10m)
+        description: Environ 890 des principaux aéroports du monde en points, avec
+          nom, codes IATA et OACI, type (majeur, moyen, militaire) et un rang
+          d'échelle pour l'étiquetage. Adapté aux cartes de synthèse ; les petits
+          aérodromes et pistes sommaires manquent - utiliser OSM ou OurAirports
+          pour ceux-là.
+  - id: global-ne-ports
+    name: Natural Earth - Sea Ports (1:10m)
+    description: About 1,080 of the world's main sea ports as points, with name and
+      a scale rank for labelling. Good for overview maps; carries no information on
+      draught, berths or handling capacity.
+    url: https://naciscdn.org/naturalearth/10m/cultural/ne_10m_ports.zip
+    archive_target: ne_10m_ports.shp
+    style_file: transport-point.qml
+    tags:
+      - ports
+      - sea ports
+      - harbour
+      - shipping
+      - ports maritimes
+      - maritime
+    i18n:
+      fr:
+        name: Natural Earth - Ports maritimes (1:10m)
+        description: Environ 1 080 des principaux ports maritimes du monde en points,
+          avec nom et rang d'échelle pour l'étiquetage. Adapté aux cartes de synthèse ;
+          aucune information sur le tirant d'eau, les quais ou la capacité de
+          manutention.

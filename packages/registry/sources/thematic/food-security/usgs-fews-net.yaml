@@ -1,0 +1,342 @@
+# FEWS NET drought monitoring layers served by the USGS EROS GeoServer (the data behind
+# the Early Warning eXplorer). Every layer has a time dimension and the server draws the
+# latest period when no TIME is given, which is what these entries rely on: dekads and
+# pentads start on the 1st, 6th, 11th... and cannot be written with a `{time}` date.
+defaults:
+  type: wms
+  license: No licence stated on the service (Fees and AccessConstraints are
+    "NONE"); USGS / FEWS NET products are US Government works, generally
+    public domain - not confirmed on the provider's site
+  attribution: USGS EROS / FEWS NET (Famine Early Warning Systems Network)
+  tags:
+    - fews net
+    - usgs
+    - ewx
+    - early warning
+    - alerte precoce
+    - drought
+    - secheresse
+    - food security
+    - securite alimentaire
+    - anomaly
+    - anomalie
+sources:
+  - id: global-fews-chirps-rainfall-month
+    name: FEWS NET - Monthly Rainfall Total (CHIRPS, Latest Month)
+    description: Rainfall total in mm of the latest complete month, from
+      CHIRPS (0.05 degree, land between 60°N and 60°S), drawn with the FEWS
+      NET colour scale. The latest final month is drawn, published about 3
+      weeks after the end of the month. Colour image, not values.
+    category: weather
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_chirps_global_month_data:chirps_global_month_data&STYLES=fews_chirps_month_data_raster_ngviewer&FORMAT=image/png
+    data_date: monthly, latest final month shown (about 3 weeks after month end)
+    tags:
+      - chirps
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
+      - monthly
+      - mensuel
+    i18n:
+      fr:
+        name: FEWS NET - Cumul de pluie mensuel (CHIRPS, dernier mois)
+        description: Cumul de pluie en mm du dernier mois complet, d'après
+          CHIRPS (0,05 degré, terres entre 60°N et 60°S), avec l'échelle de
+          couleurs de FEWS NET. Le dernier mois final est affiché, publié
+          environ 3 semaines après la fin du mois. Image colorée et non des
+          valeurs.
+  - id: global-fews-chirps-rainfall-anomaly-month
+    name: FEWS NET - Monthly Rainfall Anomaly (CHIRPS, Latest Month)
+    description: Difference in mm between the rainfall of the latest
+      complete month and the long-term average for that month, from CHIRPS
+      (0.05 degree, land between 60°N and 60°S). Yellow to red is drier than
+      normal, blue wetter. The latest final month is drawn, published about 3
+      weeks after the end of the month. Colour image, not values.
+    category: weather
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_chirps_global_month_anom:chirps_global_month_anom&STYLES=fews_chirps_month_anom_raster_ngviewer&FORMAT=image/png
+    data_date: monthly, latest final month shown (about 3 weeks after month end)
+    tags:
+      - chirps
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
+      - monthly
+      - mensuel
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de pluviométrie mensuelle (CHIRPS, dernier mois)
+        description: Écart en mm entre la pluie du dernier mois complet et
+          la moyenne de long terme pour ce mois, d'après CHIRPS (0,05 degré,
+          terres entre 60°N et 60°S). Du jaune au rouge plus sec que la normale,
+          en bleu plus humide. Le dernier mois final est affiché, publié
+          environ 3 semaines après la fin du mois. Image colorée et non des
+          valeurs.
+  - id: global-fews-chirps-rainfall-zscore-month
+    name: FEWS NET - Monthly Rainfall Z-Score (CHIRPS, Latest Month)
+    description: Rainfall of the latest complete month expressed in standard
+      deviations from the long-term average for that month (z-score), from
+      CHIRPS. Unlike the anomaly in mm, it compares dry and wet climates on
+      the same scale - below -1 is a marked deficit. The latest final month is
+      drawn. Colour image, not values.
+    category: weather
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_chirps_global_month_zscore:chirps_global_month_zscore&STYLES=fews_chirps_month_zscore_raster_ngviewer&FORMAT=image/png
+    data_date: monthly, latest final month shown (about 3 weeks after month end)
+    tags:
+      - chirps
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
+      - z-score
+      - standardized
+      - monthly
+      - mensuel
+    i18n:
+      fr:
+        name: FEWS NET - Z-score de pluviométrie mensuelle (CHIRPS, dernier mois)
+        description: Pluie du dernier mois complet exprimée en écarts types
+          par rapport à la moyenne de long terme pour ce mois (z-score),
+          d'après CHIRPS. Contrairement à l'anomalie en mm, elle compare
+          climats secs et humides sur la même échelle, en dessous de -1 le
+          déficit est marqué. Le dernier mois final est affiché. Image colorée
+          et non des valeurs.
+  - id: global-fews-chirps-rainfall-anomaly-pentad
+    name: FEWS NET - 5-Day Rainfall Anomaly (CHIRPS Preliminary, Latest Pentad)
+    description: Difference in mm between the rainfall of the latest 5-day
+      period (pentad) and the long-term average for that period, from
+      preliminary CHIRPS, published 2 days after the end of each pentad. The
+      quickest view of where the rains are failing or excessive. Colour image,
+      not values.
+    category: weather
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_chirps-prelim_global_pentad_anom:chirps-prelim_global_pentad_anom&STYLES=fews_chirps_pentad_anom_raster_ngviewer&FORMAT=image/png
+    priority: 2
+    data_date: every 5 days, latest pentad shown (2 days after its end)
+    tags:
+      - chirps
+      - rain
+      - pluie
+      - rainfall
+      - precipitation
+      - precipitations
+      - pentad
+      - pentade
+      - preliminary
+      - preliminaire
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de pluviométrie sur 5 jours (CHIRPS préliminaire, dernière pentade)
+        description: Écart en mm entre la pluie de la dernière période de 5
+          jours (pentade) et la moyenne de long terme pour cette période,
+          d'après CHIRPS préliminaire, publié 2 jours après la fin de chaque
+          pentade. La vue la plus rapide des zones où les pluies manquent ou
+          sont excessives. Image colorée et non des valeurs.
+  - id: global-fews-land-surface-temperature-anomaly-dekad
+    name: FEWS NET - Land Surface Temperature Anomaly (eVIIRS, Latest Dekad)
+    description: Difference between the daytime land surface temperature of
+      the latest 10-day period (dekad) and the average for that dekad, from
+      VIIRS. Hotter than normal ground during the growing season is a sign of
+      dry soil and crop stress. Colour image, not values.
+    category: weather
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_eviirslst_global_dekad_anom:eviirslst_global_dekad_anom&STYLES=fews_lst_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [-180, -60, 180, 80]
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - temperature
+      - land surface temperature
+      - temperature de surface
+      - lst
+      - heat
+      - chaleur
+      - viirs
+      - dekad
+      - decade
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de température de surface du sol (eVIIRS, dernière décade)
+        description: Écart entre la température diurne de la surface du sol
+          sur la dernière période de 10 jours (décade) et la moyenne pour
+          cette décade, d'après VIIRS. Un sol plus chaud que la normale
+          pendant la saison de culture signale un sol sec et des cultures en
+          stress. Image colorée et non des valeurs.
+  - id: global-fews-ndvi-anomaly-africa
+    name: FEWS NET - Vegetation NDVI Anomaly, Africa (Latest Dekad)
+    description: Difference between the vegetation greenness (NDVI, eMODIS /
+      eVIIRS, 250 m) of the latest 10-day period (dekad) and the average for
+      that dekad, over Africa. Brown is less vegetation than normal - drought,
+      failed crops or pasture - green is more. The standard FEWS NET view of
+      how the growing season is going. Colour image, not values.
+    category: landuse
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_evmod-eviirs-ndvi_africa_dekad_anom:evmod-eviirs-ndvi_africa_dekad_anom&STYLES=fews_ndvi_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [-18.17, -34.84, 51.99, 40]
+    priority: 2
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - dekad
+      - decade
+      - africa
+      - afrique
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de végétation NDVI, Afrique (dernière décade)
+        description: Écart entre la verdeur de la végétation (NDVI, eMODIS /
+          eVIIRS, 250 m) sur la dernière période de 10 jours (décade) et la
+          moyenne pour cette décade, zone Afrique. En brun moins de végétation
+          que la normale, sécheresse, cultures ou pâturages en échec, en vert
+          davantage. La vue de référence de FEWS NET sur le déroulement de la
+          saison de culture. Image colorée et non des valeurs.
+  - id: global-fews-ndvi-anomaly-asia
+    name: FEWS NET - Vegetation NDVI Anomaly, Asia (Latest Dekad)
+    description: Difference between the vegetation greenness (NDVI, eMODIS /
+      eVIIRS, 250 m) of the latest 10-day period (dekad) and the average for
+      that dekad, over Asia. Brown is less vegetation than normal - drought,
+      failed crops or pasture - green is more. The standard FEWS NET view of
+      how the growing season is going. Colour image, not values.
+    category: landuse
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_evmod-eviirs-ndvi_asia_dekad_anom:evmod-eviirs-ndvi_asia_dekad_anom&STYLES=fews_ndvi_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [20, 5, 135.98, 56]
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - dekad
+      - decade
+      - asia
+      - asie
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de végétation NDVI, Asie (dernière décade)
+        description: Écart entre la verdeur de la végétation (NDVI, eMODIS /
+          eVIIRS, 250 m) sur la dernière période de 10 jours (décade) et la
+          moyenne pour cette décade, zone Asie. En brun moins de végétation
+          que la normale, sécheresse, cultures ou pâturages en échec, en vert
+          davantage. La vue de référence de FEWS NET sur le déroulement de la
+          saison de culture. Image colorée et non des valeurs.
+  - id: global-fews-ndvi-anomaly-camcar
+    name: FEWS NET - Vegetation NDVI Anomaly, Central America and Caribbean (Latest Dekad)
+    description: Difference between the vegetation greenness (NDVI, eMODIS /
+      eVIIRS, 250 m) of the latest 10-day period (dekad) and the average for
+      that dekad, over Central America and Caribbean. Brown is less vegetation
+      than normal - drought, failed crops or pasture - green is more. The
+      standard FEWS NET view of how the growing season is going. Colour image,
+      not values.
+    category: landuse
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_evmod-eviirs-ndvi_camcar_dekad_anom:evmod-eviirs-ndvi_camcar_dekad_anom&STYLES=fews_ndvi_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [-118.5, 7, -59.01, 33]
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - dekad
+      - decade
+      - central america
+      - amerique centrale
+      - caribbean
+      - caraibes
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de végétation NDVI, Amérique centrale et Caraïbes (dernière décade)
+        description: Écart entre la verdeur de la végétation (NDVI, eMODIS /
+          eVIIRS, 250 m) sur la dernière période de 10 jours (décade) et la
+          moyenne pour cette décade, zone Amérique centrale et Caraïbes. En
+          brun moins de végétation que la normale, sécheresse, cultures ou
+          pâturages en échec, en vert davantage. La vue de référence de FEWS
+          NET sur le déroulement de la saison de culture. Image colorée et non
+          des valeurs.
+  - id: global-fews-ndvi-anomaly-southamerica
+    name: FEWS NET - Vegetation NDVI Anomaly, South America (Latest Dekad)
+    description: Difference between the vegetation greenness (NDVI, eMODIS /
+      eVIIRS, 250 m) of the latest 10-day period (dekad) and the average for
+      that dekad, over South America. Brown is less vegetation than normal -
+      drought, failed crops or pasture - green is more. The standard FEWS NET
+      view of how the growing season is going. Colour image, not values.
+    category: landuse
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_evmod-eviirs-ndvi_southamerica_dekad_anom:evmod-eviirs-ndvi_southamerica_dekad_anom&STYLES=fews_ndvi_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [-83, -57.99, -33.01, 14]
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - dekad
+      - decade
+      - south america
+      - amerique du sud
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de végétation NDVI, Amérique du Sud (dernière décade)
+        description: Écart entre la verdeur de la végétation (NDVI, eMODIS /
+          eVIIRS, 250 m) sur la dernière période de 10 jours (décade) et la
+          moyenne pour cette décade, zone Amérique du Sud. En brun moins de
+          végétation que la normale, sécheresse, cultures ou pâturages en
+          échec, en vert davantage. La vue de référence de FEWS NET sur le
+          déroulement de la saison de culture. Image colorée et non des
+          valeurs.
+  - id: global-fews-ndvi-anomaly-centralindopacific
+    name: FEWS NET - Vegetation NDVI Anomaly, South-East Asia and Pacific (Latest Dekad)
+    description: Difference between the vegetation greenness (NDVI, eMODIS /
+      eVIIRS, 250 m) of the latest 10-day period (dekad) and the average for
+      that dekad, over South-East Asia and Pacific. Brown is less vegetation
+      than normal - drought, failed crops or pasture - green is more. The
+      standard FEWS NET view of how the growing season is going. Colour image,
+      not values.
+    category: landuse
+    url: https://dmsdata.cr.usgs.gov/geoserver/wms?SERVICE=WMS&VERSION=1.3.0&LAYERS=fews_evmod-eviirs-ndvi_centralindopacific_dekad_anom:evmod-eviirs-ndvi_centralindopacific_dekad_anom&STYLES=fews_ndvi_anom_raster_ngviewer&FORMAT=image/png
+    bbox: [94, -49.99, 179.98, 8]
+    data_date: every 10 days, latest dekad shown
+    tags:
+      - ndvi
+      - vegetation
+      - vegetation index
+      - indice de vegetation
+      - crop
+      - cultures
+      - pasture
+      - paturage
+      - dekad
+      - decade
+      - south-east asia
+      - asie du sud-est
+      - pacific
+      - pacifique
+      - oceania
+      - oceanie
+    i18n:
+      fr:
+        name: FEWS NET - Anomalie de végétation NDVI, Asie du Sud-Est et Pacifique (dernière décade)
+        description: Écart entre la verdeur de la végétation (NDVI, eMODIS /
+          eVIIRS, 250 m) sur la dernière période de 10 jours (décade) et la
+          moyenne pour cette décade, zone Asie du Sud-Est et Pacifique. En
+          brun moins de végétation que la normale, sécheresse, cultures ou
+          pâturages en échec, en vert davantage. La vue de référence de FEWS
+          NET sur le déroulement de la saison de culture. Image colorée et non
+          des valeurs.

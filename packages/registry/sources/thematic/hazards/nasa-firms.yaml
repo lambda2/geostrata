@@ -1,0 +1,127 @@
+defaults:
+  category: hazard
+  type: archive
+  license: CC0-1.0 (NASA open data policy, no restriction; citation requested)
+  attribution: NASA FIRMS (LANCE / EOSDIS)
+  tags:
+    - nasa
+    - firms
+    - fire
+    - feu
+    - incendie
+    - wildfire
+    - feu de foret
+    - hotspot
+    - point chaud
+    - active fire
+    - feux actifs
+    - thermal anomaly
+    - live
+    - temps reel
+sources:
+  - id: global-firms-viirs-noaa20-24h
+    name: NASA FIRMS - Active Fires VIIRS NOAA-20, Last 24 Hours
+    description: Fire and thermal anomaly detections from the VIIRS sensor on
+      NOAA-20 over the last 24 hours, as points at the centre of a 375 m pixel,
+      with brightness temperature, fire radiative power, confidence and
+      acquisition time (UTC). Near real time, about 3 hours behind the
+      overpass. A point is a hot pixel, not a burnt area; gas flares and
+      volcanoes are detected too.
+    url: https://firms.modaps.eosdis.nasa.gov/data/active_fire/noaa-20-viirs-c2/shapes/zips/J1_VIIRS_C2_Global_24h.zip
+    archive_target: J1_VIIRS_C2_Global_24h.shp
+    priority: 2
+    data_date: rolling 24 hours, refreshed several times a day
+    tags:
+      - viirs
+      - noaa-20
+    i18n:
+      fr:
+        name: NASA FIRMS - Feux actifs VIIRS NOAA-20, 24 dernières heures
+        description: Détections de feux et d'anomalies thermiques par le capteur
+          VIIRS de NOAA-20 sur les 24 dernières heures, en points au centre d'un
+          pixel de 375 m, avec température de brillance, puissance radiative,
+          niveau de confiance et heure d'acquisition (UTC). Temps quasi réel,
+          environ 3 heures après le passage du satellite. Un point est un pixel
+          chaud et non une surface brûlée, les torchères et les volcans sont
+          aussi détectés.
+  - id: global-firms-viirs-noaa21-24h
+    name: NASA FIRMS - Active Fires VIIRS NOAA-21, Last 24 Hours
+    description: Fire and thermal anomaly detections from the VIIRS sensor on
+      NOAA-21 over the last 24 hours, as points at the centre of a 375 m pixel,
+      with fire radiative power, confidence and acquisition time (UTC).
+      Complements NOAA-20, which passes about 50 minutes apart.
+    url: https://firms.modaps.eosdis.nasa.gov/data/active_fire/noaa-21-viirs-c2/shapes/zips/J2_VIIRS_C2_Global_24h.zip
+    archive_target: J2_VIIRS_C2_Global_24h.shp
+    data_date: rolling 24 hours, refreshed several times a day
+    tags:
+      - viirs
+      - noaa-21
+    i18n:
+      fr:
+        name: NASA FIRMS - Feux actifs VIIRS NOAA-21, 24 dernières heures
+        description: Détections de feux et d'anomalies thermiques par le capteur
+          VIIRS de NOAA-21 sur les 24 dernières heures, en points au centre d'un
+          pixel de 375 m, avec puissance radiative, niveau de confiance et heure
+          d'acquisition (UTC). Complète NOAA-20, qui passe à environ 50 minutes
+          d'écart.
+  - id: global-firms-modis-24h
+    name: NASA FIRMS - Active Fires MODIS, Last 24 Hours
+    description: Fire and thermal anomaly detections from MODIS on Terra and
+      Aqua over the last 24 hours, as points at the centre of a 1 km pixel, with
+      brightness, fire radiative power, confidence (0-100) and acquisition time
+      (UTC). Coarser than VIIRS but consistent with the archive back to 2000.
+    url: https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/shapes/zips/MODIS_C6_1_Global_24h.zip
+    archive_target: MODIS_C6_1_Global_24h.shp
+    data_date: rolling 24 hours, refreshed several times a day
+    tags:
+      - modis
+      - terra
+      - aqua
+    i18n:
+      fr:
+        name: NASA FIRMS - Feux actifs MODIS, 24 dernières heures
+        description: Détections de feux et d'anomalies thermiques par MODIS
+          (Terra et Aqua) sur les 24 dernières heures, en points au centre d'un
+          pixel de 1 km, avec brillance, puissance radiative, confiance (0-100)
+          et heure d'acquisition (UTC). Moins fin que VIIRS mais cohérent avec
+          l'archive depuis 2000.
+  - id: global-firms-viirs-noaa20-7d
+    name: NASA FIRMS - Active Fires VIIRS NOAA-20, Last 7 Days
+    description: Fire and thermal anomaly detections from VIIRS on NOAA-20 over
+      the last 7 days, as points at the centre of a 375 m pixel. Several hundred
+      thousand points in a 15 MB archive, so filter on ACQ_DATE or zoom to your
+      area before styling.
+    url: https://firms.modaps.eosdis.nasa.gov/data/active_fire/noaa-20-viirs-c2/shapes/zips/J1_VIIRS_C2_Global_7d.zip
+    archive_target: J1_VIIRS_C2_Global_7d.shp
+    data_date: rolling 7 days, refreshed several times a day
+    tags:
+      - viirs
+      - noaa-20
+    i18n:
+      fr:
+        name: NASA FIRMS - Feux actifs VIIRS NOAA-20, 7 derniers jours
+        description: Détections de feux et d'anomalies thermiques par VIIRS
+          (NOAA-20) sur les 7 derniers jours, en points au centre d'un pixel de
+          375 m. Plusieurs centaines de milliers de points dans une archive de
+          15 Mo, filtrer sur ACQ_DATE ou zoomer sur la zone d'intérêt avant de
+          styliser.
+  - id: global-firms-modis-7d
+    name: NASA FIRMS - Active Fires MODIS, Last 7 Days
+    description: Fire and thermal anomaly detections from MODIS on Terra and
+      Aqua over the last 7 days, as points at the centre of a 1 km pixel, with
+      fire radiative power, confidence and acquisition date. Lighter than the
+      VIIRS 7-day file (about 3 MB).
+    url: https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/shapes/zips/MODIS_C6_1_Global_7d.zip
+    archive_target: MODIS_C6_1_Global_7d.shp
+    data_date: rolling 7 days, refreshed several times a day
+    tags:
+      - modis
+      - terra
+      - aqua
+    i18n:
+      fr:
+        name: NASA FIRMS - Feux actifs MODIS, 7 derniers jours
+        description: Détections de feux et d'anomalies thermiques par MODIS
+          (Terra et Aqua) sur les 7 derniers jours, en points au centre d'un
+          pixel de 1 km, avec puissance radiative, confiance et date
+          d'acquisition. Plus léger que le fichier VIIRS 7 jours (environ 3 Mo).

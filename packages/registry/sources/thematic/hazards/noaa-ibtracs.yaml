@@ -1,0 +1,57 @@
+defaults:
+  category: hazard
+  type: archive
+  license: Open access (NOAA NCEI, World Data Center for Meteorology policy);
+    commercial use follows WMO Resolution 40; citation requested
+  attribution: NOAA's International Best Track Archive for Climate Stewardship (IBTrACS)
+  tags:
+    - noaa
+    - ncei
+    - ibtracs
+    - cyclone
+    - hurricane
+    - ouragan
+    - typhoon
+    - typhon
+    - tropical storm
+    - tempete tropicale
+    - track
+    - trajectoire
+sources:
+  - id: global-ibtracs-active-tracks
+    name: NOAA IBTrACS - Tropical Cyclone Tracks, Active Storms
+    description: Track segments of tropical cyclones currently or recently
+      active in all basins, with name, time, wind speed and pressure from each
+      reporting agency. Observed positions only, no forecast; provisional
+      values, a few hours to a day behind the agencies' advisories.
+    url: https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/shapefile/IBTrACS.ACTIVE.list.v04r01.lines.zip
+    archive_target: IBTrACS.ACTIVE.list.v04r01.lines.shp
+    data_date: updated several times a week
+    tags:
+      - live
+      - active
+    i18n:
+      fr:
+        name: NOAA IBTrACS - Trajectoires de cyclones tropicaux, tempêtes actives
+        description: Segments de trajectoire des cyclones tropicaux actifs ou
+          récemment actifs dans tous les bassins, avec nom, date, vitesse du vent
+          et pression selon chaque agence. Positions observées uniquement, sans
+          prévision, valeurs provisoires, en retard de quelques heures à un jour
+          sur les bulletins des agences.
+  - id: global-ibtracs-last3years-tracks
+    name: NOAA IBTrACS - Tropical Cyclone Tracks, Last 3 Years
+    description: Track segments of every tropical cyclone of the last three
+      years in all basins, with name, time, wind speed, pressure and
+      Saffir-Simpson category. Useful to show recent storm history over an
+      area. Recent storms carry provisional values.
+    url: https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/shapefile/IBTrACS.last3years.list.v04r01.lines.zip
+    archive_target: IBTrACS.last3years.list.v04r01.lines.shp
+    data_date: last 3 years, updated several times a week
+    i18n:
+      fr:
+        name: NOAA IBTrACS - Trajectoires de cyclones tropicaux, 3 dernières années
+        description: Segments de trajectoire de tous les cyclones tropicaux des
+          trois dernières années dans tous les bassins, avec nom, date, vitesse
+          du vent, pression et catégorie Saffir-Simpson. Utile pour montrer
+          l'historique récent des tempêtes sur une zone. Les tempêtes récentes
+          portent des valeurs provisoires.

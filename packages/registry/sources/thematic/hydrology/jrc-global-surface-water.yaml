@@ -1,0 +1,151 @@
+# JRC Global Surface Water (Pekel et al. 2016), pre-rendered tiles of the 1984-2021 release.
+# Standard XYZ row order (checked against OpenStreetMap tile 5/8/11, Great Lakes). No tiles at z0.
+defaults:
+  type: xyz
+  category: hydrography
+  crs: EPSG:3857
+  bbox: [-180, -60, 180, 80]
+  min_zoom: 1
+  max_zoom: 13
+  license: Copernicus Programme data, free of charge and without restriction of use; acknowledgement and citation required
+  attribution: "Source: EC JRC/Google (Pekel et al. 2016, Nature)"
+  data_date: 1984-2021
+  tags:
+    - jrc
+    - gsw
+    - global surface water
+    - surface water
+    - eau de surface
+    - water
+    - eau
+    - landsat
+    - copernicus
+    - flood
+    - inondation
+    - lake
+    - lac
+    - river
+    - riviere
+    - wetland
+    - zone humide
+sources:
+  - id: global-jrc-gsw-occurrence
+    name: JRC Global Surface Water - Occurrence 1984-2021 (30 m)
+    description: >-
+      Share of the 1984-2021 period during which each 30 m Landsat
+      pixel was water, from pale (rarely water) to deep blue (always water).
+      Separates permanent water bodies from land that floods only
+      occasionally; a quick reference for what is normally wet before reading
+      a flood map. Land that was never seen as water is transparent.
+    url: https://storage.googleapis.com/global-surface-water/tiles2021/occurrence/{z}/{x}/{y}.png
+    priority: 2
+    tags:
+      - occurrence
+      - permanent water
+      - eau permanente
+      - frequence
+    i18n:
+      fr:
+        name: JRC Global Surface Water - Occurrence de l'eau 1984-2021 (30 m)
+        description: >-
+          Part de la période 1984-2021 pendant laquelle chaque pixel
+          Landsat de 30 m était en eau, du bleu pâle (rarement en eau) au bleu
+          foncé (toujours en eau). Distingue les plans d'eau permanents des
+          terres inondées occasionnellement ; référence rapide de ce qui est
+          normalement en eau avant de lire une carte d'inondation. Les terres
+          jamais vues en eau sont transparentes.
+  - id: global-jrc-gsw-seasonality
+    name: JRC Global Surface Water - Seasonality 2021 (30 m)
+    description: >-
+      Number of months water was present in 2021 for each 30 m
+      pixel, separating permanent water (12 months) from seasonal water (fewer
+      months). Useful to anticipate seasonal lakes, floodplains and river
+      crossings that are dry part of the year.
+    url: https://storage.googleapis.com/global-surface-water/tiles2021/seasonality/{z}/{x}/{y}.png
+    data_date: "2021"
+    tags:
+      - seasonality
+      - saisonnalite
+      - seasonal water
+      - eau saisonniere
+    i18n:
+      fr:
+        name: JRC Global Surface Water - Saisonnalité 2021 (30 m)
+        description: >-
+          Nombre de mois de présence d'eau en 2021 pour chaque pixel
+          de 30 m, distinguant l'eau permanente (12 mois) de l'eau saisonnière
+          (moins de mois). Utile pour anticiper lacs saisonniers, plaines
+          inondables et franchissements de cours d'eau à sec une partie de
+          l'année.
+  - id: global-jrc-gsw-recurrence
+    name: JRC Global Surface Water - Recurrence 1984-2021 (30 m)
+    description: >-
+      How often water comes back from one year to the next, as the
+      percentage of years in which a 30 m pixel was flooded during its wet
+      season. High values mark land that floods almost every year, low values
+      exceptional flooding.
+    url: https://storage.googleapis.com/global-surface-water/tiles2021/recurrence/{z}/{x}/{y}.png
+    tags:
+      - recurrence
+      - return
+      - frequence annuelle
+      - floodplain
+      - plaine inondable
+    i18n:
+      fr:
+        name: JRC Global Surface Water - Récurrence 1984-2021 (30 m)
+        description: >-
+          Fréquence de retour de l'eau d'une année sur l'autre, en
+          pourcentage des années où un pixel de 30 m a été inondé pendant sa
+          saison humide. Les valeurs élevées signalent les terres inondées
+          presque chaque année, les valeurs faibles les inondations
+          exceptionnelles.
+  - id: global-jrc-gsw-change
+    name: JRC Global Surface Water - Occurrence Change Intensity (30 m)
+    description: >-
+      Change in water occurrence between 1984-1999 and 2000-2021
+      for each 30 m pixel. Red marks places where water became less frequent
+      (drying lakes, diverted rivers), green places where it became more
+      frequent (new reservoirs, expanding lakes), black no change.
+    url: https://storage.googleapis.com/global-surface-water/tiles2021/change/{z}/{x}/{y}.png
+    tags:
+      - change
+      - changement
+      - drying
+      - assechement
+      - reservoir
+    i18n:
+      fr:
+        name: JRC Global Surface Water - Intensité du changement d'occurrence (30 m)
+        description: >-
+          Évolution de l'occurrence de l'eau entre 1984-1999 et
+          2000-2021 pour chaque pixel de 30 m. Le rouge indique les lieux où
+          l'eau est devenue moins fréquente (lacs en assèchement, rivières
+          détournées), le vert ceux où elle est devenue plus fréquente
+          (nouveaux réservoirs, lacs en extension), le noir l'absence de
+          changement.
+  - id: global-jrc-gsw-transitions
+    name: JRC Global Surface Water - Transitions 1984-2021 (30 m)
+    description: >-
+      Change of water class between the first and the last year of
+      the 1984-2021 record for each 30 m pixel, in ten classes such as
+      permanent, new permanent, lost permanent, seasonal, new seasonal and
+      lost seasonal water. Shows at a glance where reservoirs appeared and
+      where water bodies vanished.
+    url: https://storage.googleapis.com/global-surface-water/tiles2021/transitions/{z}/{x}/{y}.png
+    tags:
+      - transitions
+      - new water
+      - lost water
+      - reservoir
+      - barrage
+    i18n:
+      fr:
+        name: JRC Global Surface Water - Transitions 1984-2021 (30 m)
+        description: >-
+          Changement de classe d'eau entre la première et la
+          dernière année de la série 1984-2021 pour chaque pixel de 30 m, en
+          dix classes dont eau permanente, nouvelle eau permanente, eau
+          permanente perdue, eau saisonnière, nouvelle eau saisonnière et eau
+          saisonnière perdue. Montre d'un coup d'œil où des retenues sont
+          apparues et où des plans d'eau ont disparu.

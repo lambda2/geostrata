@@ -1,0 +1,60 @@
+defaults:
+  category: hazard
+  type: geojson
+  license: Public domain (U.S. Government work)
+  attribution: U.S. Geological Survey, Earthquake Hazards Program
+  tags:
+    - usgs
+    - earthquake
+    - seisme
+    - tremblement de terre
+    - seismic
+    - sismique
+    - magnitude
+    - epicenter
+    - epicentre
+    - live
+    - temps reel
+sources:
+  - id: global-usgs-earthquakes-significant-month
+    name: USGS - Significant Earthquakes, Past 30 Days
+    description: Earthquakes flagged as significant by USGS over the past 30
+      days (combination of magnitude, felt reports and PAGER impact estimate).
+      Usually a few points to a few dozen, and the layer can be empty in a quiet
+      month.
+    url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson
+    data_date: live feed, updated every minute
+    i18n:
+      fr:
+        name: USGS - Séismes significatifs, 30 derniers jours
+        description: Séismes classés significatifs par l'USGS sur les 30 derniers
+          jours (combinaison de la magnitude, des témoignages et de l'estimation
+          d'impact PAGER). En général de quelques points à quelques dizaines, la
+          couche peut être vide lors d'un mois calme.
+  - id: global-usgs-earthquakes-m45-week
+    name: USGS - Earthquakes M4.5+, Past 7 Days
+    description: Every earthquake of magnitude 4.5 or more recorded worldwide over
+      the past 7 days, with magnitude, depth, time and PAGER alert level.
+      Typically 100 to 200 points.
+    url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson
+    data_date: live feed, updated every minute
+    priority: 2
+    i18n:
+      fr:
+        name: USGS - Séismes M4,5+, 7 derniers jours
+        description: Tous les séismes de magnitude 4,5 ou plus enregistrés dans le
+          monde sur les 7 derniers jours, avec magnitude, profondeur, heure et
+          niveau d'alerte PAGER. En général 100 à 200 points.
+  - id: global-usgs-earthquakes-m25-week
+    name: USGS - Earthquakes M2.5+, Past 7 Days
+    description: Every earthquake of magnitude 2.5 or more recorded over the past 7
+      days. Denser than the M4.5+ layer and useful for aftershock sequences;
+      small events are only well covered in the United States.
+    url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson
+    data_date: live feed, updated every minute
+    i18n:
+      fr:
+        name: USGS - Séismes M2,5+, 7 derniers jours
+        description: Tous les séismes de magnitude 2,5 ou plus enregistrés sur les 7
+          derniers jours. Plus dense que la couche M4,5+ et utile pour suivre les
+          répliques ; les petits séismes ne sont bien couverts qu'aux États-Unis.

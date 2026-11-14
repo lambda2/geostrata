@@ -11,7 +11,10 @@ Thank you for contributing to **Geostrata**! This project is designed so that ad
 All data sources live under `packages/registry/sources/`:
 - `sources/global/`: Datasets covering the entire world (OSM, global DEMs, Overpass recipes).
 - `sources/countries/<iso-2-code>/`: National or regional datasets organized by lowercase ISO-3166-1 alpha-2 country code (e.g., `fr/`, `ch/`, `be/`).
-- `sources/thematic/`: Multi-country thematic or humanitarian datasets (HDX, FieldMaps, OSM Editor Layer Index).
+- `sources/thematic/<theme>/<provider>.yaml`: Multi-country thematic or humanitarian datasets, one file per provider (hazards, population, health, hydrology...).
+- `sources/_generated/`: Written by `npm run ingest` (OSM Editor Layer Index, geoBoundaries), ignored by git. Never edit by hand.
+
+Shared fields go in a `defaults:` block at the top of a file, and a layer published country by country is written once with `for_each_country`: see [Adding a Data Source](docs/adding-a-source.md).
 
 ### Example YAML Entry
 
@@ -55,6 +58,27 @@ For full field documentation, `/vsicurl/` streaming prefixes, and Overpass recip
    ```
 
 The compiler validates every YAML file, computes bounding-box area in square degrees (`area_deg2`), embeds the corresponding `.qml` style, enriches tags with the multilingual synonym dictionary (`assets/i18n/synonyms.json`), and emits `dist/catalog.sqlite`.
+
+### Live layer test (real QGIS, real network)
+
+`npm run build` only proves the YAML is well formed. `packages/qgis-plugin/tests/test_live_layers.py` loads the layers in a headless QGIS exactly as the plugin does and reads real data from each (one tile, one feature or one raster block). Run it with the Python bundled with QGIS, after `npm run build`:
+
+```bash
+# macOS; on Linux use `python3` where `import qgis` works
+QGIS_PY=/Applications/QGIS.app/Contents/MacOS/python
+T=packages/qgis-plugin/tests/test_live_layers.py
+
+QT_QPA_PLATFORM=offscreen $QGIS_PY $T --changed origin/main --smoke   # what CI runs on a pull request
+QT_QPA_PLATFORM=offscreen $QGIS_PY $T --id 'fr-ign-*'                 # by id (glob)
+QT_QPA_PLATFORM=offscreen $QGIS_PY $T --type wmts,wfs                 # by source type
+QT_QPA_PLATFORM=offscreen $QGIS_PY $T --all --sample-families 20      # everything, generated families sampled
+packages/qgis-plugin/tests/run_live_in_docker.sh 3.44-noble --smoke   # same QGIS image as CI
+```
+
+- **broken** (404, layer invalid on a reachable server, wrong content, no data) fails the run; **unreachable** (timeout, 5xx, 403/429) is only reported.
+- `--json out.json --markdown out.md` write the reports; `--help` lists every option.
+- A layer that cannot be fixed goes in `packages/qgis-plugin/tests/live_layers_allowlist.txt` with a reason.
+- CI runs this on every pull request (changed entries + two entries per source type) and on the whole catalog every Monday; broken layers end up in the `catalog-health` issue.
 
 ---
 

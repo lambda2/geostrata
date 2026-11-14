@@ -1,0 +1,49 @@
+defaults:
+  category: hazard
+  type: geojson
+  license: ODC-By-1.0 (Open Data Commons Attribution License)
+  attribution: Peter Bird (2003), An updated digital model of plate boundaries; GIS conversion by Hugo Ahlenius, Nordpil
+  tags:
+    - tectonic
+    - tectonique
+    - plate
+    - plaque
+    - plate boundary
+    - limite de plaque
+    - fault
+    - faille
+    - geology
+    - geologie
+    - seismic
+    - sismique
+sources:
+  - id: global-tectonic-plates-pb2002-boundaries
+    name: Tectonic Plate Boundaries (Bird 2003, PB2002)
+    description: Boundaries of the 52 tectonic plates of Peter Bird's PB2002
+      model as lines, each named after the two plates it separates. Global
+      scale reference (digitised at roughly 1:10 million and coarser), meant as
+      context for earthquake and volcano maps, not for locating a fault on the
+      ground.
+    url: https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
+    data_date: "2003"
+    i18n:
+      fr:
+        name: Limites des plaques tectoniques (Bird 2003, PB2002)
+        description: Limites des 52 plaques tectoniques du modèle PB2002 de Peter
+          Bird, sous forme de lignes nommées d'après les deux plaques qu'elles
+          séparent. Référence à l'échelle mondiale (numérisée à environ
+          1:10 000 000 ou moins précis), destinée au contexte des cartes de
+          séismes et de volcans et non à la localisation d'une faille sur le
+          terrain.
+  - id: global-tectonic-plates-pb2002-plates
+    name: Tectonic Plates (Bird 2003, PB2002)
+    description: The 52 tectonic plates of Peter Bird's PB2002 model as named
+      polygons. Global scale reference only.
+    url: https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json
+    data_date: "2003"
+    i18n:
+      fr:
+        name: Plaques tectoniques (Bird 2003, PB2002)
+        description: Les 52 plaques tectoniques du modèle PB2002 de Peter Bird,
+          sous forme de polygones nommés. Référence à l'échelle mondiale
+          uniquement.

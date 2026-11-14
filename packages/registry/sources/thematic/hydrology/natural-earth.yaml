@@ -1,0 +1,40 @@
+defaults:
+  type: archive
+  category: hydrography
+  crs: EPSG:4326
+  bbox: [-180, -90, 180, 90]
+  license: Public domain
+  attribution: Made with Natural Earth
+  tags:
+    - natural earth
+    - naturalearth
+    - small scale
+    - petite echelle
+sources:
+  - id: global-naturalearth-rivers
+    name: Natural Earth - Rivers and Lake Centerlines (1:10m)
+    description: >-
+      Major rivers of the world and centerlines through lakes at
+      1:10 million scale, as named lines with a scale rank for filtering.
+      Small file (about 2 MB) that loads in seconds; meant for country to
+      continent overview maps, too generalised below roughly 1:1 million.
+    url: https://naciscdn.org/naturalearth/10m/physical/ne_10m_rivers_lake_centerlines.zip
+    archive_target: ne_10m_rivers_lake_centerlines.shp
+    data_date: Natural Earth 5.x
+    tags:
+      - rivers
+      - river
+      - fleuves
+      - rivieres
+      - cours d'eau
+      - hydrographie
+      - hydrography
+    i18n:
+      fr:
+        name: Natural Earth - Fleuves et axes des lacs (1:10m)
+        description: >-
+          Principaux fleuves et rivières du monde et lignes d'axe à
+          travers les lacs à l'échelle 1:10 millions, en lignes nommées avec un
+          rang d'échelle pour filtrer. Petit fichier (environ 2 Mo) chargé en
+          quelques secondes ; destiné aux cartes d'ensemble du pays au
+          continent, trop généralisé en dessous d'environ 1:1 million.

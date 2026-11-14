@@ -1,0 +1,180 @@
+# Logistics Cluster (WFP) - public read-only views of the LogIE platform (Logistics Information
+# Exchange), https://gis.logcluster.org/server/rest/services. Layers and counts read on 2026-11-14.
+# Only the views exposing "Query" alone are listed (suffixes _viewer, _view, _showpublic).
+# Left out on purpose: the storage location (warehouse) and railway station services, which are
+# only published as editable services (Create/Update/Delete open to anyone), the global supply
+# routes layer (2 features) and gis.wfp.org, which no longer resolves.
+# No licence is stated on the services: the wording below says so.
+defaults:
+  type: arcgisfeatureserver
+  category: transport
+  license: No licence is stated on the service. Logistics Cluster / WFP
+    operational data shared publicly through the LogIE platform - credit the
+    Logistics Cluster and ask it before redistributing (logcluster.org)
+  attribution: © Logistics Cluster / World Food Programme (WFP), LogIE
+  data_date: updated continuously by Logistics Cluster and WFP field teams
+  tags:
+    - logistics cluster
+    - cluster logistique
+    - logcluster
+    - logie
+    - wfp
+    - pam
+    - logistics
+    - logistique
+sources:
+  - id: global-logcluster-aerodromes
+    name: Logistics Cluster - Aerodromes and Airstrips (World)
+    description: About 58,600 aerodromes worldwide from the Logistics Cluster
+      and WFP Aviation database - international airports, airfields, airstrips
+      and helipads - with name, ICAO and IATA codes when they exist, country,
+      aerodrome type, status and data reliability. Much denser than
+      OpenStreetMap for bush airstrips used by humanitarian flights. The
+      server returns 2,000 features per request, fetched for the visible
+      extent.
+    url: https://gis.logcluster.org/server/rest/services/LogIE/wld_trs_aerodromes_b_w_viewer/FeatureServer/0
+    style_file: transport-point.qml
+    priority: 2
+    tags:
+      - airports
+      - aerodromes
+      - airstrips
+      - airfields
+      - helipads
+      - unhas
+      - aviation
+      - aeroports
+      - aerodromes
+      - pistes d atterrissage
+      - helisurfaces
+    i18n:
+      fr:
+        name: Cluster Logistique - Aérodromes et pistes d'atterrissage (monde)
+        description: Environ 58 600 aérodromes dans le monde issus de la base du
+          Cluster Logistique et de l'aviation du PAM - aéroports internationaux,
+          aérodromes, pistes et hélisurfaces - avec nom, codes OACI et IATA
+          lorsqu'ils existent, pays, type, état et fiabilité de la donnée. Bien
+          plus dense qu'OpenStreetMap pour les pistes de brousse utilisées par
+          les vols humanitaires. Le serveur renvoie 2 000 entités par requête,
+          chargées pour l'emprise visible.
+  - id: global-logcluster-airports
+    name: Logistics Cluster - Main Airports (World)
+    description: The subset of about 860 aerodromes that the Logistics Cluster
+      publishes as key airports for humanitarian operations, with name, ICAO
+      and IATA codes, country, type and status. Light layer for overview maps;
+      use the aerodromes layer for every airstrip.
+    url: https://gis.logcluster.org/server/rest/services/LogIE/wld_trs_airports_b_w_showpublic/FeatureServer/0
+    style_file: transport-point.qml
+    tags:
+      - airports
+      - aviation
+      - aeroports
+    i18n:
+      fr:
+        name: Cluster Logistique - Principaux aéroports (monde)
+        description: Sous-ensemble d'environ 860 aérodromes que le Cluster
+          Logistique publie comme aéroports clés pour les opérations
+          humanitaires, avec nom, codes OACI et IATA, pays, type et état. Couche
+          légère pour les cartes d'ensemble ; utiliser la couche des aérodromes
+          pour toutes les pistes.
+  - id: global-logcluster-ports
+    name: Logistics Cluster - Sea and River Ports (World)
+    description: About 1,300 sea and river ports from the Logistics Cluster
+      and WFP Shipping database, with port name, UN/LOCODE, country, port type
+      and status. Covers the ports of entry used for humanitarian cargo,
+      including river ports in Africa that global port lists miss.
+    url: https://gis.logcluster.org/server/rest/services/LogIE/wld_trs_ports_b_w_viewer/FeatureServer/0
+    style_file: transport-point.qml
+    priority: 2
+    tags:
+      - ports
+      - sea ports
+      - river ports
+      - shipping
+      - ports maritimes
+      - ports fluviaux
+      - transport maritime
+    i18n:
+      fr:
+        name: Cluster Logistique - Ports maritimes et fluviaux (monde)
+        description: Environ 1 300 ports maritimes et fluviaux issus de la base
+          du Cluster Logistique et du service maritime du PAM, avec nom, code
+          UN/LOCODE, pays, type et état. Couvre les ports d'entrée du fret
+          humanitaire, y compris des ports fluviaux d'Afrique absents des listes
+          mondiales.
+  - id: global-logcluster-bridges
+    name: Logistics Cluster - Assessed Bridges and Crossings (World)
+    description: About 140 bridges and river crossings assessed by the
+      Logistics Cluster in its countries of operation, with status (open,
+      restricted, closed, destroyed), remarks and date of the information.
+      Sparse - only structures reported by field teams.
+    url: https://gis.logcluster.org/server/rest/services/LogIE/wld_trs_bridges_b_w_viewer/FeatureServer/0
+    style_file: transport-point.qml
+    tags:
+      - bridges
+      - river crossing
+      - access constraints
+      - ponts
+      - franchissements
+      - contraintes d acces
+    i18n:
+      fr:
+        name: Cluster Logistique - Ponts et franchissements évalués (monde)
+        description: Environ 140 ponts et franchissements évalués par le Cluster
+          Logistique dans ses pays d'opération, avec état (ouvert, restreint,
+          fermé, détruit), remarques et date de l'information. Couche clairsemée
+          - seuls les ouvrages signalés par les équipes de terrain y figurent.
+  - id: "{iso2}-logcluster-roads"
+    for_each_country: [AFG, BFA, CAF, COL, MOZ, MWI, SDN, SOM, TJK, ZWE]
+    name: "Logistics Cluster - Road Network and Access - {country}"
+    description: "Road network of {country} maintained by the Logistics Cluster and WFP for humanitarian transport planning: lines with road name and number, national class, surface type, width, lanes, seasonal recommendations, vehicle types that can pass, weight and size limits where assessed. Built on OpenStreetMap geometry and enriched by field teams, so attributes are filled unevenly. The server returns 2,000 features per request, fetched for the visible extent."
+    url: https://gis.logcluster.org/server/rest/services/Roads/{iso3}_trs_roads_s_w_b_view/FeatureServer/0
+    style_file: transport.qml
+    priority: 2
+    tags:
+      - roads
+      - road network
+      - road access
+      - physical access
+      - trucks
+      - routes
+      - reseau routier
+      - acces routier
+      - praticabilite
+      - camions
+      - "{country}"
+      - "{country_fr}"
+    i18n:
+      fr:
+        name: "Cluster Logistique - Réseau routier et accès - {country_fr}"
+        description: "Réseau routier du pays ({country_fr}) tenu à jour par le Cluster Logistique et le PAM pour planifier le transport humanitaire : lignes avec nom et numéro de route, classe nationale, revêtement, largeur, voies, recommandations saisonnières, types de véhicules pouvant passer, limites de poids et de gabarit lorsqu'elles ont été évaluées. Construit sur la géométrie OpenStreetMap et enrichi par les équipes de terrain, les attributs sont donc renseignés de façon inégale. Le serveur renvoie 2 000 entités par requête, chargées pour l'emprise visible."
+  - id: mg-logcluster-roads
+    name: Logistics Cluster - Road Network and Access - Madagascar
+    description: Road network of Madagascar maintained by the Logistics
+      Cluster with the national disaster management office (BNGRC) - about
+      212,000 lines with road name and number, national class, surface type,
+      seasonal recommendations and practicability. The server returns 2,000
+      features per request, so zoom to a region before loading.
+    country_iso: MG
+    url: https://gis.logcluster.org/server/rest/services/Roads/mdg_trs_roads_s_w_bngrc_view/FeatureServer/0
+    style_file: transport.qml
+    priority: 2
+    tags:
+      - roads
+      - road network
+      - road access
+      - bngrc
+      - routes
+      - reseau routier
+      - acces routier
+      - praticabilite
+      - madagascar
+    i18n:
+      fr:
+        name: Cluster Logistique - Réseau routier et accès - Madagascar
+        description: Réseau routier de Madagascar tenu à jour par le Cluster
+          Logistique avec le Bureau national de gestion des risques et des
+          catastrophes (BNGRC) - environ 212 000 lignes avec nom et numéro de
+          route, classe nationale, revêtement, recommandations saisonnières et
+          praticabilité. Le serveur renvoie 2 000 entités par requête, zoomer
+          sur une région avant de charger.

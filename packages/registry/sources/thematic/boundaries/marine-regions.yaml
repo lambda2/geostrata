@@ -1,0 +1,179 @@
+# Marine Regions (Flanders Marine Institute, VLIZ) GeoServer WFS. Layer names are passed as TYPENAMES.
+defaults:
+  type: wfs
+  category: admin
+  crs: EPSG:4326
+  bbox: [-180, -90, 180, 90]
+  license: CC-BY-4.0 (VLIZ asks users not to host copies for download and to cite marineregions.org; the data has no legal value)
+  tags:
+    - marine regions
+    - marineregions
+    - vliz
+    - maritime
+    - maritime boundaries
+    - frontieres maritimes
+    - sea
+    - mer
+    - ocean
+sources:
+  - id: global-marineregions-eez
+    name: Marine Regions - Exclusive Economic Zones, 200 NM (v12)
+    description: >-
+      Polygons of the exclusive economic zones of every coastal
+      state, up to 200 nautical miles from the baseline, with sovereign state,
+      territory and overlapping-claim attributes. Version 12 (2023) of the
+      VLIZ Maritime Boundaries Geodatabase. Boundaries follow treaties where
+      they exist and median lines elsewhere; they have no legal value. Large
+      detailed polygons, so the first draw at world scale is slow.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:eez
+    attribution: Flanders Marine Institute (2023). Maritime Boundaries Geodatabase - Maritime Boundaries and Exclusive Economic Zones (200NM), version 12. https://www.marineregions.org/
+    data_date: v12 (2023)
+    tags:
+      - eez
+      - zee
+      - exclusive economic zone
+      - zone economique exclusive
+      - 200 nm
+      - fisheries
+      - peche
+    i18n:
+      fr:
+        name: Marine Regions - Zones économiques exclusives, 200 milles (v12)
+        description: >-
+          Polygones des zones économiques exclusives de chaque État
+          côtier, jusqu'à 200 milles marins de la ligne de base, avec État
+          souverain, territoire et revendications qui se chevauchent en
+          attributs. Version 12 (2023) de la base Maritime Boundaries du VLIZ.
+          Les limites suivent les traités quand ils existent et des lignes
+          médianes ailleurs ; elles n'ont aucune valeur juridique. Polygones
+          volumineux et détaillés, premier affichage lent à l'échelle du monde.
+  - id: global-marineregions-territorial-seas
+    name: Marine Regions - Territorial Seas, 12 NM (v4)
+    description: >-
+      Polygons of the territorial seas, the belt of coastal waters
+      extending at most 12 nautical miles from the baseline over which a state
+      has full sovereignty. Version 4 (2023) of the VLIZ Maritime Boundaries
+      Geodatabase; indicative only, no legal value.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:eez_12nm
+    attribution: Flanders Marine Institute (2023). Maritime Boundaries Geodatabase - Territorial Seas (12NM), version 4. https://www.marineregions.org/
+    data_date: v4 (2023)
+    tags:
+      - territorial sea
+      - territorial waters
+      - mer territoriale
+      - eaux territoriales
+      - 12 nm
+    i18n:
+      fr:
+        name: Marine Regions - Mers territoriales, 12 milles (v4)
+        description: >-
+          Polygones des mers territoriales, bande d'eaux côtières
+          s'étendant au plus à 12 milles marins de la ligne de base et sur
+          laquelle l'État exerce sa pleine souveraineté. Version 4 (2023) de
+          la base Maritime Boundaries du VLIZ ; indicatif, sans valeur
+          juridique.
+  - id: global-marineregions-contiguous-zones
+    name: Marine Regions - Contiguous Zones, 24 NM (v4)
+    description: >-
+      Polygons of the contiguous zones, the band of water from the
+      outer edge of the territorial sea up to 24 nautical miles from the
+      baseline, where a state may enforce customs, immigration and sanitary
+      rules. Version 4 (2023) of the VLIZ Maritime Boundaries Geodatabase;
+      indicative only, no legal value.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:eez_24nm
+    attribution: Flanders Marine Institute (2023). Maritime Boundaries Geodatabase - Contiguous Zones (24NM), version 4. https://www.marineregions.org/
+    data_date: v4 (2023)
+    tags:
+      - contiguous zone
+      - zone contigue
+      - 24 nm
+    i18n:
+      fr:
+        name: Marine Regions - Zones contiguës, 24 milles (v4)
+        description: >-
+          Polygones des zones contiguës, bande d'eau allant de la
+          limite extérieure de la mer territoriale jusqu'à 24 milles marins de
+          la ligne de base, où l'État peut faire appliquer ses règles
+          douanières, d'immigration et sanitaires. Version 4 (2023) de la base
+          Maritime Boundaries du VLIZ ; indicatif, sans valeur juridique.
+  - id: global-marineregions-maritime-boundaries
+    name: Marine Regions - Maritime Boundary Lines (v12)
+    description: >-
+      Boundary lines between exclusive economic zones, each typed
+      as treaty line, median line, 200 NM limit, joint regime or unsettled,
+      with the source treaty where one exists. Version 12 (2023) of the VLIZ
+      Maritime Boundaries Geodatabase. Lighter to draw than the EEZ polygons;
+      indicative only, no legal value.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:eez_boundaries
+    attribution: Flanders Marine Institute (2023). Maritime Boundaries Geodatabase - Maritime Boundaries and Exclusive Economic Zones (200NM), version 12. https://www.marineregions.org/
+    data_date: v12 (2023)
+    tags:
+      - eez
+      - zee
+      - boundary lines
+      - limites maritimes
+      - treaty
+      - traite
+      - median line
+      - ligne mediane
+    i18n:
+      fr:
+        name: Marine Regions - Lignes de délimitation maritime (v12)
+        description: >-
+          Lignes de délimitation entre zones économiques exclusives,
+          chacune qualifiée de ligne conventionnelle, ligne médiane, limite
+          des 200 milles, régime conjoint ou non réglée, avec le traité source
+          lorsqu'il existe. Version 12 (2023) de la base Maritime Boundaries
+          du VLIZ. Plus légère à afficher que les polygones de ZEE ; indicatif,
+          sans valeur juridique.
+  - id: global-marineregions-high-seas
+    name: Marine Regions - High Seas (v2)
+    description: >-
+      Polygon of the high seas, the parts of the ocean outside any
+      exclusive economic zone, territorial sea or internal waters. Version 2
+      (2024) of the VLIZ Maritime Boundaries Geodatabase; indicative only, no
+      legal value.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:high_seas
+    attribution: Flanders Marine Institute (2024). Maritime Boundaries Geodatabase - High Seas, version 2. https://www.marineregions.org/
+    data_date: v2 (2024)
+    tags:
+      - high seas
+      - haute mer
+      - international waters
+      - eaux internationales
+    i18n:
+      fr:
+        name: Marine Regions - Haute mer (v2)
+        description: >-
+          Polygone de la haute mer, parties de l'océan situées hors
+          de toute zone économique exclusive, mer territoriale ou eaux
+          intérieures. Version 2 (2024) de la base Maritime Boundaries du
+          VLIZ ; indicatif, sans valeur juridique.
+  - id: global-marineregions-iho-sea-areas
+    name: Marine Regions - IHO Sea Areas (v3)
+    description: >-
+      Named polygons of the oceans and seas of the world following
+      the limits published by the International Hydrographic Organization in
+      "Limits of Oceans and Seas" (Special Publication 23, 1953). The usual
+      reference to name the sea an event takes place in.
+    url: https://geo.vliz.be/geoserver/MarineRegions/wfs?SERVICE=WFS&VERSION=2.0.0&TYPENAMES=MarineRegions:iho
+    attribution: Flanders Marine Institute (2018). IHO Sea Areas, version 3. https://www.marineregions.org/
+    data_date: v3 (2018)
+    tags:
+      - iho
+      - ohi
+      - sea areas
+      - seas
+      - oceans
+      - mers
+      - noms des mers
+      - sea names
+    i18n:
+      fr:
+        name: Marine Regions - Mers et océans de l'OHI (v3)
+        description: >-
+          Polygones nommés des océans et mers du monde selon les
+          limites publiées par l'Organisation hydrographique internationale
+          dans « Limites des océans et des mers » (publication spéciale 23,
+          1953). Référence habituelle pour nommer la mer où se produit un
+          événement.

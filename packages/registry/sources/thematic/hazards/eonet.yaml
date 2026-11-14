@@ -1,0 +1,48 @@
+# EONET - Earth Observatory Natural Event Tracker (NASA GSFC), API v3, GeoJSON output.
+# The answer is generated on request and sent without Content-Length: the plugin downloads it
+# in the background. It mixes points (7,945 on 2026-11-14) and a few storm-track lines (22):
+# `geometry_type: point` keeps the points, so the layer has one geometry type.
+- id: global-eonet-open-events
+  name: NASA EONET - Open Natural Events (Wildfires, Storms, Volcanoes, Sea Ice)
+  description: Natural events currently open in NASA's Earth Observatory
+    Natural Event Tracker - mostly wildfires, plus severe storms, volcanoes,
+    floods, sea and lake ice - one point per observation with title, category,
+    date, magnitude (acres burnt, wind speed) and a link to the source agency
+    (IRWIN, GDACS, JTWC, Smithsonian GVP...). About 8,000 points, heavily
+    weighted towards wildfires in the United States. Storm tracks drawn as
+    lines by EONET are not loaded.
+  type: geojson
+  category: hazard
+  url: https://eonet.gsfc.nasa.gov/api/v3/events/geojson?status=open
+  geometry_type: point
+  license: No licence is stated by EONET. NASA data are generally free to
+    reuse; each event comes from a source agency with its own terms (link in
+    the attributes)
+  attribution: NASA Earth Observatory Natural Event Tracker (EONET) and the
+    source agency of each event
+  data_date: live, updated several times a day
+  tags:
+    - eonet
+    - nasa
+    - natural events
+    - wildfires
+    - storms
+    - volcanoes
+    - alerts
+    - evenements naturels
+    - feux de foret
+    - incendies
+    - tempetes
+    - volcans
+    - alertes
+  i18n:
+    fr:
+      name: NASA EONET - Événements naturels en cours (feux, tempêtes, volcans, glaces)
+      description: Événements naturels actuellement ouverts dans l'Earth
+        Observatory Natural Event Tracker de la NASA - surtout des feux de
+        forêt, mais aussi tempêtes, volcans, inondations, glaces de mer et de
+        lac - un point par observation avec titre, catégorie, date, magnitude
+        (surface brûlée, vitesse du vent) et lien vers l'agence source (IRWIN,
+        GDACS, JTWC, Smithsonian GVP...). Environ 8 000 points, très
+        majoritairement des feux aux États-Unis. Les trajectoires de tempêtes
+        tracées en lignes par EONET ne sont pas chargées.

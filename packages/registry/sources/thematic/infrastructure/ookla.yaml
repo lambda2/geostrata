@@ -1,0 +1,51 @@
+# Ookla Open Data: Speedtest network performance aggregates (AWS Open Data bucket ookla-open-data).
+# One zipped shapefile per quarter: bump the URL, id suffix and data_date when a new quarter is out.
+defaults:
+  category: utilities
+  license: CC-BY-NC-SA-4.0 (non-commercial use only, share alike)
+  attribution: Speedtest® by Ookla® Global Fixed and Mobile Network Performance Maps
+  tags:
+    - ookla
+    - speedtest
+    - connectivity
+    - connectivite
+    - telecom
+sources:
+  - id: global-ookla-mobile-performance-2026q3
+    name: Ookla Speedtest - Mobile Network Performance Tiles (Q3 2026)
+    description: Average mobile (cellular) download speed, upload speed and latency
+      measured by Speedtest users between July and September 2026, aggregated in
+      about 610 m tiles (zoom 16 quadkeys), with the number of tests and devices.
+      Shows where mobile data really works - tiles exist only where people ran
+      tests, so an empty area means no measurement, not necessarily no coverage.
+      Non-commercial use only. 190 MB zipped shapefile with 3.5 million polygons -
+      slow first load, zoom to your area.
+    type: archive
+    url: https://ookla-open-data.s3.amazonaws.com/shapefiles/performance/type=mobile/year=2026/quarter=3/2026-07-01_performance_mobile_tiles.zip
+    archive_target: gps_mobile_tiles.shp
+    style_file: buildings.qml
+    crs: EPSG:4326
+    data_date: "Q3 2026 (July-September), new file each quarter"
+    tags:
+      - mobile network
+      - mobile coverage
+      - internet speed
+      - 4g
+      - 5g
+      - cellular
+      - reseau mobile
+      - couverture mobile
+      - debit
+      - internet
+    i18n:
+      fr:
+        name: Ookla Speedtest - Performance des réseaux mobiles par tuile (T3 2026)
+        description: Débit descendant, débit montant et latence moyens des réseaux
+          mobiles (cellulaires) mesurés par les utilisateurs de Speedtest entre
+          juillet et septembre 2026, agrégés par tuiles d'environ 610 m (quadkeys de
+          zoom 16), avec le nombre de tests et d'appareils. Montre où la donnée
+          mobile fonctionne réellement - les tuiles n'existent que là où des tests
+          ont été lancés - une zone vide signifie absence de mesure, pas forcément
+          absence de couverture. Usage non commercial uniquement. Shapefile zippé de
+          190 Mo contenant 3,5 millions de polygones - premier chargement lent,
+          zoomer sur sa zone.

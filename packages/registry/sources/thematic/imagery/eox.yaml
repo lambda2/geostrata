@@ -1,0 +1,135 @@
+# EOX::Maps tile service (EOX IT Services GmbH, Vienna). Layer names come from
+# https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml ; tiles are addressed {z}/{y}/{x}.
+# Licence differs by year: the 2016 mosaic is CC BY 4.0, 2018 onward CC BY-NC-SA 4.0.
+# The 2017 layer (CC BY 4.0) is left out: it rendered blank over North America, it is not global.
+defaults:
+  type: xyz
+  category: imagery
+  crs: EPSG:3857
+  bbox: [-180, -85.05, 180, 85.05]
+  min_zoom: 0
+  max_zoom: 15
+  tags:
+    - eox
+    - sentinel-2
+    - sentinel
+    - s2cloudless
+    - cloudless
+    - sans nuage
+    - satellite
+    - imagery
+    - imagerie
+    - mosaic
+    - mosaique
+    - copernicus
+sources:
+  - id: global-eox-s2cloudless-2025
+    name: EOX Sentinel-2 Cloudless 2025 (10 m, non-commercial)
+    description: >-
+      Near cloud-free true-colour mosaic of the whole world built
+      from Sentinel-2 images acquired during 2025, at 10 m resolution. The
+      most recent uniform satellite background available without a key; a
+      composite of many dates, so it does not show the situation on a given
+      day. Non-commercial use only (CC BY-NC-SA 4.0); commercial use needs a
+      licence from EOX.
+    url: https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg
+    license: CC-BY-NC-SA-4.0 (non-commercial use only; commercial licence available from EOX)
+    attribution: Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2025)
+    data_date: "2025"
+    priority: 2
+    tags:
+      - "2025"
+      - non-commercial
+    i18n:
+      fr:
+        name: EOX Sentinel-2 sans nuage 2025 (10 m, usage non commercial)
+        description: >-
+          Mosaïque mondiale en couleurs naturelles presque sans
+          nuage, composée d'images Sentinel-2 acquises en 2025, à 10 m de
+          résolution. Fond satellite homogène le plus récent disponible sans
+          clé ; assemblage de nombreuses dates, il ne montre donc pas la
+          situation d'un jour donné. Usage non commercial uniquement
+          (CC BY-NC-SA 4.0) ; l'usage commercial nécessite une licence EOX.
+  - id: global-eox-s2cloudless-2024
+    name: EOX Sentinel-2 Cloudless 2024 (10 m, non-commercial)
+    description: >-
+      Near cloud-free true-colour mosaic of the whole world built
+      from Sentinel-2 images acquired during 2024, at 10 m resolution. Compare
+      with the 2025 mosaic to spot changes from one year to the next.
+      Non-commercial use only (CC BY-NC-SA 4.0); commercial use needs a
+      licence from EOX.
+    url: https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg
+    license: CC-BY-NC-SA-4.0 (non-commercial use only; commercial licence available from EOX)
+    attribution: Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024)
+    data_date: "2024"
+    tags:
+      - "2024"
+      - non-commercial
+    i18n:
+      fr:
+        name: EOX Sentinel-2 sans nuage 2024 (10 m, usage non commercial)
+        description: >-
+          Mosaïque mondiale en couleurs naturelles presque sans
+          nuage, composée d'images Sentinel-2 acquises en 2024, à 10 m de
+          résolution. À comparer avec la mosaïque 2025 pour repérer les
+          changements d'une année sur l'autre. Usage non commercial uniquement
+          (CC BY-NC-SA 4.0) ; l'usage commercial nécessite une licence EOX.
+  - id: global-eox-s2cloudless-2016
+    name: EOX Sentinel-2 Cloudless 2016 (10 m, CC BY)
+    description: >-
+      First near cloud-free true-colour mosaic of the whole world
+      built from Sentinel-2 images acquired during 2016, at 10 m resolution,
+      under CC BY 4.0, so it can be used in commercial or published work
+      where the later, non-commercial mosaics cannot. Some cloud and haze
+      remain in the humid tropics; also useful as a before-image against
+      recent mosaics.
+    url: https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg
+    license: CC-BY-4.0
+    attribution: Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)
+    data_date: "2016"
+    tags:
+      - "2016"
+    i18n:
+      fr:
+        name: EOX Sentinel-2 sans nuage 2016 (10 m, CC BY)
+        description: >-
+          Première mosaïque mondiale en couleurs naturelles presque
+          sans nuage, composée d'images Sentinel-2 acquises en 2016, à 10 m de
+          résolution, sous CC BY 4.0 : utilisable dans un travail commercial
+          ou publié, contrairement aux mosaïques ultérieures réservées à
+          l'usage non commercial. Des nuages et de la brume subsistent sous
+          les tropiques humides ; utile aussi comme image « avant » face aux
+          mosaïques récentes.
+  - id: global-eox-terrain-light
+    name: EOX Terrain Light (Shaded Relief Basemap)
+    description: >-
+      Pale shaded-relief background with land cover tints,
+      coastlines, water bodies and ocean depth shading, without labels or
+      roads. Designed to sit under thematic overlays; detail runs out around
+      1:250,000. Free to use with attribution and a link back to EOX::Maps;
+      EOX publishes no Creative Commons licence for this rendering.
+    category: basemap
+    url: https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg
+    max_zoom: 12
+    license: EOX::Maps terms - free to use with attribution and a link back to https://maps.eox.at (rendering © EOX, no Creative Commons licence stated)
+    attribution: Terrain Light - Data © OpenStreetMap contributors and others, Rendering © EOX (https://maps.eox.at)
+    data_date: static rendering
+    tags:
+      - terrain
+      - relief
+      - hillshade
+      - estompage
+      - fond de carte
+      - basemap
+      - light
+      - clair
+    i18n:
+      fr:
+        name: EOX Terrain Light (fond de carte en relief ombré)
+        description: >-
+          Fond clair en relief ombré avec teintes d'occupation du
+          sol, traits de côte, plans d'eau et ombrage des fonds marins, sans
+          étiquettes ni routes. Conçu pour être placé sous des couches
+          thématiques ; le détail s'épuise vers 1:250 000. Libre d'usage avec
+          attribution et lien vers EOX::Maps ; EOX ne publie pas de licence
+          Creative Commons pour ce rendu.

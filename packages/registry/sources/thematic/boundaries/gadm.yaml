@@ -1,0 +1,167 @@
+# GADM 4.1 administrative areas, one GeoPackage per country (University of California, Davis).
+# Every GeoPackage holds one layer per administrative level (ADM_ADM_0 ... ADM_ADM_5); the number of
+# levels differs by country, so there is one template per level and each lists only the countries
+# whose GeoPackage really contains that layer. Lists read on 2026-11-14 by opening the 236 files
+# with OGR through /vsicurl/ (HKG and MAC answer 404: GADM files them under China).
+# The GeoPackage is streamed with HTTP range requests (type fgb = any OGR file read in place),
+# not downloaded: only the SQLite pages of the requested layer are fetched.
+# LICENCE: GADM is NOT open data. Free for academic and other non-commercial use only;
+# redistribution and commercial use need prior permission (https://gadm.org/license.html).
+defaults:
+  type: fgb
+  category: admin
+  crs: EPSG:4326
+  url: /vsicurl/https://geodata.ucdavis.edu/gadm/gadm4.1/gpkg/gadm41_{ISO3}.gpkg
+  style_file: admin.qml
+  license: GADM licence - free for academic and other non-commercial use only;
+    redistribution and commercial use are not allowed without prior permission
+    (https://gadm.org/license.html). Austria is CC BY-SA 2.0
+  attribution: © GADM 4.1 (gadm.org), University of California, Davis
+  data_date: GADM version 4.1, released July 2022
+  priority: 0
+  tags:
+    - gadm
+    - boundaries
+    - administrative boundaries
+    - admin
+    - limites administratives
+    - frontieres
+    - decoupage administratif
+    - non-commercial
+    - "{country}"
+    - "{country_fr}"
+sources:
+  - id: "{iso2}-gadm-adm0"
+    name: "GADM 4.1 - Country outline - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: the national outline (one feature), as polygons with the names and GADM identifiers (GID_0, NAME_0). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_0
+    tags:
+      - adm0
+      - admin0
+      - niveau 0
+      - level 0
+    i18n:
+      fr:
+        name: "GADM 4.1 - Contour du pays - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : le contour national (une entité), en polygones avec les noms et identifiants GADM (GID_0, NAME_0). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      ABW, AFG, AGO, AIA, ALA, ALB, AND, ARE, ARG, ARM, ASM, ATA, ATF, ATG, AUS, AUT, AZE, BDI,
+      BEL, BEN, BFA, BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA,
+      CAF, CAN, CHE, CHL, CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP,
+      CZE, DEU, DJI, DMA, DNK, DOM, DZA, ECU, EGY, ERI, ESH, ESP, EST, ETH, FIN, FJI, FLK, FRA,
+      FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIB, GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUM, GUY,
+      HMD, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN, IRQ, ISL, ISR, ITA, JAM, JEY, JOR,
+      JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU,
+      LUX, LVA, MAF, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MNP, MOZ,
+      MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NFK, NGA, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN,
+      PAK, PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RUS, RWA,
+      SAU, SDN, SEN, SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, SPM, SRB, SSD, STP, SUR, SVK, SVN,
+      SWE, SWZ, SXM, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN,
+      TZA, UGA, UKR, UMI, URY, USA, UZB, VAT, VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF,
+      ZMB, ZWE
+    ]
+  - id: "{iso2}-gadm-adm1"
+    name: "GADM 4.1 - Level 1 (regions, provinces, states) - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: first-level administrative units (regions, provinces or states), as polygons with the names and GADM identifiers (GID_1, NAME_1, and those of the parent levels). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_1
+    tags:
+      - adm1
+      - admin1
+      - niveau 1
+      - level 1
+    i18n:
+      fr:
+        name: "GADM 4.1 - Niveau 1 (régions, provinces, États) - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : les unités administratives de premier niveau (régions, provinces ou États), en polygones avec les noms et identifiants GADM (GID_1, NAME_1, et ceux des niveaux supérieurs). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      AFG, AGO, AIA, ALA, ALB, AND, ARE, ARG, ARM, ASM, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN,
+      BFA, BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN,
+      CHE, CHL, CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CYM, CYP, CZE, DEU, DJI,
+      DMA, DNK, DOM, DZA, ECU, EGY, ERI, ESH, ESP, EST, ETH, FIN, FJI, FRA, FRO, FSM, GAB, GBR,
+      GEO, GGY, GHA, GIN, GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUM, GUY, HND, HRV, HTI, HUN, IDN,
+      IMN, IND, IRL, IRN, IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KNA, KOR,
+      KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAR, MDA, MDG, MEX, MHL, MKD,
+      MLI, MLT, MMR, MNE, MNG, MNP, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD,
+      NOR, NPL, NRU, NZL, OMN, PAK, PAN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF,
+      QAT, ROU, RUS, RWA, SAU, SDN, SEN, SGP, SHN, SLB, SLE, SLV, SMR, SOM, SPM, SRB, SSD, STP,
+      SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR,
+      TUV, TWN, TZA, UGA, UKR, UMI, URY, USA, UZB, VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM,
+      ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-gadm-adm2"
+    name: "GADM 4.1 - Level 2 (districts, departments) - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: second-level administrative units (districts, departments or counties), as polygons with the names and GADM identifiers (GID_2, NAME_2, and those of the parent levels). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_2
+    tags:
+      - adm2
+      - admin2
+      - niveau 2
+      - level 2
+    i18n:
+      fr:
+        name: "GADM 4.1 - Niveau 2 (districts, départements) - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : les unités administratives de deuxième niveau (districts, départements ou comtés), en polygones avec les noms et identifiants GADM (GID_2, NAME_2, et ceux des niveaux supérieurs). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      AFG, AGO, ALA, ALB, ARE, ARG, ASM, AUS, AUT, AZE, BDI, BEL, BEN, BFA, BGD, BGR, BIH, BLM,
+      BLR, BOL, BRA, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CHN, CIV, CMR, COD, COG, COL, CRI, CUB,
+      CZE, DEU, DJI, DNK, DOM, DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FRA, FRO, FSM, GAB,
+      GBR, GEO, GHA, GIN, GMB, GNB, GNQ, GRC, GTM, GUY, HND, HRV, HTI, HUN, IDN, IND, IRL, IRN,
+      IRQ, ISL, ITA, JOR, JPN, KAZ, KEN, KGZ, KHM, KOR, LAO, LBN, LBR, LKA, LTU, LUX, LVA, MAR,
+      MDG, MEX, MLI, MLT, MMR, MNG, MOZ, MRT, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL,
+      NZL, OMN, PAK, PAN, PER, PHL, PNG, POL, PRK, PRT, PRY, PSE, ROU, RUS, RWA, SAU, SDN, SEN,
+      SHN, SLB, SLE, SLV, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYR, TCD, TGO, THA, TJK,
+      TKM, TLS, TON, TUN, TUR, TWN, TZA, UGA, UKR, URY, USA, UZB, VEN, VIR, VNM, VUT, WLF, WSM,
+      YEM, ZAF, ZMB, ZWE
+    ]
+  - id: "{iso2}-gadm-adm3"
+    name: "GADM 4.1 - Level 3 (sub-districts, communes) - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: third-level administrative units (sub-districts, communes or municipalities), as polygons with the names and GADM identifiers (GID_3, NAME_3, and those of the parent levels). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_3
+    tags:
+      - adm3
+      - admin3
+      - niveau 3
+      - level 3
+    i18n:
+      fr:
+        name: "GADM 4.1 - Niveau 3 (sous-districts, communes) - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : les unités administratives de troisième niveau (sous-districts, communes ou municipalités), en polygones avec les noms et identifiants GADM (GID_3, NAME_3, et ceux des niveaux supérieurs). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      AGO, ALB, ARE, ASM, AUT, BDI, BEL, BEN, BFA, BGD, BIH, BOL, CAN, CHE, CHL, CHN, CIV, CMR,
+      CRI, DEU, ECU, ESP, EST, ETH, FIN, FRA, GBR, GIN, GRC, HTI, IDN, IND, ITA, KEN, KHM, KOR,
+      LBN, LBR, LUX, MAR, MDG, MLI, MMR, MOZ, MWI, NER, NPL, PAK, PAN, PER, PHL, POL, PRT, RUS,
+      RWA, SDN, SEN, SLE, SSD, TCD, TGO, THA, TJK, TLS, TZA, UGA, VNM, ZAF, ZWE
+    ]
+  - id: "{iso2}-gadm-adm4"
+    name: "GADM 4.1 - Level 4 - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: fourth-level administrative units (wards, villages or sections), as polygons with the names and GADM identifiers (GID_4, NAME_4, and those of the parent levels). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_4
+    tags:
+      - adm4
+      - admin4
+      - niveau 4
+      - level 4
+    i18n:
+      fr:
+        name: "GADM 4.1 - Niveau 4 - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : les unités administratives de quatrième niveau (quartiers, villages ou sections), en polygones avec les noms et identifiants GADM (GID_4, NAME_4, et ceux des niveaux supérieurs). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      AUT, BDI, BEL, BGD, CIV, DEU, ESP, FIN, FRA, GBR, HTI, IDN, LUX, MAR, MDG, MLI, NPL, RWA,
+      SEN, UGA, ZAF
+    ]
+  - id: "{iso2}-gadm-adm5"
+    name: "GADM 4.1 - Level 5 - {country}"
+    description: "Administrative boundaries of {country} from GADM 4.1: fifth-level administrative units, the finest level GADM holds, as polygons with the names and GADM identifiers (GID_5, NAME_5, and those of the parent levels). GADM is a compiled global dataset: handy when no official Common Operational Dataset exists, but boundaries and names can be outdated or differ from the government's. Licence restriction: free for academic and other non-commercial use only, redistribution not allowed. The country GeoPackage (from under 1 MB to about 450 MB for Indonesia) is read in place over HTTP, so large countries are slow to draw."
+    layer: ADM_ADM_5
+    tags:
+      - adm5
+      - admin5
+      - niveau 5
+      - level 5
+    i18n:
+      fr:
+        name: "GADM 4.1 - Niveau 5 - {country_fr}"
+        description: "Limites administratives du pays ({country_fr}) issues de GADM 4.1 : les unités administratives de cinquième niveau, le plus fin de GADM, en polygones avec les noms et identifiants GADM (GID_5, NAME_5, et ceux des niveaux supérieurs). GADM est une compilation mondiale : pratique en l'absence de jeu de données opérationnel commun (COD) officiel, mais les limites et les noms peuvent être anciens ou différer de ceux du gouvernement. Restriction de licence : usage académique et non commercial uniquement, redistribution interdite. Le GeoPackage du pays (de moins de 1 Mo à environ 450 Mo pour l'Indonésie) est lu à distance en HTTP, l'affichage est donc lent pour les grands pays."
+    for_each_country: [
+      FRA, RWA
+    ]

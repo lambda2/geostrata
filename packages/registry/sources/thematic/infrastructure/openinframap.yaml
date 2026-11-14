@@ -1,0 +1,79 @@
+# Open Infrastructure Map vector tiles (community project rendering OSM infrastructure tags).
+# The site publishes no usage policy for its tile server: keep use moderate.
+defaults:
+  type: vectortile
+  category: utilities
+  crs: EPSG:3857
+  min_zoom: 2
+  max_zoom: 17
+  license: ODbL-1.0 (OpenStreetMap data)
+  attribution: © OpenStreetMap contributors, OpenInfraMap (openinframap.org)
+  data_date: updated continuously from OpenStreetMap
+  tags:
+    - openinframap
+    - open infrastructure map
+    - osm
+    - infrastructure
+    - vector tiles
+    - tuiles vectorielles
+sources:
+  - id: global-openinframap-power
+    name: Open Infrastructure Map - Power (lines, substations, plants)
+    description: Worldwide vector tiles of the electricity system mapped in
+      OpenStreetMap - power lines and cables with voltage, towers and poles,
+      substations, transformers, power plants and generators with source and output.
+      Loads unstyled (one default symbol per sub-layer) - style by `voltage` or
+      sub-layer yourself. Low-voltage detail appears only at high zoom. Community-run
+      tile server with no published usage policy - avoid bulk use.
+    url: https://openinframap.org/map/power/{z}/{x}/{y}.pbf
+    tags:
+      - power
+      - electricity
+      - power lines
+      - substations
+      - power plants
+      - electricite
+      - lignes electriques
+      - haute tension
+      - postes electriques
+      - centrales
+      - energie
+    i18n:
+      fr:
+        name: Open Infrastructure Map - Électricité (lignes, postes, centrales)
+        description: Tuiles vectorielles mondiales du système électrique cartographié
+          dans OpenStreetMap - lignes et câbles avec leur tension, pylônes et poteaux,
+          postes, transformateurs, centrales et générateurs avec source et puissance.
+          Se charge sans style (un symbole par défaut par sous-couche) - à styler
+          soi-même selon `voltage` ou la sous-couche. Le détail basse tension
+          n'apparaît qu'à fort zoom. Serveur de tuiles communautaire sans politique
+          d'usage publiée - éviter les usages massifs.
+  - id: global-openinframap-telecoms
+    name: Open Infrastructure Map - Telecoms (cables, masts, data centres)
+    description: Worldwide vector tiles of telecom infrastructure mapped in
+      OpenStreetMap - communication lines and submarine cables, masts and towers,
+      exchanges, data centres and street cabinets. Loads unstyled (one default symbol
+      per sub-layer). Mast coverage is very incomplete in most countries.
+      Community-run tile server with no published usage policy - avoid bulk use.
+    url: https://openinframap.org/map/telecoms/{z}/{x}/{y}.pbf
+    tags:
+      - telecom
+      - telecommunications
+      - masts
+      - towers
+      - submarine cables
+      - data centres
+      - antennes
+      - pylones
+      - cables sous-marins
+      - fibre
+    i18n:
+      fr:
+        name: Open Infrastructure Map - Télécoms (câbles, pylônes, centres de données)
+        description: Tuiles vectorielles mondiales des infrastructures de
+          télécommunication cartographiées dans OpenStreetMap - lignes de
+          communication et câbles sous-marins, pylônes et tours, centraux, centres de
+          données et armoires de rue. Se charge sans style (un symbole par défaut par
+          sous-couche). La couverture des pylônes est très incomplète dans la plupart
+          des pays. Serveur de tuiles communautaire sans politique d'usage publiée -
+          éviter les usages massifs.

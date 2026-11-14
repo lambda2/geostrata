@@ -1,0 +1,116 @@
+# UNHCR core GIS feature services (https://gis.unhcr.org/arcgis/rest/services/core_v2).
+# Loaded as ArcGIS feature layers since 2026-11-14 (formerly `query?f=geojson` downloads): QGIS
+# fetches the features of the visible extent and pages through the server record cap
+# (20,000 per request for the PoC points, 2,000 or 5,000 for the other layers).
+defaults:
+  category: crisis
+  type: arcgisfeatureserver
+  license: © UNHCR - no licence is stated on the map service itself; UNHCR
+    operational data is published under CC-BY-4.0 except where otherwise
+    indicated; confirm with UNHCR before redistributing
+  attribution: © UNHCR, The UN Refugee Agency
+  tags:
+    - unhcr
+    - hcr
+    - refugee
+    - refugie
+    - refugies
+    - displacement
+    - deplacement
+    - idp
+    - deplaces internes
+    - camp
+    - settlement
+    - site
+sources:
+  - id: global-unhcr-poc-locations
+    name: UNHCR - Locations of People of Concern (Camps, Settlements, Centres)
+    description: Reference points of the places where UNHCR records refugees,
+      asylum seekers, internally displaced people and returnees - planned
+      camps, settlements, collective and reception centres, and urban or
+      dispersed locations - with site name, type, country and UNHCR P-code.
+      About 14,500 points worldwide, read live from the UNHCR feature service
+      for the visible extent; population figures are not included.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_prp_p_unhcr_PoC/FeatureServer/0
+    priority: 2
+    data_date: updated continuously by UNHCR operations
+    tags:
+      - reception centre
+      - centre d accueil
+      - asylum
+      - asile
+    i18n:
+      fr:
+        name: UNHCR - Lieux d'accueil des personnes relevant du HCR (camps, sites, centres)
+        description: Points de référence des lieux où le HCR recense réfugiés,
+          demandeurs d'asile, déplacés internes et rapatriés, camps planifiés,
+          sites d'installation, centres collectifs et d'accueil, lieux urbains ou
+          dispersés, avec nom du site, type, pays et P-code HCR. Environ 14 500
+          points dans le monde, lus en direct sur le service d'entités du HCR
+          pour l'emprise visible, les effectifs de population ne sont pas inclus.
+  - id: global-unhcr-poc-polygons
+    name: UNHCR - Camp and Settlement Outlines
+    description: Outline polygons of refugee and IDP camps and settlements
+      mapped by UNHCR, with site name and P-code. Only a few hundred sites have
+      an outline (about 350, in Africa, the Middle East and Asia); use the
+      point layer for the complete list.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_prp_a_unhcr/FeatureServer/0
+    style_file: buildings.qml
+    data_date: updated continuously by UNHCR operations
+    tags:
+      - outline
+      - perimetre
+      - emprise
+    i18n:
+      fr:
+        name: UNHCR - Emprises des camps et sites d'installation
+        description: Polygones d'emprise des camps et sites de réfugiés et de
+          déplacés internes cartographiés par le HCR, avec nom du site et P-code.
+          Seuls quelques centaines de sites ont une emprise (environ 350, en
+          Afrique, au Moyen-Orient et en Asie), utiliser la couche de points pour la
+          liste complète.
+  - id: global-unhcr-border-crossings
+    name: UNHCR - Border Crossing Points
+    description: About 700 border crossing points monitored by UNHCR, with the
+      name of the crossing on each side of the border, the two countries and a
+      type code. Covers the borders where UNHCR follows refugee movements
+      (most points are in Kazakhstan, Chad, Uganda, Hungary, DRC, Türkiye and
+      Moldova), not every official border post.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_marker_crossing_p_unhcr/FeatureServer/0
+    data_date: updated continuously by UNHCR operations
+    tags:
+      - border crossing
+      - border
+      - entry point
+      - poste frontiere
+      - point de passage
+      - frontiere
+    i18n:
+      fr:
+        name: UNHCR - Points de passage frontaliers
+        description: Environ 700 points de passage frontaliers suivis par le HCR,
+          avec le nom du point de passage de chaque côté de la frontière, les
+          deux pays et un code de type. Couvre les frontières où le HCR suit les
+          mouvements de réfugiés (la plupart des points sont au Kazakhstan, au
+          Tchad, en Ouganda, en Hongrie, en RDC, en Türkiye et en Moldavie), pas
+          tous les postes frontières officiels.
+  - id: global-unhcr-presence
+    name: UNHCR - Offices and Presence
+    description: About 530 UNHCR offices worldwide, with office name (English,
+      French, Spanish), a coded office type, address and city. Useful to find the nearest UNHCR counterpart in an
+      operation.
+    url: https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_marker_presence_p_unhcr/FeatureServer/0
+    data_date: updated continuously by UNHCR
+    tags:
+      - office
+      - presence
+      - field office
+      - bureau
+      - presence operationnelle
+      - bureau de terrain
+    i18n:
+      fr:
+        name: UNHCR - Bureaux et présence du HCR
+        description: Environ 530 bureaux du HCR dans le monde, avec nom (anglais,
+          français, espagnol), type de bureau codé, adresse et ville. Utile pour trouver
+          l'interlocuteur HCR le plus proche dans une opération.

@@ -1,0 +1,11 @@
+# Known-unfixable entries for tests/test_live_layers.py.
+#
+# One entry per line: <id or glob> <reason, with a link or a date>
+# A listed entry is still tested. If it is broken it is reported as
+# "allowlisted" instead of failing the run; when it passes again the test asks
+# you to delete the line. Every line needs a reason and goes through review:
+# prefer fixing or removing the catalog entry.
+#
+# Example:
+# xx-example-layer provider geo-blocks non-EU addresses, see issue #123 (2026-11)
+global-esa-worldcover-2021 VRT mosaic is served from this repo's main branch: remove this line once assets/vrt/esa-worldcover-2021-v200.vrt is merged

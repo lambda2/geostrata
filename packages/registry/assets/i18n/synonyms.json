@@ -59,6 +59,30 @@
 			"en": ["crisis", "emergency", "humanitarian", "relief", "civil defense"],
 			"es": ["crisis", "emergencia", "humanitario", "socorro"],
 			"ar": ["أزمة", "طوارئ", "إنساني", "إغاثة"]
+		},
+		"population": {
+			"fr": ["population", "demographie", "habitants", "densite de population", "peuplement"],
+			"en": ["population", "demography", "demographics", "inhabitants", "population density", "settlement"],
+			"es": ["poblacion", "demografia", "habitantes"],
+			"ar": ["سكان", "تعداد السكان"]
+		},
+		"health": {
+			"fr": ["sante", "hopital", "hopitaux", "soins", "centre de sante", "clinique"],
+			"en": ["health", "healthcare", "hospital", "hospitals", "clinic", "medical"],
+			"es": ["salud", "hospital", "hospitales", "clinica"],
+			"ar": ["صحة", "مستشفى", "عيادة"]
+		},
+		"hazard": {
+			"fr": ["alea", "aleas", "risque", "risques", "catastrophe", "inondation", "seisme", "cyclone", "incendie", "feu"],
+			"en": ["hazard", "hazards", "risk", "disaster", "flood", "earthquake", "cyclone", "wildfire", "fire"],
+			"es": ["amenaza", "riesgo", "desastre", "inundacion", "terremoto", "ciclon", "incendio"],
+			"ar": ["خطر", "مخاطر", "كارثة", "فيضان", "زلزال", "إعصار", "حريق"]
+		},
+		"weather": {
+			"fr": ["meteo", "meteorologie", "climat", "pluie", "precipitations", "temperature"],
+			"en": ["weather", "meteorology", "climate", "rain", "rainfall", "precipitation", "temperature"],
+			"es": ["tiempo", "meteorologia", "clima", "lluvia", "precipitacion", "temperatura"],
+			"ar": ["طقس", "مناخ", "مطر", "هطول", "حرارة"]
 		}
 	},
 	"countries": {

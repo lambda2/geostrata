@@ -29,13 +29,15 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ..i18n import tr
+
 GITHUB_NEW_ISSUE_URL = "https://github.com/lambda2/geostrata/issues/new"
 
 
 def _slugify(value: str) -> str:
     lowered = value.lower().strip()
     slug = re.sub(r"[^a-z0-9]+", "-", lowered).strip("-")
-    return slug or "nouvelle-source"
+    return slug or "new-source"
 
 
 class GeostrataShareDialog(QDialog):
@@ -43,7 +45,7 @@ class GeostrataShareDialog(QDialog):
 
     def __init__(self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Geostrata — Partager une couche (YAML)")
+        self.setWindowTitle(tr("Geostrata — Share a layer (YAML)"))
         self.setMinimumSize(680, 520)
         self._layers: List[QgsMapLayer] = list(
             QgsProject.instance().mapLayers().values()
@@ -56,8 +58,10 @@ class GeostrataShareDialog(QDialog):
         layout = QVBoxLayout(self)
 
         intro = QLabel(
-            "Sélectionnez une couche ouverte dans votre projet QGIS pour générer "
-            "automatiquement sa fiche YAML Geostrata."
+            tr(
+                "Select a layer of your QGIS project to generate its Geostrata "
+                "YAML entry automatically."
+            )
         )
         intro.setWordWrap(True)
         layout.addWidget(intro)
@@ -67,7 +71,7 @@ class GeostrataShareDialog(QDialog):
         for layer in self._layers:
             self._layer_combo.addItem(layer.name(), layer.id())
         self._layer_combo.currentIndexChanged.connect(self._on_layer_selected)
-        form.addRow("Couche QGIS :", self._layer_combo)
+        form.addRow(tr("QGIS layer:"), self._layer_combo)
 
         self._category_combo = QComboBox(self)
         for cat in [
@@ -81,23 +85,27 @@ class GeostrataShareDialog(QDialog):
             "imagery",
             "utilities",
             "crisis",
+            "population",
+            "health",
+            "hazard",
+            "weather",
         ]:
             self._category_combo.addItem(cat)
         self._category_combo.currentIndexChanged.connect(self._regenerate_yaml)
-        form.addRow("Catégorie :", self._category_combo)
+        form.addRow(tr("Category:"), self._category_combo)
 
         self._country_edit = QLineEdit(self)
-        self._country_edit.setPlaceholderText("Ex: FR (laisser vide si mondial)")
+        self._country_edit.setPlaceholderText(tr("E.g. FR (leave empty if worldwide)"))
         self._country_edit.textChanged.connect(self._regenerate_yaml)
-        form.addRow("Code Pays ISO-2 :", self._country_edit)
+        form.addRow(tr("ISO-2 country code:"), self._country_edit)
 
-        self._license_edit = QLineEdit("Licence Ouverte / Etalab 2.0", self)
+        self._license_edit = QLineEdit(tr("CC BY 4.0"), self)
         self._license_edit.textChanged.connect(self._regenerate_yaml)
-        form.addRow("Licence :", self._license_edit)
+        form.addRow(tr("License:"), self._license_edit)
 
-        self._attribution_edit = QLineEdit("© Fournisseur de données", self)
+        self._attribution_edit = QLineEdit(tr("© Data provider"), self)
         self._attribution_edit.textChanged.connect(self._regenerate_yaml)
-        form.addRow("Attribution :", self._attribution_edit)
+        form.addRow(tr("Attribution:"), self._attribution_edit)
 
         layout.addLayout(form)
 
@@ -105,9 +113,9 @@ class GeostrataShareDialog(QDialog):
         layout.addWidget(self._yaml_preview)
 
         btn_row = QHBoxLayout()
-        copy_btn = QPushButton("Copier le YAML", self)
-        issue_btn = QPushButton("Proposer sur GitHub (Issue pré-remplie)…", self)
-        close_btn = QPushButton("Fermer", self)
+        copy_btn = QPushButton(tr("Copy YAML"), self)
+        issue_btn = QPushButton(tr("Propose on GitHub (pre-filled issue)…"), self)
+        close_btn = QPushButton(tr("Close"), self)
 
         copy_btn.clicked.connect(self._on_copy_yaml)
         issue_btn.clicked.connect(self._on_open_github_issue)
@@ -171,7 +179,7 @@ class GeostrataShareDialog(QDialog):
     def _regenerate_yaml(self, *_: Any) -> None:
         idx = self._layer_combo.currentIndex()
         if idx < 0 or idx >= len(self._layers):
-            self._yaml_preview.setPlainText("# Aucune couche ouverte dans le projet.")
+            self._yaml_preview.setPlainText(tr("# No layer is open in the project."))
             return
 
         layer = self._layers[idx]
@@ -214,16 +222,17 @@ class GeostrataShareDialog(QDialog):
             QMessageBox.information(
                 self,
                 "Geostrata",
-                "Fiche YAML copiée dans le presse-papiers.",
+                tr("YAML entry copied to the clipboard."),
             )
 
     def _on_open_github_issue(self) -> None:
         yaml_body = self._yaml_preview.toPlainText()
-        title = "Nouvelle source : " + (
-            self._layer_combo.currentText() or "Source géographique"
+        # The issue is read by the maintainers: always written in English.
+        title = "New source: " + (
+            self._layer_combo.currentText() or "Geographic source"
         )
         body = (
-            "### Proposition de nouvelle source Geostrata\n\n"
+            "### New Geostrata source proposal\n\n"
             f"```yaml\n{yaml_body}```\n"
         )
         query = urllib.parse.urlencode({"title": title, "body": body})

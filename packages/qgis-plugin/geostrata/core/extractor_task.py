@@ -1,4 +1,4 @@
-"""Non-blocking QgsTask for offline canvas extraction (Maj + Entrée)."""
+"""Non-blocking QgsTask for offline canvas extraction (Shift + Enter)."""
 
 from __future__ import annotations
 
@@ -6,11 +6,14 @@ import datetime
 from pathlib import Path
 from typing import Any, Optional, Tuple
 
+from ..i18n import tr
 from .db_client import CatalogSourceRecord
 from .uri_builder import (
     apply_layer_metadata_and_style,
     build_provider_uri,
 )
+
+_ACTIVE_EXTRACTOR_TASKS: list[Any] = []
 
 
 def resolve_extraction_output_dir() -> Path:
@@ -66,7 +69,7 @@ def launch_offline_extraction_task(
 
         def __init__(self) -> None:
             super().__init__(
-                f"Geostrata : Extraction locale ({entry.localized_name()})",
+                tr("Geostrata: offline extraction ({name})", name=entry.localized_name()),
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_path
@@ -82,8 +85,8 @@ def launch_offline_extraction_task(
                         spec.uri, spec.display_name, spec.provider
                     )
                     if not source_layer.isValid():
-                        self.error_message = (
-                            f"Impossible d'ouvrir la source raster : {spec.uri}"
+                        self.error_message = tr(
+                            "Could not open the raster source: {uri}", uri=spec.uri
                         )
                         return False
 
@@ -106,8 +109,8 @@ def launch_offline_extraction_task(
                         spec.uri, spec.display_name, spec.provider
                     )
                     if not source_layer.isValid():
-                        self.error_message = (
-                            f"Impossible d'ouvrir la source vecteur : {spec.uri}"
+                        self.error_message = tr(
+                            "Could not open the vector source: {uri}", uri=spec.uri
                         )
                         return False
 
@@ -128,8 +131,13 @@ def launch_offline_extraction_task(
                 return False
 
         def finished(self, result: bool) -> None:
+            try:
+                if self in _ACTIVE_EXTRACTOR_TASKS:
+                    _ACTIVE_EXTRACTOR_TASKS.remove(self)
+            except Exception:
+                pass
             if not result or not self.output_file.is_file():
-                msg = self.error_message or "Échec de l'extraction hors-ligne."
+                msg = self.error_message or tr("Offline extraction failed.")
                 QgsMessageLog.logMessage(
                     msg, "Geostrata", Qgis.MessageLevel.Critical
                 )
@@ -142,7 +150,7 @@ def launch_offline_extraction_task(
                     )
                 return
 
-            layer_title = f"{entry.localized_name()} [Local]"
+            layer_title = f"{entry.localized_name()} {tr('[Local]')}"
             if is_raster:
                 local_layer = QgsRasterLayer(
                     str(self.output_file), layer_title, "gdal"
@@ -158,7 +166,7 @@ def launch_offline_extraction_task(
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Couche extraite hors-ligne : {self.output_file}",
+                        tr("Layer extracted offline: {path}", path=self.output_file),
                         level=Qgis.MessageLevel.Success,
                         duration=5,
                     )
@@ -166,11 +174,12 @@ def launch_offline_extraction_task(
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Le fichier extrait est invalide : {self.output_file}",
+                        tr("The extracted file is invalid: {path}", path=self.output_file),
                         level=Qgis.MessageLevel.Warning,
                         duration=6,
                     )
 
     task = OfflineExtractorTask()
+    _ACTIVE_EXTRACTOR_TASKS.append(task)
     QgsApplication.taskManager().addTask(task)
     return task

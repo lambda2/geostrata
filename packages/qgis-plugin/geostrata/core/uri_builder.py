@@ -106,19 +106,29 @@ def build_provider_uri(
 
         base_url, params = _parse_query_params_ci(raw_url)
         layer_name = params.get("LAYER") or params.get("LAYERS") or ""
-        style_name = params.get("STYLE") or params.get("STYLES") or "normal"
+        is_wmts = source_type == "wmts" or bool(params.get("TILEMATRIXSET"))
+        # An empty WMS style means "server default"; "normal" is only a WMTS convention.
+        style_name = (
+            params.get("STYLE") or params.get("STYLES") or ("normal" if is_wmts else "")
+        )
         img_format = params.get("FORMAT") or "image/png"
         tile_matrix_set = params.get("TILEMATRIXSET") or ""
 
         if source_type == "wmts" or tile_matrix_set:
             tms = tile_matrix_set or "PM"
+            # The wms provider reads `url` as the capabilities document: a KVP
+            # endpoint needs an explicit GetCapabilities request, a RESTful
+            # WMTSCapabilities.xml URL is used as is.
+            capabilities_url = base_url
+            if not base_url.lower().endswith(".xml"):
+                capabilities_url = f"{base_url}?SERVICE=WMTS&REQUEST=GetCapabilities"
             uri = (
                 f"contextualWMSLegend=0&crs={crs}&dpiMode=7&featureCount=10"
                 f"&format={urllib.parse.quote(img_format, safe='/')}"
                 f"&layers={urllib.parse.quote(layer_name)}"
                 f"&styles={urllib.parse.quote(style_name)}"
                 f"&tileMatrixSet={urllib.parse.quote(tms)}"
-                f"&url={urllib.parse.quote(base_url, safe=':/')}"
+                f"&url={urllib.parse.quote(capabilities_url, safe=':/?')}"
             )
         else:
             uri = (
@@ -229,6 +239,30 @@ def build_provider_uri(
     raise ValueError(f"Unsupported Geostrata source type: {entry.type}")
 
 
+_QML_SYMBOL_TYPE_BY_GEOMETRY = {0: "marker", 1: "line", 2: "fill"}
+
+
+def _style_matches_layer_geometry(layer: Any, style_qml: str) -> bool:
+    """Reject a category default style whose symbol cannot draw this layer.
+
+    A fill symbol applied to a point layer (or a line symbol to polygons)
+    renders nothing at all, which looks like an empty layer to the user.
+    """
+    try:
+        if not hasattr(layer, "geometryType"):
+            # Raster and vector-tile layers have no single-symbol QML to apply.
+            return 'symbol type="' not in style_qml
+        geometry_type = layer.geometryType()
+        geometry_code = int(getattr(geometry_type, "value", geometry_type))
+        expected = _QML_SYMBOL_TYPE_BY_GEOMETRY.get(geometry_code)
+        if expected is None:
+            return False
+        declared = re.search(r'<symbol[^>]*\btype="(marker|line|fill)"', style_qml)
+        return declared is None or declared.group(1) == expected
+    except Exception:
+        return True
+
+
 def apply_layer_metadata_and_style(layer: Any, entry: CatalogSourceRecord) -> None:
     """Apply attribution, license metadata, and embedded QML style XML to a QGIS layer."""
     if layer is None or not layer.isValid():
@@ -254,7 +288,7 @@ def apply_layer_metadata_and_style(layer: Any, entry: CatalogSourceRecord) -> No
     except Exception:
         pass
 
-    if entry.style_qml:
+    if entry.style_qml and _style_matches_layer_geometry(layer, entry.style_qml):
         try:
             from qgis.PyQt.QtXml import QDomDocument
 
@@ -282,6 +316,21 @@ def create_qgis_layer(
         layer = QgsVectorTileLayer(spec.uri, spec.display_name)
     else:
         layer = QgsVectorLayer(spec.uri, spec.display_name, spec.provider)
+        if not layer.isValid() and entry.type.lower() == "geojson":
+            # Live feeds (earthquakes, alerts) are generated on the fly: no
+            # Content-Length, no Range support, so /vsicurl/ refuses them.
+            # The GeoJSON driver can still download such a URL in one request.
+            plain_url = re.sub(r"^/vsicurl/", "", spec.uri)
+            if plain_url.startswith(("http://", "https://")):
+                fallback = QgsVectorLayer(plain_url, spec.display_name, spec.provider)
+                if fallback.isValid():
+                    layer = fallback
+                    spec = ResolvedLayerSpec(
+                        uri=plain_url,
+                        provider=spec.provider,
+                        layer_kind=spec.layer_kind,
+                        display_name=spec.display_name,
+                    )
 
     if layer.isValid():
         apply_layer_metadata_and_style(layer, entry)

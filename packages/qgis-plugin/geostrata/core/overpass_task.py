@@ -1,4 +1,4 @@
-"""Resilient asynchronous Overpass API fetcher with multi-mirror failover and GeoJSON conversion."""
+"""Resilient asynchronous Overpass API fetcher with priority-ordered OSM Wiki mirrors and GeoJSON conversion."""
 
 from __future__ import annotations
 
@@ -11,14 +11,112 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from ..i18n import tr
 from .db_client import CatalogSourceRecord
 from .extractor_task import resolve_extraction_output_dir
 from .uri_builder import apply_layer_metadata_and_style
 
-OVERPASS_MIRRORS: Tuple[str, ...] = (
-    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.private.coffee/api/interpreter",
+SETTINGS_OVERPASS_SERVERS_KEY = "geostrata/overpass_servers_json"
+
+# Default Overpass API servers from https://wiki.openstreetmap.org/wiki/Overpass_API
+# Ordered by priority: fast regional instances first (used when canvas bbox falls within their coverage),
+# followed by global instances, then optional API-key instances.
+DEFAULT_OVERPASS_SERVERS: List[Dict[str, Any]] = [
+    {
+        "name": "Overpass Europe (dresel.systems)",
+        "url": "https://ovp.dresel.systems/api/interpreter",
+        "enabled": True,
+        "region": "Europe",
+        "bbox": [-25.0, 34.0, 45.0, 72.0],
+    },
+    {
+        "name": "Swiss Overpass (overpass.osm.ch)",
+        "url": "https://overpass.osm.ch/api/interpreter",
+        "enabled": True,
+        "region": "Switzerland",
+        "bbox": [5.9, 45.8, 10.5, 47.9],
+    },
+    {
+        "name": "Britain & Ireland (atownsend.org.uk)",
+        "url": "https://overpass.atownsend.org.uk/api/interpreter",
+        "enabled": True,
+        "region": "UK & Ireland",
+        "bbox": [-11.0, 49.8, 2.0, 61.0],
+    },
+    {
+        "name": "Overpass North America (dresel.systems)",
+        "url": "https://ovp.dresel.systems/api-na/interpreter",
+        "enabled": True,
+        "region": "North America",
+        "bbox": [-170.0, 14.0, -50.0, 75.0],
+    },
+    {
+        "name": "MapRVA Virginia (overpass.maprva.org)",
+        "url": "https://overpass.maprva.org/api/interpreter",
+        "enabled": True,
+        "region": "US-VA",
+        "bbox": [-83.7, 36.5, -75.2, 39.5],
+    },
+    {
+        "name": "Ethiopia OpenPlaceGuide",
+        "url": "https://ethiopia.overpass.openplaceguide.org/api/interpreter",
+        "enabled": True,
+        "region": "Ethiopia",
+        "bbox": [32.9, 3.4, 48.0, 14.9],
+    },
+    {
+        "name": "Private.coffee Overpass (Global)",
+        "url": "https://overpass.private.coffee/api/interpreter",
+        "enabled": True,
+        "region": "Global",
+        "bbox": None,
+    },
+    {
+        "name": "Main Overpass API FOSSGIS (Global)",
+        "url": "https://overpass-api.de/api/interpreter",
+        "enabled": True,
+        "region": "Global",
+        "bbox": None,
+    },
+    {
+        "name": "VK Maps Overpass (Global)",
+        "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+        "enabled": True,
+        "region": "Global",
+        "bbox": None,
+    },
+    {
+        "name": "Overpass.ch (API key required)",
+        "url": "https://api.overpass.ch/v1/YOUR_API_KEY/interpreter",
+        "enabled": False,
+        "region": "Global (API Key)",
+        "bbox": None,
+    },
+    {
+        "name": "NextGIS Overpass (API key required)",
+        "url": "https://overpass.nextgis.com/YOUR_API_KEY/api/interpreter",
+        "enabled": False,
+        "region": "Global (API Key)",
+        "bbox": None,
+    },
+    {
+        "name": "FairwayMapper (API key required)",
+        "url": "https://api.fairwaymapper.com/k/YOUR_API_KEY/api/interpreter",
+        "enabled": False,
+        "region": "Global (API Key)",
+        "bbox": None,
+    },
+    {
+        "name": "Geofabrik Overpass (API key required)",
+        "url": "https://overpass.geofabrik.de/YOUR_API_KEY/api/interpreter",
+        "enabled": False,
+        "region": "Global (API Key)",
+        "bbox": None,
+    },
+]
+
+OVERPASS_MIRRORS: Tuple[str, ...] = tuple(
+    str(s["url"]) for s in DEFAULT_OVERPASS_SERVERS if s.get("enabled")
 )
 
 MAX_OVERPASS_AREA_DEG2 = 16.0
@@ -36,6 +134,124 @@ LINEAR_OVERPASS_KEYS: Tuple[str, ...] = (
     "power=line",
     "power=minor_line",
 )
+
+# Strong references to active QgsTask objects to prevent premature Python GC crashes
+_ACTIVE_OVERPASS_TASKS: List[Any] = []
+
+
+def normalize_overpass_endpoint(url: str) -> str:
+    """Normalize an Overpass endpoint URL so it ends with /interpreter when needed."""
+    cleaned = url.strip()
+    if not cleaned:
+        return ""
+    if cleaned.endswith("/api/"):
+        return cleaned + "interpreter"
+    if cleaned.endswith("/api"):
+        return cleaned + "/interpreter"
+    return cleaned
+
+
+def get_configured_overpass_servers() -> List[Dict[str, Any]]:
+    """Return the user's priority-ordered list of Overpass servers from QgsSettings."""
+    try:
+        from qgis.core import QgsSettings
+
+        raw = QgsSettings().value(SETTINGS_OVERPASS_SERVERS_KEY, "")
+        if raw:
+            parsed = json.loads(str(raw))
+            if isinstance(parsed, list) and parsed:
+                valid: List[Dict[str, Any]] = []
+                for item in parsed:
+                    if isinstance(item, dict) and item.get("url"):
+                        valid.append(
+                            {
+                                "name": str(item.get("name") or item["url"]),
+                                "url": normalize_overpass_endpoint(str(item["url"])),
+                                "enabled": bool(item.get("enabled", True)),
+                                "region": str(item.get("region") or "Global"),
+                                "bbox": item.get("bbox"),
+                            }
+                        )
+                if valid:
+                    return valid
+    except Exception:
+        pass
+    return [dict(s) for s in DEFAULT_OVERPASS_SERVERS]
+
+
+def save_configured_overpass_servers(servers: Sequence[Dict[str, Any]]) -> None:
+    """Persist the priority-ordered list of Overpass servers into QgsSettings."""
+    try:
+        from qgis.core import QgsSettings
+
+        serializable = []
+        for s in servers:
+            url = normalize_overpass_endpoint(str(s.get("url") or ""))
+            if not url:
+                continue
+            serializable.append(
+                {
+                    "name": str(s.get("name") or url),
+                    "url": url,
+                    "enabled": bool(s.get("enabled", True)),
+                    "region": str(s.get("region") or "Global"),
+                    "bbox": s.get("bbox"),
+                }
+            )
+        QgsSettings().setValue(
+            SETTINGS_OVERPASS_SERVERS_KEY,
+            json.dumps(serializable, ensure_ascii=False),
+        )
+    except Exception:
+        pass
+
+
+def _bbox_fits_server_region(
+    query_bbox: Optional[Tuple[float, float, float, float]],
+    server_bbox: Any,
+) -> bool:
+    """Return True if the server covers the query_bbox (or has global coverage)."""
+    if query_bbox is None or not isinstance(server_bbox, (list, tuple)) or len(server_bbox) != 4:
+        return True
+    try:
+        q_min_x, q_min_y, q_max_x, q_max_y = query_bbox
+        s_min_x, s_min_y, s_max_x, s_max_y = (
+            float(server_bbox[0]),
+            float(server_bbox[1]),
+            float(server_bbox[2]),
+            float(server_bbox[3]),
+        )
+        # Check that the center of the query bbox is inside the regional server's bbox
+        center_x = (q_min_x + q_max_x) / 2.0
+        center_y = (q_min_y + q_max_y) / 2.0
+        return (s_min_x <= center_x <= s_max_x) and (s_min_y <= center_y <= s_max_y)
+    except Exception:
+        return True
+
+
+def resolve_priority_overpass_urls(
+    query_bbox: Optional[Tuple[float, float, float, float]] = None,
+) -> List[str]:
+    """Return enabled Overpass endpoint URLs in priority order, filtering regional servers by bbox."""
+    servers = get_configured_overpass_servers()
+    urls: List[str] = []
+    for srv in servers:
+        if not srv.get("enabled", True):
+            continue
+        url = normalize_overpass_endpoint(str(srv.get("url") or ""))
+        if not url or "YOUR_API_KEY" in url:
+            continue
+        if not _bbox_fits_server_region(query_bbox, srv.get("bbox")):
+            continue
+        if url not in urls:
+            urls.append(url)
+    if not urls:
+        urls = [
+            "https://ovp.dresel.systems/api/interpreter",
+            "https://overpass.private.coffee/api/interpreter",
+            "https://overpass-api.de/api/interpreter",
+        ]
+    return urls
 
 
 def is_linear_overpass_entry(entry: CatalogSourceRecord) -> bool:
@@ -197,40 +413,48 @@ def convert_overpass_json_to_geojson(
 
 def fetch_overpass_with_failover(
     ql_query: str,
-    mirrors: Sequence[str] = OVERPASS_MIRRORS,
-    timeout_sec: int = 12,
+    mirrors: Optional[Sequence[str]] = None,
+    timeout_sec: int = 8,
+    query_bbox: Optional[Tuple[float, float, float, float]] = None,
 ) -> Tuple[Dict[str, Any], str]:
-    """Execute Overpass QL POST across mirrors until one succeeds.
+    """Execute Overpass QL POST across priority-ordered mirrors until one succeeds.
 
-    Returns:
-        Tuple of (parsed_json_dict, winning_mirror_url).
+    Uses a dedicated ProxyHandler({}) opener so worker threads on macOS never
+    invoke the non-thread-safe _scproxy C API.
     """
+    target_mirrors = (
+        list(mirrors)
+        if mirrors is not None
+        else resolve_priority_overpass_urls(query_bbox)
+    )
     encoded_body = urllib.parse.urlencode({"data": ql_query}).encode("utf-8")
     errors: List[str] = []
+    # Bypass macOS _scproxy in background worker threads to prevent CFNetwork segfaults
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
-    for mirror_url in mirrors:
+    for mirror_url in target_mirrors:
         req = urllib.request.Request(
             mirror_url,
             data=encoded_body,
             method="POST",
             headers={
-                "User-Agent": "Geostrata-QGIS-Plugin/1.0",
+                "User-Agent": "Geostrata-QGIS-Plugin/1.0 (+https://github.com/lambda2/geostrata)",
                 "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
                 "Accept": "application/json",
             },
         )
         try:
-            with urllib.request.urlopen(req, timeout=timeout_sec) as resp:
+            with opener.open(req, timeout=timeout_sec) as resp:
                 raw_bytes = resp.read()
             payload = json.loads(raw_bytes.decode("utf-8"))
             if isinstance(payload, dict) and "elements" in payload:
                 return payload, mirror_url
-            errors.append(f"{mirror_url}: réponse JSON inattendue")
+            errors.append(f"{mirror_url}: unexpected JSON response")
         except Exception as exc:
             errors.append(f"{mirror_url}: {exc}")
 
     raise RuntimeError(
-        "Tous les miroirs Overpass ont échoué (" + " ; ".join(errors) + ")"
+        tr("All Overpass servers failed ({errors})", errors=" ; ".join(errors))
     )
 
 
@@ -257,16 +481,18 @@ def launch_overpass_fetch_task(
         clamped_bbox,
         prefer_lines=prefer_lines,
     )
+    priority_urls = resolve_priority_overpass_urls(clamped_bbox)
     out_dir = resolve_extraction_output_dir()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     output_geojson_path = out_dir / f"{entry.id}_{timestamp}.geojson"
+    title_str = entry.localized_name()
 
     class OverpassFetchTask(QgsTask):
         """Background task querying Overpass mirrors and writing a local GeoJSON."""
 
         def __init__(self) -> None:
             super().__init__(
-                f"Geostrata Overpass : {entry.localized_name()}",
+                tr("Geostrata Overpass: {name}", name=title_str),
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_geojson_path
@@ -278,12 +504,15 @@ def launch_overpass_fetch_task(
             if self.isCanceled():
                 return False
             try:
-                self.setProgress(15.0)
-                payload, mirror = fetch_overpass_with_failover(ql_query)
+                payload, mirror = fetch_overpass_with_failover(
+                    ql_query,
+                    mirrors=priority_urls,
+                    timeout_sec=8,
+                    query_bbox=clamped_bbox,
+                )
                 if self.isCanceled():
                     return False
                 self.mirror_used = mirror
-                self.setProgress(70.0)
 
                 geojson_dict = convert_overpass_json_to_geojson(
                     payload,
@@ -296,18 +525,22 @@ def launch_overpass_fetch_task(
                     json.dumps(geojson_dict, ensure_ascii=False),
                     encoding="utf-8",
                 )
-                self.setProgress(100.0)
                 return True
             except Exception as exc:
                 self.error_message = str(exc)
                 return False
 
         def finished(self, result: bool) -> None:
-            title_str = entry.localized_name()
+            try:
+                if self in _ACTIVE_OVERPASS_TASKS:
+                    _ACTIVE_OVERPASS_TASKS.remove(self)
+            except Exception:
+                pass
+
             if not result or not self.output_file.is_file():
                 msg = (
                     self.error_message
-                    or f"Échec de la requête Overpass pour {title_str}"
+                    or tr("Overpass query failed for {name}", name=title_str)
                 )
                 QgsMessageLog.logMessage(
                     msg, "Geostrata", Qgis.MessageLevel.Warning
@@ -325,13 +558,13 @@ def launch_overpass_fetch_task(
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"Aucune entité OSM trouvée sur cette emprise pour : {title_str}",
+                        tr("No OSM feature found in this extent for: {name}", name=title_str),
                         level=Qgis.MessageLevel.Info,
                         duration=5,
                     )
                 return
 
-            suffix = " [Local]" if is_offline_extract else ""
+            suffix = f" {tr('[Local]')}" if is_offline_extract else ""
             layer = QgsVectorLayer(
                 str(self.output_file),
                 f"{title_str}{suffix}",
@@ -341,16 +574,24 @@ def launch_overpass_fetch_task(
                 apply_layer_metadata_and_style(layer, entry)
                 QgsProject.instance().addMapLayer(layer)
                 clamp_note = (
-                    " (emprise réduite au centre de la carte)" if was_clamped else ""
+                    tr(" (extent reduced to the centre of the map)") if was_clamped else ""
                 )
+                host = urllib.parse.urlsplit(self.mirror_used).netloc or self.mirror_used
                 if iface is not None and iface.messageBar() is not None:
                     iface.messageBar().pushMessage(
                         "Geostrata",
-                        f"{self.feature_count} entités OSM chargées : {title_str}{clamp_note}",
+                        tr(
+                            "{count} OSM features loaded via {host}: {name}{note}",
+                            count=self.feature_count,
+                            host=host,
+                            name=title_str,
+                            note=clamp_note,
+                        ),
                         level=Qgis.MessageLevel.Success,
                         duration=5,
                     )
 
     task = OverpassFetchTask()
+    _ACTIVE_OVERPASS_TASKS.append(task)
     QgsApplication.taskManager().addTask(task)
     return task

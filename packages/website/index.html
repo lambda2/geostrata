@@ -3,80 +3,91 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Geostrata — Spatial Catalog Plugin for QGIS</title>
+	<title>Geostrata: open geodata search for QGIS</title>
 	<meta
 		name="description"
-		content="QGIS 3 & 4 plugin adding a static SQLite spatial catalog to the Ctrl+K locator bar."
+		content="QGIS plugin that finds open map layers covering your current view and loads them from the locator bar. Works with QGIS 3.28+ and 4.x."
 	/>
+	<meta property="og:title" content="Geostrata: open geodata search for QGIS" />
+	<meta
+		property="og:description"
+		content="Find open map layers covering your current view and load them from the QGIS locator bar."
+	/>
+	<meta property="og:type" content="website" />
+	<meta name="color-scheme" content="light dark" />
+	<link rel="alternate" hreflang="en" href="./index.html" />
+	<link rel="alternate" hreflang="fr" href="./index.fr.html" />
 	<link rel="icon" type="image/svg+xml" href="./icons/geostrata.svg" />
 	<link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+	<a href="#main" class="skip-link">Skip to content</a>
+
 	<header class="site-header">
 		<div class="container header-inner">
-			<a href="#" class="brand">
-				<img src="./icons/geostrata.svg" alt="Geostrata" class="brand-logo" />
+			<a href="./index.html" class="brand">
+				<img src="./icons/geostrata.svg" alt="" class="brand-logo" />
 				<span class="brand-name">Geostrata</span>
 			</a>
-			<nav class="main-nav">
-				<a href="#how-it-works">How it works</a>
-				<a href="#catalogue">Catalog</a>
+			<nav class="main-nav" aria-label="Sections">
+				<a href="#how-it-works">How to use</a>
 				<a href="#installation">Install</a>
-				<a href="https://github.com/lambda2/geostrata" target="_blank" rel="noopener">GitHub</a>
+				<a href="#catalogue">Catalog</a>
+				<a href="#contribute">Contribute</a>
+				<a href="https://github.com/lambda2/geostrata">GitHub</a>
 			</nav>
-			<div class="header-actions">
-				<div class="lang-switch" aria-label="Language switcher">
-					<a href="./index.html" class="active">EN</a>
-					<a href="./index.fr.html">FR</a>
-				</div>
-				<a href="./geostrata.zip" class="btn btn-secondary btn-sm" download>geostrata.zip</a>
-			</div>
+			<nav class="lang-switch" aria-label="Language">
+				<a href="./index.html" lang="en" hreflang="en" aria-current="page" class="active">EN</a>
+				<a href="./index.fr.html" lang="fr" hreflang="fr">FR</a>
+			</nav>
 		</div>
 	</header>
 
-	<main>
+	<main id="main">
 		<!-- INTRO -->
 		<section class="section">
 			<div class="container intro-grid">
 				<div>
-					<h1 class="intro-title">Geostrata</h1>
+					<h1 class="intro-title">Find open geodata for the map in front of you</h1>
 					<p class="intro-text">
-						A PyQGIS plugin (QGIS 3.28+ &amp; 4.x) that queries a static SQLite catalog (<span id="hero-total-count">267</span> layers) directly from the QGIS locator bar (<kbd>Ctrl</kbd>+<kbd>K</kbd>).
-					</p>
-					<p class="intro-sub">
-						Results are filtered by your current map canvas extent using an SQLite R-Tree index and ordered from local to global coverage. Requires no backend server and no external Python packages.
+						Geostrata is a QGIS plugin. Type a keyword in the locator bar and it lists the open layers that cover your current map view, out of a catalog of <span id="hero-total-count">267</span>. Press <kbd>Enter</kbd> to load one.
 					</p>
 					<div class="intro-actions">
 						<a href="#installation" class="btn btn-primary">Install in QGIS</a>
-						<a href="#catalogue" class="btn btn-secondary">Browse catalog</a>
-						<a href="https://github.com/lambda2/geostrata" class="btn btn-outline" target="_blank" rel="noopener">Source code</a>
+						<a href="#catalogue" class="btn btn-secondary">Browse the catalog</a>
 					</div>
+					<p class="intro-sub">
+						Free and open source (GPL). QGIS 3.28+ and 4.x on Windows, macOS and Linux. No account, no server, no extra Python package.
+					</p>
 				</div>
 
 				<div>
 					<table class="spec-table">
+						<caption>
+							In the locator bar (<kbd>Ctrl</kbd>+<kbd>K</kbd>, or <kbd>Cmd</kbd>+<kbd>K</kbd> on macOS)
+						</caption>
 						<thead>
 							<tr>
-								<th>Shortcut / Input</th>
-								<th>Behavior</th>
+								<th scope="col">You type or press</th>
+								<th scope="col">What happens</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td><code class="cmd-code">gst &lt;query&gt;</code></td>
-								<td>Searches layers intersecting the active map canvas (e.g. <code>gst water</code>, <code>gst dem</code>, <code>gst hospital</code>).</td>
+								<th scope="row"><code class="cmd-code">gst water</code></th>
+								<td>Lists the layers matching "water" that cover the visible map, local ones first.</td>
 							</tr>
 							<tr>
-								<td><code class="cmd-code">gst &lt;query&gt; !global</code></td>
-								<td>Ignores the map canvas extent and searches the entire catalog.</td>
+								<th scope="row"><code class="cmd-code">gst water !global</code></th>
+								<td>Searches the whole catalog, wherever your map is.</td>
 							</tr>
 							<tr>
-								<td><kbd>Enter</kbd></td>
-								<td>Streams the layer directly (<code>WMTS</code>, <code>WFS</code>, <code>XYZ</code>, <code>COG /vsicurl/</code>, <code>FlatGeobuf</code>, or <code>Overpass</code>) and applies its default QML style.</td>
+								<th scope="row"><kbd>Enter</kbd></th>
+								<td>Adds the layer to the project as a live stream, already styled and attributed.</td>
 							</tr>
 							<tr>
-								<td><kbd>Shift</kbd> + <kbd>Enter</kbd></td>
-								<td>Clips the layer to the active canvas extent in a background <code>QgsTask</code> and saves a local <code>.gpkg</code> or <code>.tif</code>.</td>
+								<th scope="row"><kbd>Shift</kbd>+<kbd>Enter</kbd></th>
+								<td>Saves a copy clipped to the visible map as a local <code>.gpkg</code> or <code>.tif</code>, usable offline.</td>
 							</tr>
 						</tbody>
 					</table>
@@ -84,189 +95,246 @@
 			</div>
 		</section>
 
-		<!-- HOW IT WORKS -->
+		<!-- HOW TO USE -->
 		<section id="how-it-works" class="section section-alt">
 			<div class="container">
-				<h2 class="section-title">How it works</h2>
-				<div class="how-grid">
-					<div class="how-box">
-						<h3>1. Static SQLite compilation</h3>
+				<h2 class="section-title">How to use</h2>
+				<ol class="steps">
+					<li>
+						<h3>Zoom to your area of interest</h3>
 						<p>
-							YAML source definitions in <code>packages/registry/sources/</code> are validated with Zod and compiled into a single <code>catalog.sqlite</code> file containing an R-Tree spatial index (<code>sources_rtree</code>), an FTS5 text index (<code>sources_fts</code>), <code>i18n</code> translations, and QML styles.
+							Geostrata only suggests layers that have data where you are looking. A map centred on Lyon gets the city's open data, the French national layers, then the worldwide ones.
 						</p>
+					</li>
+					<li>
+						<h3>Search with the <code>gst</code> prefix</h3>
+						<p>
+							Open the locator bar and type <code>gst</code> followed by a keyword, in English or French: <code>gst dem</code>, <code>gst hospital</code>, <code>gst cadastre</code>, <code>gst orthophoto</code>. Accents are optional and synonyms are understood.
+						</p>
+					</li>
+					<li>
+						<h3>Stream it or keep a local copy</h3>
+						<p>
+							<kbd>Enter</kbd> streams the layer from its provider. <kbd>Shift</kbd>+<kbd>Enter</kbd> clips it to the visible map in the background and saves the file in a <code>geostrata_extracts</code> folder next to your project.
+						</p>
+					</li>
+				</ol>
+				<figure class="screenshot">
+					<img src="./screenshots/dock-en.png" width="1320" height="780" loading="lazy" alt="The Geostrata panel docked beside a map of Haiti: a search for health lists the layers covering the view, with the description, license and coverage outline of the selected one." />
+					<figcaption>The Geostrata panel (<strong>Web &rarr; Geostrata</strong>) lists what covers the map. Selecting a layer shows its description, license, data date and link status, and outlines its coverage before you load anything.</figcaption>
+				</figure>
+				<p class="section-note">
+					Layer language, imagery from the OSM Editor Layer Index, icons and extra team catalogs are set in <strong>Web &rarr; Geostrata &rarr; Settings</strong>.
+				</p>
+			</div>
+		</section>
+
+		<!-- INSTALLATION -->
+		<section id="installation" class="section">
+			<div class="container">
+				<h2 class="section-title">Install</h2>
+
+				<div class="install-grid">
+					<div class="install-card">
+						<h3>From the QGIS plugin manager (recommended)</h3>
+						<ol class="install-steps">
+							<li>In QGIS, open <strong>Plugins &rarr; Manage and Install Plugins&hellip; &rarr; Settings</strong>.</li>
+							<li>
+								Under <em>Plugin Repositories</em>, click <strong>Add&hellip;</strong> and paste this URL:
+								<div class="copy-box">
+									<code id="repo-xml-url">https://lambda2.github.io/geostrata/plugins.xml</code>
+									<button type="button" class="btn btn-secondary btn-sm" data-copy-target="repo-xml-url">Copy</button>
+								</div>
+							</li>
+							<li>Go to the <em>All</em> tab, search for <strong>Geostrata</strong> and click <strong>Install Plugin</strong>.</li>
+						</ol>
+						<p class="install-note">Updates then arrive through the plugin manager like any other plugin.</p>
 					</div>
 
-					<div class="how-box">
-						<h3>2. Two-step spatial filter</h3>
-						<p>
-							When you type in <kbd>Ctrl</kbd>+<kbd>K</kbd>, the plugin queries the SQLite R-Tree with the current canvas bounding box, checks exact WKT polygon intersection in PyQGIS, and sorts matches by ascending area (<code>area_deg2 ASC</code>) so local datasets appear before global ones.
-						</p>
-					</div>
-
-					<div class="how-box">
-						<h3>3. Options &amp; custom catalogs</h3>
-						<p>
-							In <strong>Web &rarr; Geostrata &rarr; Settings</strong>, you can switch the layer language (<code>auto</code>, <code>en</code>, <code>fr</code>), toggle OSM Editor Layer Index (ELI) imagery, replace category/layer SVG icons, or attach additional <code>manifest.json</code> catalogs.
-						</p>
+					<div class="install-card">
+						<h3>From a ZIP file</h3>
+						<ol class="install-steps">
+							<li>Download <a href="./geostrata.zip" download>geostrata.zip</a>.</li>
+							<li>In QGIS, open <strong>Plugins &rarr; Manage and Install Plugins&hellip; &rarr; Install from ZIP</strong> and select the file.</li>
+						</ol>
+						<details class="install-details">
+							<summary>Build from source</summary>
+							<p>Requires Node.js 22 and Python 3. This compiles the catalog and copies the plugin into your QGIS profile.</p>
+							<pre class="code-block"><code>git clone https://github.com/lambda2/geostrata.git
+cd geostrata/packages/registry
+npm install
+npm run deploy:qgis</code></pre>
+						</details>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- CATALOG EXPLORER -->
-		<section id="catalogue" class="section">
+		<section id="catalogue" class="section section-alt">
 			<div class="container">
-				<h2 class="section-title">Catalog (<span id="stat-sources-count">267</span> layers)</h2>
+				<h2 class="section-title">Catalog</h2>
 				<p class="section-desc">
-					Compiled from <code>catalog.json</code>. Build: <strong id="catalog-version-badge">Loading…</strong>
+					Every layer the plugin can load. Search here to check what exists for your area before installing.
 				</p>
 
-				<div class="catalog-controls">
+				<form class="catalog-controls" id="catalog-form" role="search" aria-label="Catalog">
 					<div class="search-box">
+						<label for="catalog-search-input">Search layers</label>
 						<input
 							type="search"
 							id="catalog-search-input"
-							placeholder="Search layers (e.g. lidar, ign, orthophoto, osm, swisstopo, water, sentinel…)"
+							placeholder="lidar, orthophoto, hospital, swisstopo&hellip;"
 							autocomplete="off"
 						/>
 					</div>
 
-					<div class="filters-row">
-						<div class="category-pills" id="category-pills">
-							<button type="button" class="pill active" data-category="ALL">All</button>
-							<button type="button" class="pill" data-category="BASEMAP">
-								<img src="./icons/basemap.svg" alt="" /> Basemaps
-							</button>
-							<button type="button" class="pill" data-category="IMAGERY">
-								<img src="./icons/imagery.svg" alt="" /> Imagery
-							</button>
-							<button type="button" class="pill" data-category="ELEVATION">
-								<img src="./icons/elevation.svg" alt="" /> Elevation
-							</button>
-							<button type="button" class="pill" data-category="HYDROGRAPHY">
-								<img src="./icons/hydrography.svg" alt="" /> Hydrography
-							</button>
-							<button type="button" class="pill" data-category="ADMIN">
-								<img src="./icons/admin.svg" alt="" /> Admin
-							</button>
-							<button type="button" class="pill" data-category="BUILDINGS">
-								<img src="./icons/buildings.svg" alt="" /> Buildings
-							</button>
-							<button type="button" class="pill" data-category="TRANSPORT">
-								<img src="./icons/transport.svg" alt="" /> Transport
-							</button>
-							<button type="button" class="pill" data-category="UTILITIES">
-								<img src="./icons/utilities.svg" alt="" /> Utilities
-							</button>
-							<button type="button" class="pill" data-category="LANDUSE">
-								<img src="./icons/landuse.svg" alt="" /> Landuse
-							</button>
-							<button type="button" class="pill" data-category="CRISIS">
-								<img src="./icons/crisis.svg" alt="" /> Crisis
-							</button>
+					<div class="category-pills" id="category-pills" role="group" aria-label="Filter by theme">
+						<button type="button" class="pill active" data-category="ALL" aria-pressed="true">All</button>
+						<button type="button" class="pill" data-category="BASEMAP" aria-pressed="false">
+							<img src="./icons/basemap.svg" alt="" /> Basemaps
+						</button>
+						<button type="button" class="pill" data-category="IMAGERY" aria-pressed="false">
+							<img src="./icons/imagery.svg" alt="" /> Imagery
+						</button>
+						<button type="button" class="pill" data-category="ELEVATION" aria-pressed="false">
+							<img src="./icons/elevation.svg" alt="" /> Elevation
+						</button>
+						<button type="button" class="pill" data-category="HYDROGRAPHY" aria-pressed="false">
+							<img src="./icons/hydrography.svg" alt="" /> Hydrography
+						</button>
+						<button type="button" class="pill" data-category="ADMIN" aria-pressed="false">
+							<img src="./icons/admin.svg" alt="" /> Boundaries
+						</button>
+						<button type="button" class="pill" data-category="BUILDINGS" aria-pressed="false">
+							<img src="./icons/buildings.svg" alt="" /> Buildings
+						</button>
+						<button type="button" class="pill" data-category="TRANSPORT" aria-pressed="false">
+							<img src="./icons/transport.svg" alt="" /> Transport
+						</button>
+						<button type="button" class="pill" data-category="UTILITIES" aria-pressed="false">
+							<img src="./icons/utilities.svg" alt="" /> Utilities
+						</button>
+						<button type="button" class="pill" data-category="LANDUSE" aria-pressed="false">
+							<img src="./icons/landuse.svg" alt="" /> Land use
+						</button>
+						<button type="button" class="pill" data-category="CRISIS" aria-pressed="false">
+							<img src="./icons/crisis.svg" alt="" /> Crisis
+						</button>
+						<button type="button" class="pill" data-category="POPULATION" aria-pressed="false">
+							<img src="./icons/population.svg" alt="" /> Population
+						</button>
+						<button type="button" class="pill" data-category="HEALTH" aria-pressed="false">
+							<img src="./icons/health.svg" alt="" /> Health
+						</button>
+						<button type="button" class="pill" data-category="HAZARD" aria-pressed="false">
+							<img src="./icons/hazard.svg" alt="" /> Hazards
+						</button>
+						<button type="button" class="pill" data-category="WEATHER" aria-pressed="false">
+							<img src="./icons/weather.svg" alt="" /> Weather
+						</button>
+					</div>
+
+					<div class="secondary-filters">
+						<div class="field">
+							<label for="country-select">Coverage</label>
+							<select id="country-select">
+								<option value="ALL">Anywhere</option>
+							</select>
 						</div>
 
-						<div class="secondary-filters">
-							<select id="country-select" aria-label="Filter by geographic coverage">
-								<option value="ALL">All coverages</option>
+						<div class="field">
+							<label for="type-select">Format</label>
+							<select id="type-select">
+								<option value="ALL">Any format</option>
+								<option value="wmts">WMTS (raster tiles)</option>
+								<option value="wms">WMS (raster map)</option>
+								<option value="xyz">XYZ / TMS (raster tiles)</option>
+								<option value="wfs">WFS (vector features)</option>
+								<option value="cog">COG / VRT (raster file)</option>
+								<option value="fgb">FlatGeobuf / GeoJSON (vector file)</option>
+								<option value="overpass">OpenStreetMap live query</option>
+								<option value="vectortile">Vector tiles</option>
 							</select>
-
-							<select id="type-select" aria-label="Filter by protocol">
-								<option value="ALL">All protocols</option>
-								<option value="wmts">WMTS</option>
-								<option value="wms">WMS</option>
-								<option value="xyz">XYZ / TMS</option>
-								<option value="wfs">WFS</option>
-								<option value="cog">COG / VRT (/vsicurl/)</option>
-								<option value="fgb">FlatGeobuf / GeoJSON</option>
-								<option value="overpass">OSM Overpass</option>
-								<option value="vectortile">Vector Tiles</option>
-							</select>
-
-							<label class="eli-toggle-label">
-								<input type="checkbox" id="include-eli-checkbox" checked />
-								<span>Include OSM Editor Layer Index (ELI)</span>
-							</label>
 						</div>
+
+						<label class="eli-toggle-label">
+							<input type="checkbox" id="include-eli-checkbox" checked />
+							<span>Include imagery from the OSM Editor Layer Index</span>
+						</label>
 					</div>
 
 					<div class="catalog-results-bar">
-						<span id="catalog-results-count">Loading…</span>
-						<a href="./catalog.sqlite" download>Download <code>catalog.sqlite</code></a>
+						<span id="catalog-results-count" role="status" aria-live="polite">Loading&hellip;</span>
+						<button type="button" class="btn btn-outline btn-sm" id="reset-filters-btn" hidden>Reset filters</button>
 					</div>
-				</div>
+				</form>
 
-				<div id="catalog-grid" class="catalog-grid"></div>
+				<noscript>
+					<p class="section-note">
+						The catalog explorer needs JavaScript. The raw list is available as <a href="./catalog.json">catalog.json</a>.
+					</p>
+				</noscript>
+
+				<ul id="catalog-grid" class="catalog-grid" aria-label="Layers"></ul>
 
 				<div class="catalog-load-more-wrap" id="load-more-wrap" hidden>
-					<button type="button" id="load-more-btn" class="btn btn-secondary">
-						Show more
-					</button>
+					<button type="button" id="load-more-btn" class="btn btn-secondary">Show more</button>
 				</div>
 			</div>
 		</section>
 
-		<!-- INSTALLATION -->
-		<section id="installation" class="section section-alt">
-			<div class="container">
-				<h2 class="section-title">Installation</h2>
-
-				<div class="install-grid">
-					<div class="install-card">
-						<h3>Option 1: QGIS Plugin Repository</h3>
-						<ol class="install-steps">
-							<li>In QGIS, open <strong>Plugins &rarr; Manage and Install Plugins… &rarr; Settings</strong>.</li>
-							<li>Click <strong>Add…</strong> under Plugin Repositories and enter this URL:</li>
-						</ol>
-						<div class="copy-box">
-							<code id="repo-xml-url">https://lambda2.github.io/geostrata/plugins.xml</code>
-							<button type="button" class="btn btn-secondary btn-sm" id="copy-repo-url-btn">Copy</button>
-						</div>
-						<p style="margin: 0; font-size: 0.85rem; color: var(--ink-secondary);">
-							Then search for <strong>Geostrata</strong> in the <em>All</em> tab and click <strong>Install Plugin</strong>.
-						</p>
+		<!-- CONTRIBUTE -->
+		<section id="contribute" class="section">
+			<div class="container contribute-grid">
+				<div>
+					<h2 class="section-title">Add a layer</h2>
+					<p>
+						The catalog is a set of YAML files in the repository. A layer is about fifteen lines: a name, a URL, a license, a coverage and a few keywords. If you know an open dataset that is missing, describe it in a pull request or simply open an issue.
+					</p>
+					<div class="intro-actions">
+						<a href="https://github.com/lambda2/geostrata/blob/main/docs/adding-a-source.md" class="btn btn-secondary">Read the guide</a>
+						<a href="https://github.com/lambda2/geostrata/issues/new?template=new-source.yml" class="btn btn-outline">Suggest a layer</a>
 					</div>
-
-					<div class="install-card">
-						<h3>Option 2: ZIP Archive or Local Build</h3>
-						<p style="margin: 0 0 8px; font-size: 0.88rem; color: var(--ink-secondary);">
-							Download <a href="./geostrata.zip" download><strong>geostrata.zip</strong></a> and install via <strong>Plugins &rarr; Install from ZIP</strong>, or build from the repository:
-						</p>
-						<pre class="code-block"><code>npm --prefix packages/registry install
-npm run build
-npm run deploy:qgis</code></pre>
-					</div>
+				</div>
+				<div>
+					<h2 class="section-title">Under the hood</h2>
+					<p>
+						The YAML files are validated and compiled into one SQLite file with a full-text index and a spatial index. The plugin keeps a local copy of that file, so every search runs on your machine in a few milliseconds, without any backend. Teams can publish their own catalog the same way and attach it in the settings.
+					</p>
+					<p class="build-line">
+						<a href="https://github.com/lambda2/geostrata/blob/main/docs/architecture.md">Architecture notes</a>
+						<span>Catalog build: <span id="catalog-version-badge">loading&hellip;</span></span>
+					</p>
 				</div>
 			</div>
 		</section>
 	</main>
 
-	<!-- MODAL -->
-	<div id="source-modal" class="modal-backdrop" hidden>
-		<div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-			<div class="modal-header">
-				<div class="modal-title-wrap">
-					<img id="modal-icon" src="./icons/geostrata.svg" alt="" class="modal-icon" />
-					<div>
-						<h3 id="modal-title">Layer details</h3>
-						<span id="modal-id" class="modal-id"></span>
-					</div>
+	<!-- LAYER DETAILS -->
+	<dialog id="source-modal" class="modal-dialog" aria-labelledby="modal-title">
+		<div class="modal-header">
+			<div class="modal-title-wrap">
+				<img id="modal-icon" src="./icons/geostrata.svg" alt="" class="modal-icon" />
+				<div>
+					<h2 id="modal-title">Layer details</h2>
+					<span id="modal-id" class="modal-id"></span>
 				</div>
-				<button type="button" id="modal-close-btn" class="modal-close" aria-label="Close">&times;</button>
 			</div>
-			<div class="modal-body" id="modal-body"></div>
+			<button type="button" id="modal-close-btn" class="modal-close" aria-label="Close">&times;</button>
 		</div>
-	</div>
+		<div class="modal-body" id="modal-body"></div>
+	</dialog>
 
 	<footer class="site-footer">
 		<div class="container footer-inner">
-			<div>Geostrata &middot; GPL-2.0-or-later</div>
+			<div>Geostrata, GPL-2.0-or-later</div>
 			<div class="footer-links">
-				<a href="https://github.com/lambda2/geostrata" target="_blank" rel="noopener">GitHub</a>
-				<a href="./manifest.json" target="_blank" rel="noopener">manifest.json</a>
-				<a href="./catalog.json" target="_blank" rel="noopener">catalog.json</a>
-				<a href="./plugins.xml" target="_blank" rel="noopener">plugins.xml</a>
-				<a href="./geostrata.zip" download>geostrata.zip</a>
+				<a href="https://github.com/lambda2/geostrata">GitHub</a>
+				<a href="./catalog.json">catalog.json</a>
+				<a href="./catalog.sqlite" download>catalog.sqlite</a>
+				<a href="./manifest.json">manifest.json</a>
+				<a href="./plugins.xml">plugins.xml</a>
 			</div>
 		</div>
 	</footer>

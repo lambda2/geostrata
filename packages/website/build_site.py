@@ -29,6 +29,11 @@ def build_static_site() -> None:
         if src.exists():
             shutil.copy2(src, site_dir / asset_name)
 
+    # 1b. Copier les captures d'écran du plugin
+    screenshots_dir = website_dir / "screenshots"
+    if screenshots_dir.exists():
+        shutil.copytree(screenshots_dir, site_dir / "screenshots")
+
     # 2. Copier les icônes SVG thématiques (dans _site/icons/ et dans packages/website/icons/)
     site_icons_dir = site_dir / "icons"
     site_icons_dir.mkdir(parents=True, exist_ok=True)

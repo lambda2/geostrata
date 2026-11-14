@@ -91,7 +91,7 @@ def _resolve_entry_icon(entry: CatalogSourceRecord) -> Any:
 
         # 3. Technical QGIS icons
         src_type = entry.type.lower()
-        if src_type in ("xyz", "tms", "wms", "wmts", "cog", "vrt"):
+        if src_type in ("xyz", "tms", "wms", "wmts", "cog", "vrt", "arcgismapserver"):
             return QgsApplication.getThemeIcon("/mIconRaster.svg")
         if src_type == "vectortile":
             return QgsApplication.getThemeIcon("/mIconVectorTileLayer.svg")

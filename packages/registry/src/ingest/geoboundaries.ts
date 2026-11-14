@@ -37,7 +37,6 @@ export function buildGeoBoundariesCatalogEntry(
 	record: GeoBoundariesApiRecord,
 	release: GeoBoundariesRelease,
 	country: CountryReference,
-	useCuratedCountryPolygon: boolean,
 ): CatalogEntry {
 	const levelTag = record.boundaryType.toLowerCase()
 	const levelLabel = levelTag.toUpperCase()
@@ -66,8 +65,7 @@ export function buildGeoBoundariesCatalogEntry(
 		url: `/vsicurl/${record.gjDownloadURL}`,
 		crs: 'EPSG:4326',
 		country_iso: country.iso2,
-		// Countries listed in assets/polygons/countries.json keep their curated outline.
-		bbox: useCuratedCountryPolygon ? undefined : country.bbox,
+		// No bbox: the build fills in the outline of the country (assets/polygons/country-outlines.json).
 		style_file: 'admin.qml',
 		tags: [
 			levelTag,

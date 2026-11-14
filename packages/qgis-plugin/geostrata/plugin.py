@@ -11,6 +11,7 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
 from .core.db_client import CatalogDatabaseClient
+from .core.loader_task import cancel_active_file_load_tasks
 from .core.sync_manager import SyncManager
 from .i18n import N_, get_ui_language, tr
 from .ui.browser_dock import GeostrataDockWidget
@@ -110,6 +111,8 @@ class GeostrataPlugin:
 
     def unload(self) -> None:
         """Deregister locator filter, dock widget, and remove plugin menu actions."""
+        # Running downloads keep their partial file and resume on the next load.
+        cancel_active_file_load_tasks()
         if self._locator_filter is not None:
             self._iface.deregisterLocatorFilter(self._locator_filter)
             self._locator_filter = None

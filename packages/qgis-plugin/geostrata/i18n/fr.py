@@ -113,8 +113,8 @@ TRANSLATIONS: Dict[str, str] = {
         "N'afficher que les couches qui intersectent l'emprise actuelle de la carte QGIS"
     ),
     "Load": "Charger",
-    "Add the layer to QGIS, streamed from its source": (
-        "Ajouter la couche à QGIS, en flux direct depuis sa source"
+    "Add the layer to QGIS (files are downloaded in the background)": (
+        "Ajouter la couche à QGIS (les fichiers sont téléchargés en arrière-plan)"
     ),
     "Extract (.gpkg/.tif)": "Extraire (.gpkg/.tif)",
     "Clip the layer to the current map extent and save it locally": (
@@ -251,4 +251,97 @@ TRANSLATIONS: Dict[str, str] = {
     "Close": "Fermer",
     "# No layer is open in the project.": "# Aucune couche ouverte dans le projet.",
     "YAML entry copied to the clipboard.": "Fiche YAML copiée dans le presse-papiers.",
+    # --- 1.1: ArcGIS services, time-templated sources -----------------------------
+    "ArcGIS Feature Service (vector)": "Service d'entités ArcGIS (vecteur)",
+    "ArcGIS Map/Image Service (raster)": "Service de cartes/d'images ArcGIS (raster)",
+    "Date loaded": "Date chargée",
+    "Loading": "Chargement",
+    "Downloaded in the background, then kept for offline use": (
+        "Téléchargé en arrière-plan, puis conservé pour un usage hors ligne"
+    ),
+    # --- core/file_cache.py, core/loader_task.py: background download and cache -----
+    "{value} GB": "{value} Go",
+    "{value} MB": "{value} Mo",
+    "{value} kB": "{value} ko",
+    "the download was interrupted {count} times ({error})": (
+        "le téléchargement a été interrompu {count} fois ({error})"
+    ),
+    "not enough free disk space ({needed} needed, {free} available)": (
+        "espace disque insuffisant ({needed} nécessaires, {free} disponibles)"
+    ),
+    "'{target}' was not found in the archive (it contains: {files})": (
+        "« {target} » est introuvable dans l'archive (elle contient : {files})"
+    ),
+    "the downloaded archive is corrupted ({error})": (
+        "l'archive téléchargée est corrompue ({error})"
+    ),
+    "the server sent no data": "le serveur n'a envoyé aucune donnée",
+    "the server answered HTTP {code}": "le serveur a répondu HTTP {code}",
+    "the archive contains an unsafe path: {path}": (
+        "l'archive contient un chemin dangereux : {path}"
+    ),
+    "this source has no downloadable URL": "cette source n'a pas d'URL téléchargeable",
+    "the downloaded file could not be opened ({uri})": (
+        "le fichier téléchargé n'a pas pu être ouvert ({uri})"
+    ),
+    "unknown error": "erreur inconnue",
+    "Geostrata: loading {name}": "Geostrata : chargement de {name}",
+    "Downloading {name}: {done} of {total}": "Téléchargement de {name} : {done} sur {total}",
+    "Downloading {name}: {done}": "Téléchargement de {name} : {done}",
+    "Extracting {name}: {percent} %": "Extraction de {name} : {percent} %",
+    "Opening {name}…": "Ouverture de {name}…",
+    "{name} is already being downloaded.": "{name} est déjà en cours de téléchargement.",
+    "Could not load '{name}': {error}": "Impossible de charger « {name} » : {error}",
+    "Download cancelled: {name}. The part already downloaded is kept and the download resumes from there next time.": (
+        "Téléchargement annulé : {name}. La partie déjà téléchargée est conservée et le "
+        "téléchargement reprendra de là la prochaine fois."
+    ),
+    "Layer loaded from the local copy of {date}: {name}. The server could not be checked for a newer version ({error}).": (
+        "Couche chargée depuis la copie locale du {date} : {name}. Impossible de vérifier "
+        "auprès du serveur s'il existe une version plus récente ({error})."
+    ),
+    "Layer loaded from the local cache: {name} (downloaded on {date})": (
+        "Couche chargée depuis le cache local : {name} (téléchargée le {date})"
+    ),
+    "Layer loaded: {name} ({size} downloaded and kept in the local cache)": (
+        "Couche chargée : {name} ({size} téléchargés et conservés dans le cache local)"
+    ),
+    "Offline extraction cancelled: {name}": "Extraction hors ligne annulée : {name}",
+    # --- core/overpass_task.py: companion layers of polygon recipes -------------------
+    "points": "points",
+    "lines": "lignes",
+    "polygons": "polygones",
+    # --- ui/settings_dialog.py: downloaded files tab ----------------------------------
+    "<b>Downloaded files:</b><br>ZIP archives and GeoJSON files are downloaded once, in the background, and kept in this folder: loading them again is immediate and works offline. Geostrata asks the server whether a file changed (at most once a day for archives) and downloads it again only then. When the folder exceeds the maximum size, the files that were not used for the longest time are removed.": (
+        "<b>Fichiers téléchargés :</b><br>Les archives ZIP et les fichiers GeoJSON sont "
+        "téléchargés une seule fois, en arrière-plan, et conservés dans ce dossier : les "
+        "recharger est immédiat et fonctionne hors ligne. Geostrata demande au serveur si un "
+        "fichier a changé (au plus une fois par jour pour les archives) et ne le retélécharge "
+        "que dans ce cas. Quand le dossier dépasse la taille maximale, les fichiers inutilisés "
+        "depuis le plus longtemps sont supprimés."
+    ),
+    "Choose…": "Choisir…",
+    "Default folder": "Dossier par défaut",
+    "Open": "Ouvrir",
+    "Folder:": "Dossier :",
+    " GB": " Go",
+    "Maximum size:": "Taille maximale :",
+    "Delete the downloaded files": "Supprimer les fichiers téléchargés",
+    "Files used by a layer of the open project are kept. Layers of other projects that point to a deleted file will have to be loaded again.": (
+        "Les fichiers utilisés par une couche du projet ouvert sont conservés. Les couches "
+        "d'autres projets qui pointent vers un fichier supprimé devront être rechargées."
+    ),
+    "Disk space used:": "Espace disque utilisé :",
+    "Downloaded files": "Fichiers téléchargés",
+    "{count} file, {size}": "{count} fichier, {size}",
+    "{count} files, {size}": "{count} fichiers, {size}",
+    "Folder for downloaded files": "Dossier des fichiers téléchargés",
+    "Delete {size} of downloaded files? They will be downloaded again the next time their layer is loaded.": (
+        "Supprimer {size} de fichiers téléchargés ? Ils seront téléchargés à nouveau au "
+        "prochain chargement de leur couche."
+    ),
+    "{freed} deleted. {kept} kept: used by a layer of the open project or being downloaded.": (
+        "{freed} supprimés. {kept} conservés : utilisés par une couche du projet ouvert "
+        "ou en cours de téléchargement."
+    ),
 }

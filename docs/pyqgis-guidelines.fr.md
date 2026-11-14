@@ -34,7 +34,14 @@ L'interface graphique de QGIS ne doit **jamais** geler :
    - Exécuter le découpage dans une `QgsTask` en appelant `processing.run("native:extractbyextent", ...)` pour les vecteurs ou `processing.run("gdal:cliprasterbyextent", ...)` pour les rasters.
    - Ne jamais instancier ou ajouter une couche au `QgsProject.instance()` depuis `QgsTask.run()`. Charger la couche dans `QgsTask.finished(result)` sur le thread principal.
 
-4. **Aperçu sur le canevas (`ui/coverage_preview.py`)** :
+4. **Sources de type fichier (`loader_task.py`, `file_cache.py`)** :
+   - Ne jamais ouvrir une archive ZIP ou une URL GeoJSON sur le thread principal. `ui/actions.load_entry()` envoie les entrées retenues par `uri_builder.needs_local_copy()` à `launch_file_load_task()` ; FlatGeobuf, COG et VRT restent lus en flux (voir `architecture.fr.md`, section 4.3).
+   - Tout le travail réseau et disque se fait dans `QgsTask.run()` via `FileCache.fetch()`, qui interroge `isCanceled()` entre deux blocs. `file_cache.py` est en Python pur et doit le rester (il est testé unitairement avec un serveur HTTP local).
+   - Une couche créée dans `run()` appartient au thread de travail : appeler `layer.moveToThread(QgsApplication.instance().thread())` en dernière étape de `run()`, et n'appliquer le style et l'ajout au projet que dans `finished()`.
+   - Capturer l'état du thread principal (réglages du cache, `open_layer_sources()`) avant de lancer la tâche et conserver la tâche dans `_ACTIVE_FILE_LOAD_TASKS` jusqu'à `finished()`.
+   - Tout autre code ayant besoin d'un tel fichier (la tâche d'extraction hors ligne) appelle `fetch_entry_file()` depuis son propre thread de travail, jamais le réseau directement.
+
+5. **Aperçu sur le canevas (`ui/coverage_preview.py`)** :
    - Utiliser le `CoveragePreview` partagé pour mettre une emprise en évidence ; ne jamais créer un autre `QgsRubberBand`. Il ne doit être appelé que depuis le thread principal (`triggerResultFromAction`, slots du panneau) et est libéré dans `unload()`.
 
 ---
@@ -56,10 +63,18 @@ L'interface graphique de QGIS ne doit **jamais** geler :
 | `xyz` / `tms` | `wms` | `QgsRasterLayer` | `type=xyz&url=<encoded_url>&zmax=<max_zoom>&zmin=<min_zoom>&crs=EPSG:3857` |
 | `wms` / `wmts` | `wms` | `QgsRasterLayer` | Paramètres `contextualWMSLegend=0&crs=...&dpiMode=7&format=image/png&layers=...&styles=&tileMatrixSet=...&url=...` |
 | `wfs` | `WFS` | `QgsVectorLayer` | `pagingEnabled='true' preferCoordinatesForWfsT11='false' restrictToRequestBBOX='1' srsname='<crs>' typename='<typename>' url='<url>' version='auto'` |
+| `wms` avec KVP supplémentaires (`TIME=...`) | `wms` | `QgsRasterLayer` | `IgnoreGetMapUrl=1&...&url=<point d'accès>?TIME%3D<valeur>` (les paramètres restent dans l'URL, encodés une fois de plus) |
+| `wmts` avec une dimension | `wms` | `QgsRasterLayer` | ajoute `tileDimensions=TIME%3D<valeur>` |
 | `cog` / `vrt` | `gdal` | `QgsRasterLayer` | `/vsicurl/https://...` |
-| `fgb` / `geojson` | `ogr` | `QgsVectorLayer` | `/vsicurl/https://...` |
+| `fgb` | `ogr` | `QgsVectorLayer` | `/vsicurl/https://...[\|layername=<couche>][\|geometrytype=Point/LineString/Polygon]` |
+| `geojson` | `ogr` | `QgsVectorLayer` | `<fichier en cache>[\|geometrytype=...]` (`/vsicurl/https://...` sur le chemin synchrone) |
+| `archive` | `ogr` / `gdal` | `QgsVectorLayer` / `QgsRasterLayer` | `<cible extraite en cache>[\|layername=<couche>][\|geometrytype=...]` (`/vsizip//vsicurl/<url>/<cible>` sur le chemin synchrone) |
+| `arcgisfeatureserver` | `arcgisfeatureserver` | `QgsVectorLayer` | `url='<point d'accès de la couche>'` |
+| `arcgismapserver` | `arcgismapserver` | `QgsRasterLayer` | `format='PNG32' layer='<id de sous-couche ou vide>' url='<racine MapServer ou ImageServer>'` |
 | `vectortile` | `vectortile` | `QgsVectorTileLayer` | `type=xyz&url=<url>&zmax=<max_zoom>&zmin=<min_zoom>` |
-| `overpass` | `ogr` | `QgsVectorLayer` | Requête asynchrone multi-miroirs `[out:json]` convertie en `.geojson` local via `overpass_task.py`. |
+| `overpass` | `ogr` | `QgsVectorLayer` | Requête asynchrone multi-miroirs `[out:json]` convertie en `.geojson` local via `overpass_task.py` (points, lignes ou polygones, voir `architecture.fr.md`, section 4.4). |
+
+`{time}` dans `url` / `archive_target` est résolu par `resolved_entry_url()` / `resolved_archive_target()` avant tout ce qui précède (date UTC) ; utiliser `entry_display_name()` pour le titre de la couche afin que la date soit visible.
 
 ---
 

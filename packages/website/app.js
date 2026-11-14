@@ -9,6 +9,7 @@
 		country: 'ALL',
 		protocolType: 'ALL',
 		includeEli: true,
+		family: '',
 		query: '',
 		visibleLimit: PAGE_SIZE
 	}
@@ -71,6 +72,9 @@
 				worldwide: 'Monde entier',
 				countOne: ' couche',
 				countMany: ' couches',
+				familyCountries: ' pays',
+				familyHint: 'Même couche publiée pays par pays. Ouvrez la famille ou choisissez une couverture pour voir un pays.',
+				familyOpen: 'Voir les pays',
 				countOf: ' sur ',
 				emptyTitle: 'Aucune couche ne correspond',
 				emptyHint: 'Essayez un autre mot-clé ou retirez un filtre.',
@@ -99,6 +103,9 @@
 				worldwide: 'Worldwide',
 				countOne: ' layer',
 				countMany: ' layers',
+				familyCountries: ' countries',
+				familyHint: 'The same layer published country by country. Open the family or pick a coverage to see one country.',
+				familyOpen: 'See countries',
 				countOf: ' of ',
 				emptyTitle: 'No layer matches',
 				emptyHint: 'Try another keyword or remove a filter.',
@@ -151,6 +158,73 @@
 		var status = String(item.health_status || 'ok')
 		var label = status === 'dead' ? TEXT.statusDead : status === 'degraded' ? TEXT.statusDegraded : TEXT.statusOk
 		return label + ' (' + TEXT.checkedOn + String(item.health_checked_at).slice(0, 10) + ')'
+	}
+
+	var FAMILY_MIN_SIZE = 20
+	var familyKeyById = {}
+	var familyInfo = {}
+
+	// A family is one layer published country by country (ids differ only by their country prefix).
+	function buildFamilies(sources) {
+		var members = {}
+		for (var i = 0; i < sources.length; i++) {
+			var item = sources[i]
+			if (!item.country_iso) {
+				continue
+			}
+			var key = String(item.id).replace(/^[a-z]{2}-/, '')
+			if (!members[key]) {
+				members[key] = []
+			}
+			members[key].push(item)
+		}
+		Object.keys(members).forEach(function registerFamily(key) {
+			var list = members[key]
+			if (list.length < FAMILY_MIN_SIZE) {
+				return
+			}
+			// The family label is what all member names share before the country name.
+			var prefix = getLocalizedName(list[0])
+			for (var j = 1; j < list.length; j++) {
+				var name = getLocalizedName(list[j])
+				var k = 0
+				while (k < prefix.length && k < name.length && prefix.charAt(k) === name.charAt(k)) {
+					k++
+				}
+				prefix = prefix.slice(0, k)
+			}
+			var label = prefix.replace(/[\s\-–(:,]+$/, '')
+			familyInfo[key] = { label: label ? label : key, count: list.length }
+			for (var m = 0; m < list.length; m++) {
+				familyKeyById[list[m].id] = key
+			}
+		})
+	}
+
+	// Families are folded into one card while browsing everything, and unfolded as soon as the visitor narrows down.
+	function shouldFoldFamilies() {
+		return state.country === 'ALL' && state.family === '' && state.query.trim() === ''
+	}
+
+	function buildDisplayList() {
+		if (!shouldFoldFamilies()) {
+			return state.filtered.map(function wrapItem(item) {
+				return { item: item, family: null }
+			})
+		}
+		var seen = {}
+		var list = []
+		for (var i = 0; i < state.filtered.length; i++) {
+			var item = state.filtered[i]
+			var key = familyKeyById[item.id]
+			if (!key) {
+				list.push({ item: item, family: null })
+			} else if (!seen[key]) {
+				seen[key] = true
+				list.push({ item: item, family: key })
+			}
+		}
+		return list
 	}
 
 	function isEliSource(item) {
@@ -264,6 +338,9 @@
 		if (filterValue === 'xyz') {
 			return t === 'xyz' || t === 'tms'
 		}
+		if (filterValue === 'arcgis') {
+			return t === 'arcgisfeatureserver' || t === 'arcgismapserver'
+		}
 		if (filterValue === 'cog') {
 			return t === 'cog' || t === 'vrt'
 		}
@@ -279,6 +356,7 @@
 			state.category !== 'ALL' ||
 			state.country !== 'ALL' ||
 			state.protocolType !== 'ALL' ||
+			state.family !== '' ||
 			!state.includeEli
 		)
 	}
@@ -293,6 +371,7 @@
 		if (state.category !== 'ALL') params.set('theme', state.category.toLowerCase())
 		if (state.country !== 'ALL') params.set('coverage', state.country)
 		if (state.protocolType !== 'ALL') params.set('format', state.protocolType)
+		if (state.family) params.set('family', state.family)
 		if (!state.includeEli) params.set('eli', '0')
 		if (openLayerId) params.set('layer', openLayerId)
 		var qs = params.toString()
@@ -310,6 +389,7 @@
 		state.country = params.get('coverage') || 'ALL'
 		state.protocolType = params.get('format') || 'ALL'
 		state.includeEli = params.get('eli') !== '0'
+		state.family = familyInfo[params.get('family') || ''] ? params.get('family') : ''
 		return params.get('layer')
 	}
 
@@ -355,6 +435,7 @@
 		state.category = 'ALL'
 		state.country = 'ALL'
 		state.protocolType = 'ALL'
+		state.family = ''
 		state.includeEli = true
 		state.visibleLimit = PAGE_SIZE
 		syncControlsFromState()
@@ -379,6 +460,9 @@
 				}
 			}
 			if (!matchesProtocolFilter(item.type, state.protocolType)) {
+				return false
+			}
+			if (state.family !== '' && familyKeyById[item.id] !== state.family) {
 				return false
 			}
 			if (tokens.length > 0) {
@@ -432,7 +516,8 @@
 			resetBtn.hidden = !hasActiveFilters()
 		}
 
-		var slice = state.filtered.slice(0, state.visibleLimit)
+		var displayList = buildDisplayList()
+		var slice = displayList.slice(0, state.visibleLimit)
 		if (slice.length === 0) {
 			grid.innerHTML =
 				'<li class="catalog-empty">' +
@@ -454,7 +539,8 @@
 
 		var html = []
 		for (var i = 0; i < slice.length; i++) {
-			var item = slice[i]
+			var item = slice[i].item
+			var family = slice[i].family ? familyInfo[slice[i].family] : null
 			var catKey = String(item.category || '').toLowerCase()
 			var categoryLabel = CATEGORY_LABELS[catKey] ? CATEGORY_LABELS[catKey] : item.category
 			var description = getLocalizedDescription(item)
@@ -468,21 +554,31 @@
 					'" alt="" />' +
 					'<div>' +
 					'<h3 class="source-card-title">' +
-					'<button type="button" class="source-card-open" data-open-id="' +
-					escapeHtml(item.id) +
-					'">' +
-					escapeHtml(getLocalizedName(item)) +
-					'</button>' +
+					(family
+						? '<button type="button" class="source-card-open" data-open-family="' +
+							escapeHtml(slice[i].family) +
+							'">' +
+							escapeHtml(family.label) +
+							'</button>'
+						: '<button type="button" class="source-card-open" data-open-id="' +
+							escapeHtml(item.id) +
+							'">' +
+							escapeHtml(getLocalizedName(item)) +
+							'</button>') +
 					'</h3>' +
 					'<div class="source-card-provider">' +
 					escapeHtml(categoryLabel) +
 					'</div>' +
 					'</div>' +
 					'</div>' +
-					(description ? '<p class="source-card-desc">' + escapeHtml(description) + '</p>' : '') +
+					(family
+						? '<p class="source-card-desc">' + escapeHtml(TEXT.familyHint) + '</p>'
+						: description
+							? '<p class="source-card-desc">' + escapeHtml(description) + '</p>'
+							: '') +
 					'<div class="source-badges">' +
 					'<span class="badge badge-country">' +
-					escapeHtml(getCoverageLabel(item.country_iso)) +
+					escapeHtml(family ? family.count + TEXT.familyCountries : getCoverageLabel(item.country_iso)) +
 					'</span>' +
 					'<span class="badge badge-type">' +
 					escapeHtml(String(item.type || '').toUpperCase()) +
@@ -501,7 +597,7 @@
 		grid.innerHTML = html.join('')
 
 		if (loadMoreWrap) {
-			loadMoreWrap.hidden = state.filtered.length <= state.visibleLimit
+			loadMoreWrap.hidden = displayList.length <= state.visibleLimit
 		}
 	}
 
@@ -685,7 +781,7 @@
 				state.visibleLimit += PAGE_SIZE
 				renderGrid()
 				// Keep keyboard users where they were instead of dropping focus on the body.
-				var openers = document.querySelectorAll('#catalog-grid [data-open-id]')
+				var openers = document.querySelectorAll('#catalog-grid .source-card-open')
 				if (openers[firstNewIndex]) {
 					openers[firstNewIndex].focus()
 				}
@@ -697,6 +793,17 @@
 			grid.addEventListener('click', function onGridClick(e) {
 				if (e.target.closest('[data-reset-filters]')) {
 					resetFilters()
+					return
+				}
+				var familyBtn = e.target.closest('[data-open-family]')
+				if (familyBtn) {
+					state.family = familyBtn.getAttribute('data-open-family') || ''
+					state.visibleLimit = PAGE_SIZE
+					applyFilters()
+					var firstOpener = document.querySelector('#catalog-grid [data-open-id]')
+					if (firstOpener) {
+						firstOpener.focus()
+					}
 					return
 				}
 				var btn = e.target.closest('[data-open-id]')
@@ -769,6 +876,7 @@
 						: sources.length + ' ' + TEXT.layers
 				}
 
+				buildFamilies(sources)
 				populateCountrySelect(sources)
 				renderPillCounts(sources)
 				var layerToOpen = readStateFromUrl()

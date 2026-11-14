@@ -113,18 +113,6 @@ function loadCountryReferences(packageRoot: string): Map<string, CountryReferenc
 	return references
 }
 
-function loadCuratedCountryCodes(packageRoot: string): Set<string> {
-	const polygonsPath = path.join(
-		packageRoot,
-		'assets',
-		'polygons',
-		'countries.json',
-	)
-	return fs.existsSync(polygonsPath)
-		? new Set(Object.keys(JSON.parse(fs.readFileSync(polygonsPath, 'utf-8'))))
-		: new Set()
-}
-
 async function ingestGeoBoundaries(
 	packageRoot: string,
 	generatedDir: string,
@@ -132,7 +120,6 @@ async function ingestGeoBoundaries(
 	const outputPath = path.join(generatedDir, 'geoboundaries-adm.yaml')
 	try {
 		const countries = loadCountryReferences(packageRoot)
-		const curatedCodes = loadCuratedCountryCodes(packageRoot)
 		const entries: Array<CatalogEntry> = []
 
 		for (const level of ADMIN_LEVELS) {
@@ -160,14 +147,7 @@ async function ingestGeoBoundaries(
 				if (!country || !record.gjDownloadURL) {
 					continue
 				}
-				entries.push(
-					buildGeoBoundariesCatalogEntry(
-						record,
-						release,
-						country,
-						curatedCodes.has(country.iso2),
-					),
-				)
+				entries.push(buildGeoBoundariesCatalogEntry(record, release, country))
 			}
 		}
 

@@ -54,7 +54,7 @@ Quand un fournisseur publie la même couche pays par pays, décrivez-la une seul
 | `{iso3}` / `{ISO3}` | `hti` / `HTI` |
 | `{country}` / `{country_fr}` | `Haiti` / `Haïti` |
 
-Les codes, noms et emprises des pays viennent de `assets/polygons/country-index.json` (à régénérer avec `npm run refresh:countries`). Ne listez que les pays pour lesquels le fournisseur publie réellement le fichier.
+Les codes et noms des pays viennent de `assets/polygons/country-index.json`, et l'emprise est le contour simplifié du pays dans `assets/polygons/country-outlines.json` (tous deux régénérés depuis Natural Earth avec `npm run refresh:countries`). Ne listez que les pays pour lesquels le fournisseur publie réellement le fichier.
 
 ---
 
@@ -66,20 +66,23 @@ Les codes, noms et emprises des pays viennent de `assets/polygons/country-index.
 | `name` | `string` | Oui | Titre par défaut en anglais affiché dans QGIS (`Ctrl+K`). |
 | `description` | `string` | Non | Description par défaut en anglais (indexée dans FTS5). |
 | `i18n` | `Record<string, { name?: string, description?: string }>` | Non | Traductions localisées indexées par code langue ISO-2 (ex: `i18n.fr.name`, `i18n.fr.description`). Toutes les langues sont également indexées dans FTS5. |
-| `type` | `SourceType` | Oui | `'xyz' \| 'tms' \| 'wms' \| 'wmts' \| 'wfs' \| 'vectortile' \| 'cog' \| 'vrt' \| 'fgb' \| 'geojson' \| 'archive' \| 'overpass'` |
+| `type` | `SourceType` | Oui | `'xyz' \| 'tms' \| 'wms' \| 'wmts' \| 'wfs' \| 'vectortile' \| 'cog' \| 'vrt' \| 'fgb' \| 'geojson' \| 'archive' \| 'overpass' \| 'arcgisfeatureserver' \| 'arcgismapserver'` |
 | `category` | `SourceCategory` | Oui | `'basemap' \| 'elevation' \| 'hydrography' \| 'transport' \| 'admin' \| 'buildings' \| 'landuse' \| 'imagery' \| 'utilities' \| 'crisis' \| 'population' \| 'health' \| 'hazard' \| 'weather'` |
-| `url` | `string` | Oui | URL du flux, chemin `/vsicurl/https://...`, ou requête/expression Overpass. |
+| `url` | `string` | Oui | URL du flux, chemin `/vsicurl/https://...`, point d'accès ArcGIS REST, ou requête/expression Overpass. Peut contenir `{time}` (section 7). |
 | `crs` | `string` | Non | Code EPSG (défaut : `'EPSG:4326'`). |
-| `country_iso` | `string` | Non | Code ISO-3166-1 alpha-2 sur 2 lettres majuscules (`'FR'`). Injecte automatiquement le polygone WKT et la bbox du pays si non spécifiés. |
+| `country_iso` | `string` | Non | Code ISO-3166-1 alpha-2 sur 2 lettres majuscules (`'FR'`). Si ni `bbox` ni `geom_wkt` ne sont fournis, la couche prend le contour du pays comme emprise. |
 | `bbox` | `[number, number, number, number]` | Non* | `[minX, minY, maxX, maxY]` en WGS84 (`EPSG:4326`). Défaut `[-180, -90, 180, 90]` si `country_iso` absent. |
-| `geom_wkt` | `string` | Non | Géométrie exacte en WKT (`EPSG:4326`). Calculée automatiquement depuis `bbox`, le contour soigné de `assets/polygons/countries.json`, ou l'emprise du pays dans `assets/polygons/country-index.json` si absente. |
+| `geom_wkt` | `string` | Non | Géométrie exacte en WKT (`EPSG:4326`). Si absente : le rectangle `bbox`, sinon le contour du pays de `assets/polygons/country-outlines.json` quand `country_iso` est renseigné, sinon le monde entier. |
 | `tags` | `Array<string>` | Oui | Mots-clés métiers ou géographiques (automatiquement enrichis par `synonyms.json`). |
 | `license` | `string` | Oui | Nom court de la licence (ex: `ODbL`, `Licence Ouverte 2.0`, `CC-BY-4.0`). |
 | `attribution` | `string` | Oui | Texte de copyright injecté dans les métadonnées de la couche QGIS. |
 | `style_file` | `string` | Non | Fichier `.qml` dans `assets/styles/` (ex: `hydrography.qml`). Par défaut, utilise `<category>.qml` s'il existe. |
 | `min_zoom` | `number` | Non | Niveau de zoom minimal (entier >= 0). |
 | `max_zoom` | `number` | Non | Niveau de zoom maximal (entier <= 24). |
-| `archive_target` | `string` | Non | Chemin interne du fichier `.gpkg` ou `.shp` lorsque `type: archive` (via `/vsizip//vsicurl/`). |
+| `archive_target` | `string` | Non | Chemin interne du fichier `.gpkg` ou `.shp` lorsque `type: archive` (via `/vsizip//vsicurl/`). Peut contenir `{time}` (section 7). |
+| `layer` | `string` | Non | Sous-couche à charger : le nom de la couche dans un fichier qui en contient plusieurs (`fgb`, `geojson`, `archive` contenant un GeoPackage), ou l'identifiant de la sous-couche d'un service `arcgismapserver` (section 6). |
+| `geometry_type` | `'point' \| 'line' \| 'polygon'` | Non | Type de géométrie à charger quand un fichier en mélange plusieurs (section 6). |
+| `time` | `{ offset_days?, step?, format? }` | Non* | Date substituée à `{time}` dans `url` et `archive_target`. Obligatoire quand l'un des deux contient `{time}`, interdit sinon (section 7). |
 | `priority` | `number` | Non | Entier de `-10` à `10` (défaut `0`). Coup de pouce éditorial : à pertinence égale, les valeurs hautes sont listées en premier. Laissez `0` sauf pour une couche de référence qu'un cartographe d'urgence veut voir d'abord. |
 | `data_date` | `string` | Non | Millésime ou fréquence de mise à jour en texte libre, affiché avant le chargement (ex. `2021`, `updated daily`). |
 | `for_each_country` | `Array<string> \| 'all'` | Non | Codes ISO alpha-3 : développe l'entrée en une couche par pays (voir section 1). |
@@ -112,3 +115,68 @@ Pour les données OpenStreetMap à la demande, utilisez `type: overpass`.
 Le champ `url` peut contenir :
 - Soit une expression de filtres OSM concise (ex: `amenity=drinking_water|natural=spring|man_made=water_well`) que `overpass_task.py` transforme en requête Overpass `[out:json]` bornée par l'emprise avec bascule multi-miroirs.
 - Soit une requête Overpass QL complète incluant le template `{{bbox}}` (`minLat,minLon,maxLat,maxLon`).
+
+---
+
+## 5. Services ArcGIS REST (`type: arcgisfeatureserver`, `type: arcgismapserver`)
+
+- `arcgisfeatureserver` : entités vectorielles. L'`url` est le **point d'accès d'une couche**, terminé par le numéro de la couche :
+  ```yaml
+  type: arcgisfeatureserver
+  url: https://example.org/arcgis/rest/services/Health/Facilities/FeatureServer/0
+  ```
+- `arcgismapserver` : images rendues par le serveur. L'`url` est la **racine du service** d'un `MapServer` ou d'un `ImageServer` ; `layer` sélectionne éventuellement une sous-couche par son identifiant :
+  ```yaml
+  type: arcgismapserver
+  url: https://example.org/arcgis/rest/services/Hazards/Floods/MapServer
+  layer: 2
+  ```
+
+N'ajoutez ni `?f=json` ni aucun autre paramètre à l'`url`. Le contrôle des liens interroge `<url>?f=json` et considère l'erreur qu'un serveur ArcGIS renvoie dans une réponse HTTP 200 (`{"error":{"code":404}}`) comme le véritable statut.
+
+---
+
+## 6. Choisir une sous-couche (`layer`, `geometry_type`)
+
+Un GeoPackage, et certaines sources GeoJSON ou FlatGeobuf lues par OGR, contiennent plusieurs couches. Sans `layer`, la première est chargée.
+
+```yaml
+type: archive
+url: https://example.org/export/admin_boundaries.zip
+archive_target: admin_boundaries.gpkg
+layer: admin2            # nom de la couche dans le GeoPackage
+```
+
+Quand un même fichier mélange points, lignes et polygones (cas courant des exports OSM en GeoJSON), `geometry_type` n'en garde qu'un : la couche a alors un seul type de géométrie et un seul style :
+
+```yaml
+type: geojson
+url: https://example.org/export/health.geojson
+geometry_type: point     # point | line | polygon
+```
+
+Aucun de ces deux champs ne modifie l'URL téléchargée ni celle testée par le contrôle des liens. Pour `arcgismapserver`, `layer` est l'identifiant de la sous-couche (section 5).
+
+---
+
+## 7. URL datées (`time`)
+
+Certains fournisseurs publient un fichier par jour ou par mois. Écrivez `{time}` à l'emplacement de la date dans `url` (et dans `archive_target` si nécessaire) et décrivez la date dans un bloc `time` :
+
+```yaml
+- id: global-example-rainfall-daily
+  name: Daily rainfall (latest)
+  type: cog
+  url: /vsicurl/https://example.org/rain/{time}/rainfall_{time}.tif
+  time:
+    offset_days: -2        # le fichier du jour est publié deux jours plus tard
+    format: YYYYMMDD
+```
+
+| Clé | Défaut | Signification |
+| :--- | :--- | :--- |
+| `offset_days` | `0` | Nombre entier de jours ajouté à la date du jour (UTC) ; une valeur négative remonte dans le passé. |
+| `step` | `day` | `day` ou `month`. Avec `month`, la date est ramenée au premier jour de son mois, une fois le décalage appliqué. |
+| `format` | `YYYY-MM-DD` | Texte écrit à la place de `{time}`. `YYYY`, `MM` et `DD` sont remplacés par l'année, le mois et le jour sur 4, 2 et 2 chiffres ; le reste est conservé (`YYYY/MM`, `YYYYMMDD`...). |
+
+La date est calculée au chargement de la couche, et de la même façon par le contrôle des liens avant de tester l'URL. Choisissez un `offset_days` que le fournisseur respecte toujours (un fichier pas encore publié fait échouer le chargement et la couche est signalée morte). La compilation échoue si `{time}` est utilisé sans bloc `time`, ou un bloc `time` sans `{time}`. Dans une entrée `for_each_country`, `{time}` n'est pas touché par l'expansion par pays.

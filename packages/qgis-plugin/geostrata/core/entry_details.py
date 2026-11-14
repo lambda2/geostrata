@@ -10,6 +10,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from ..i18n import N_, tr
 from .db_client import CatalogSourceRecord
+from .uri_builder import entry_time_value, needs_local_copy
 
 FORMAT_LABELS: Dict[str, str] = {
     "xyz": N_("XYZ tiles (raster)"),
@@ -24,6 +25,8 @@ FORMAT_LABELS: Dict[str, str] = {
     "vectortile": N_("Vector tiles"),
     "overpass": N_("OpenStreetMap Overpass query (vector)"),
     "archive": N_("File inside a remote ZIP archive"),
+    "arcgisfeatureserver": N_("ArcGIS Feature Service (vector)"),
+    "arcgismapserver": N_("ArcGIS Map/Image Service (raster)"),
 }
 
 
@@ -86,7 +89,7 @@ def describe_entry(
     country_name: Optional[Callable[[str], str]] = None,
 ) -> List[Tuple[str, str]]:
     """Return translated ``(label, value)`` rows describing the entry before loading it."""
-    return [
+    rows = [
         (tr("Provider"), entry.attribution or tr("Not specified")),
         (tr("License"), entry.license or tr("Not specified")),
         (tr("Format"), format_label(entry)),
@@ -94,6 +97,15 @@ def describe_entry(
         (tr("Data date"), data_date_label(entry)),
         (tr("Link status"), link_status_label(entry)),
     ]
+    time_value = entry_time_value(entry)
+    if time_value:
+        # Time-templated source: the date that "Load" requests today.
+        rows.insert(5, (tr("Date loaded"), time_value))
+    if needs_local_copy(entry):
+        rows.append(
+            (tr("Loading"), tr("Downloaded in the background, then kept for offline use"))
+        )
+    return rows
 
 
 def build_details_html(

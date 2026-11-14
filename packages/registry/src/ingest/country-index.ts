@@ -1,10 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {
+	type CountryOutline,
+	type GeoJsonPolygonalGeometry,
+	buildCountryOutline,
+} from './country-outlines.js'
 
 /**
- * Regenerates assets/polygons/country-index.json from Natural Earth (public domain).
- * The index is committed: it only changes when a country is created or renamed.
+ * Regenerates, from Natural Earth 1:10m (public domain):
+ *   - assets/polygons/country-index.json: codes, names and bounding box of every country,
+ *   - assets/polygons/country-outlines.json: its simplified outline (see country-outlines.ts).
+ * Both files are committed: they only change when a country is created, renamed or redrawn.
  * Run with `npm run refresh:countries`.
  */
 
@@ -15,6 +22,7 @@ interface NaturalEarthCollection {
 	features: Array<{
 		bbox?: Array<number>
 		properties: Record<string, string | number | null>
+		geometry: GeoJsonPolygonalGeometry | null
 	}>
 }
 
@@ -39,6 +47,7 @@ async function refreshCountryIndex(): Promise<void> {
 	const collection = (await response.json()) as NaturalEarthCollection
 
 	const index: Record<string, CountryIndexEntry> = {}
+	const outlines: Record<string, CountryOutline> = {}
 	for (const feature of collection.features) {
 		const props = feature.properties
 		const iso3 = String(props.ISO_A3_EH ?? '')
@@ -62,29 +71,45 @@ async function refreshCountryIndex(): Promise<void> {
 				roundCoordinate(Math.min(90, bbox[3])),
 			],
 		}
+		if (feature.geometry) {
+			try {
+				outlines[iso3] = buildCountryOutline(feature.geometry)
+			} catch (error) {
+				// The build falls back to the bounding box of the index for this country.
+				const message = error instanceof Error ? error.message : String(error)
+				console.warn(`No outline for ${iso3}: ${message}`)
+			}
+		}
 	}
 
-	const sortedIndex = Object.fromEntries(
-		Object.entries(index).sort(function compareIso3(a, b) {
-			return a[0].localeCompare(b[0])
-		}),
-	)
-	const srcDir = path.dirname(fileURLToPath(import.meta.url))
-	const outputPath = path.resolve(
-		srcDir,
+	const polygonsDir = path.resolve(
+		path.dirname(fileURLToPath(import.meta.url)),
 		'..',
 		'..',
 		'assets',
 		'polygons',
-		'country-index.json',
 	)
-	const lines = Object.entries(sortedIndex).map(function formatLine([iso3, entry]) {
-		return `\t${JSON.stringify(iso3)}: ${JSON.stringify(entry)}`
-	})
-	fs.writeFileSync(outputPath, `{\n${lines.join(',\n')}\n}\n`, 'utf-8')
+	const indexPath = path.join(polygonsDir, 'country-index.json')
+	writeJsonObjectByLine(indexPath, index)
+	console.log(`Wrote ${Object.keys(index).length} countries to ${indexPath}`)
+
+	const outlinesPath = path.join(polygonsDir, 'country-outlines.json')
+	writeJsonObjectByLine(outlinesPath, outlines)
 	console.log(
-		`Wrote ${Object.keys(sortedIndex).length} countries to ${outputPath}`,
+		`Wrote ${Object.keys(outlines).length} outlines to ${outlinesPath} (${fs.statSync(outlinesPath).size} bytes)`,
 	)
+}
+
+/** One key per line, sorted, so a refresh gives a readable diff. */
+function writeJsonObjectByLine(outputPath: string, content: Record<string, unknown>): void {
+	const lines = Object.entries(content)
+		.sort(function compareKeys(a, b) {
+			return a[0].localeCompare(b[0])
+		})
+		.map(function formatLine([key, value]) {
+			return `\t${JSON.stringify(key)}: ${JSON.stringify(value)}`
+		})
+	fs.writeFileSync(outputPath, `{\n${lines.join(',\n')}\n}\n`, 'utf-8')
 }
 
 refreshCountryIndex()

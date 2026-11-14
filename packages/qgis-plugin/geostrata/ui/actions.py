@@ -18,8 +18,9 @@ from qgis.PyQt.QtCore import QLocale
 
 from ..core.db_client import CatalogSourceRecord
 from ..core.extractor_task import launch_offline_extraction_task
+from ..core.loader_task import launch_file_load_task
 from ..core.overpass_task import launch_overpass_fetch_task
-from ..core.uri_builder import create_qgis_layer
+from ..core.uri_builder import create_qgis_layer, entry_display_name, needs_local_copy
 from ..i18n import get_ui_language, tr
 from .coverage_preview import (
     PREVIEW_FAILED,
@@ -168,12 +169,14 @@ def load_entry(
     entry: CatalogSourceRecord,
     offline_extract: bool = False,
 ) -> Optional[Any]:
-    """Load an entry in QGIS (streaming) or start its offline extraction.
+    """Load an entry in QGIS or start its offline extraction.
 
-    Returns the background QgsTask when one was started (Overpass query, extraction),
-    None when the layer was added (or failed) synchronously.
+    Returns the background QgsTask when one was started (Overpass query, extraction,
+    download of a file-based source), None when the layer was added (or failed)
+    synchronously: services and range-friendly files (FlatGeobuf, COG, VRT), whose
+    providers only fetch what the map needs.
     """
-    title_str = entry.localized_name()
+    title_str = entry_display_name(entry)
     bbox_4326 = capture_canvas_bbox_4326(iface) or (
         entry.min_x,
         entry.min_y,
@@ -201,6 +204,11 @@ def load_entry(
             tr("Offline extraction started in the background: {name}", name=title_str),
         )
         return task
+
+    if needs_local_copy(entry):
+        # ZIP archives and GeoJSON documents: background download into the file cache,
+        # the layer is added by the task when the local copy is ready.
+        return launch_file_load_task(iface, entry, bbox_4326)
 
     is_dense_wfs = entry.type.lower() == "wfs" and any(
         kw in entry.url.lower() for kw in DENSE_WFS_KEYWORDS

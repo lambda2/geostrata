@@ -34,7 +34,14 @@ The QGIS main UI thread must **never** freeze:
    - Run clipping inside a `QgsTask` calling `processing.run("native:extractbyextent", ...)` for vectors or `processing.run("gdal:cliprasterbyextent", ...)` for rasters.
    - Only instantiate and add the resulting `.gpkg` or `.tif` layer to `QgsProject.instance()` inside `QgsTask.finished(result)` on the main thread.
 
-4. **Canvas Preview (`ui/coverage_preview.py`)**:
+4. **File-Based Sources (`loader_task.py`, `file_cache.py`)**:
+   - Never open a ZIP archive or a GeoJSON URL on the main thread. `ui/actions.load_entry()` sends the entries selected by `uri_builder.needs_local_copy()` to `launch_file_load_task()`; FlatGeobuf, COG and VRT stay streamed (see `architecture.md`, section 4.3).
+   - All network and disk work happens in `QgsTask.run()` through `FileCache.fetch()`, which polls `isCanceled()` between chunks. `file_cache.py` is pure Python and must stay so (it is unit-tested against a local HTTP server).
+   - A layer created inside `run()` belongs to the worker thread: call `layer.moveToThread(QgsApplication.instance().thread())` as the last step of `run()`, and only style it and add it to the project in `finished()`.
+   - Capture main-thread state (cache settings, `open_layer_sources()`) before starting the task and keep the task in `_ACTIVE_FILE_LOAD_TASKS` until `finished()`.
+   - Any other code needing such a file (the offline extraction task) calls `fetch_entry_file()` from its own worker thread, never the network directly.
+
+5. **Canvas Preview (`ui/coverage_preview.py`)**:
    - Use the shared `CoveragePreview` to highlight a footprint; never create another `QgsRubberBand`. It must only be called from the main thread (`triggerResultFromAction`, dock slots) and is disposed in `unload()`.
 
 ---
@@ -56,10 +63,18 @@ The QGIS main UI thread must **never** freeze:
 | `xyz` / `tms` | `wms` | `QgsRasterLayer` | `type=xyz&url=<encoded_url>&zmax=<max_zoom>&zmin=<min_zoom>&crs=EPSG:3857` |
 | `wms` / `wmts` | `wms` | `QgsRasterLayer` | `contextualWMSLegend=0&crs=...&dpiMode=7&format=image/png&layers=...&styles=&tileMatrixSet=...&url=...` |
 | `wfs` | `WFS` | `QgsVectorLayer` | `pagingEnabled='true' preferCoordinatesForWfsT11='false' restrictToRequestBBOX='1' srsname='<crs>' typename='<typename>' url='<url>' version='auto'` |
+| `wms` with extra KVP (`TIME=...`) | `wms` | `QgsRasterLayer` | `IgnoreGetMapUrl=1&...&url=<endpoint>?TIME%3D<value>` (extras stay in the URL, percent-encoded once more) |
+| `wmts` with a dimension | `wms` | `QgsRasterLayer` | adds `tileDimensions=TIME%3D<value>` |
 | `cog` / `vrt` | `gdal` | `QgsRasterLayer` | `/vsicurl/https://...` |
-| `fgb` / `geojson` | `ogr` | `QgsVectorLayer` | `/vsicurl/https://...` |
+| `fgb` | `ogr` | `QgsVectorLayer` | `/vsicurl/https://...[\|layername=<layer>][\|geometrytype=Point/LineString/Polygon]` |
+| `geojson` | `ogr` | `QgsVectorLayer` | `<cached file>[\|geometrytype=...]` (`/vsicurl/https://...` on the synchronous path) |
+| `archive` | `ogr` / `gdal` | `QgsVectorLayer` / `QgsRasterLayer` | `<cached extracted target>[\|layername=<layer>][\|geometrytype=...]` (`/vsizip//vsicurl/<url>/<target>` on the synchronous path) |
+| `arcgisfeatureserver` | `arcgisfeatureserver` | `QgsVectorLayer` | `url='<layer endpoint>'` |
+| `arcgismapserver` | `arcgismapserver` | `QgsRasterLayer` | `format='PNG32' layer='<sublayer id or empty>' url='<MapServer or ImageServer root>'` |
 | `vectortile` | `vectortile` | `QgsVectorTileLayer` | `type=xyz&url=<url>&zmax=<max_zoom>&zmin=<min_zoom>` |
-| `overpass` | `ogr` | `QgsVectorLayer` | Asynchronous multi-mirror `[out:json]` query converted to a local `.geojson` file via `overpass_task.py`. |
+| `overpass` | `ogr` | `QgsVectorLayer` | Asynchronous multi-mirror `[out:json]` query converted to a local `.geojson` file via `overpass_task.py` (points, lines or polygons, see `architecture.md`, section 4.4). |
+
+`{time}` in `url` / `archive_target` is resolved by `resolved_entry_url()` / `resolved_archive_target()` before any of the above (UTC date); use `entry_display_name()` for the layer title so the date is visible.
 
 ---
 

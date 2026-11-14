@@ -39,6 +39,10 @@ jobs:
         working-directory: packages/registry
         run: npm run typecheck
 
+      - name: Run registry unit tests
+        working-directory: packages/registry
+        run: npm test
+
       - name: Run geoBoundaries/ELI ingestion & Build catalog.sqlite
         working-directory: packages/registry
         run: npm run ingest && npm run build
@@ -103,6 +107,9 @@ jobs:
       fail-fast: false
       matrix:
         qgis:
+          - label: minimum 3.28
+            tag: release-3_28
+            experimental: false
           - label: LTR 3.44
             tag: 3.44-noble
             experimental: false

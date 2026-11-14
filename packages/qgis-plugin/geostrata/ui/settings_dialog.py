@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from qgis.core import QgsSettings
@@ -12,11 +13,14 @@ from qgis.PyQt.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
+    QDoubleSpinBox,
+    QFileDialog,
     QFormLayout,
     QHBoxLayout,
     QHeaderView,
     QInputDialog,
     QLabel,
+    QLineEdit,
     QListWidget,
     QMessageBox,
     QPushButton,
@@ -28,7 +32,19 @@ from qgis.PyQt.QtWidgets import (
 )
 
 from ..core.db_client import SETTINGS_LANGUAGE_KEY
-from ..i18n import tr
+from ..core.file_cache import (
+    BYTES_PER_GB,
+    DEFAULT_MAX_CACHE_GB,
+    SETTINGS_CACHE_DIR_KEY,
+    SETTINGS_CACHE_MAX_GB_KEY,
+    FileCache,
+    configured_cache_dir,
+    configured_max_bytes,
+    default_cache_dir,
+    format_size,
+)
+from ..core.loader_task import open_layer_sources
+from ..i18n import tr, tr_n
 from ..core.overpass_task import (
     DEFAULT_OVERPASS_SERVERS,
     get_configured_overpass_servers,
@@ -230,6 +246,63 @@ class GeostrataSettingsDialog(QDialog):
 
         self._tabs.addTab(general_tab, tr("Display & catalogs"))
 
+        # TAB 3: downloaded files (local cache of ZIP archives and GeoJSON documents)
+        cache_tab = QWidget(self)
+        cache_layout = QVBoxLayout(cache_tab)
+
+        cache_intro = QLabel(
+            tr(
+                "<b>Downloaded files:</b><br>"
+                "ZIP archives and GeoJSON files are downloaded once, in the background, and "
+                "kept in this folder: loading them again is immediate and works offline. "
+                "Geostrata asks the server whether a file changed (at most once a day for "
+                "archives) and downloads it again only then. When the folder exceeds the "
+                "maximum size, the files that were not used for the longest time are removed."
+            )
+        )
+        cache_intro.setWordWrap(True)
+        cache_layout.addWidget(cache_intro)
+
+        cache_form = QFormLayout()
+        dir_row = QHBoxLayout()
+        self._cache_dir_edit = QLineEdit(cache_tab)
+        self._cache_dir_edit.setReadOnly(True)
+        choose_dir_btn = QPushButton(tr("Choose…"), cache_tab)
+        default_dir_btn = QPushButton(tr("Default folder"), cache_tab)
+        open_dir_btn = QPushButton(tr("Open"), cache_tab)
+        choose_dir_btn.clicked.connect(self._on_choose_cache_dir)
+        default_dir_btn.clicked.connect(self._on_default_cache_dir)
+        open_dir_btn.clicked.connect(self._on_open_cache_dir)
+        dir_row.addWidget(self._cache_dir_edit, stretch=1)
+        dir_row.addWidget(choose_dir_btn)
+        dir_row.addWidget(default_dir_btn)
+        dir_row.addWidget(open_dir_btn)
+        cache_form.addRow(tr("Folder:"), dir_row)
+
+        self._cache_max_spin = QDoubleSpinBox(cache_tab)
+        self._cache_max_spin.setRange(1.0, 2000.0)
+        self._cache_max_spin.setDecimals(0)
+        self._cache_max_spin.setSuffix(tr(" GB"))
+        cache_form.addRow(tr("Maximum size:"), self._cache_max_spin)
+
+        usage_row = QHBoxLayout()
+        self._cache_usage_label = QLabel("", cache_tab)
+        self._cache_clear_btn = QPushButton(tr("Delete the downloaded files"), cache_tab)
+        self._cache_clear_btn.setToolTip(
+            tr(
+                "Files used by a layer of the open project are kept. Layers of other "
+                "projects that point to a deleted file will have to be loaded again."
+            )
+        )
+        self._cache_clear_btn.clicked.connect(self._on_clear_cache)
+        usage_row.addWidget(self._cache_usage_label, stretch=1)
+        usage_row.addWidget(self._cache_clear_btn)
+        cache_form.addRow(tr("Disk space used:"), usage_row)
+        cache_layout.addLayout(cache_form)
+        cache_layout.addStretch()
+
+        self._tabs.addTab(cache_tab, tr("Downloaded files"))
+
         footer_row = QHBoxLayout()
         footer_row.addStretch()
         save_btn = QPushButton(tr("Save and close"), self)
@@ -258,6 +331,10 @@ class GeostrataSettingsDialog(QDialog):
 
         self._overpass_servers = get_configured_overpass_servers()
         self._populate_ovp_table()
+
+        self._cache_dir_edit.setText(str(configured_cache_dir()))
+        self._cache_max_spin.setValue(configured_max_bytes() / BYTES_PER_GB)
+        self._refresh_cache_usage()
 
         self._url_list.clear()
         for url in self._sync_manager.get_manifest_urls():
@@ -468,6 +545,80 @@ class GeostrataSettingsDialog(QDialog):
         )
         self._refresh_status_table()
 
+    def _shown_file_cache(self) -> FileCache:
+        """Return the cache of the folder currently displayed in the dialog."""
+        return FileCache(
+            Path(self._cache_dir_edit.text().strip() or str(default_cache_dir())),
+            int(self._cache_max_spin.value() * BYTES_PER_GB),
+        )
+
+    def _refresh_cache_usage(self) -> None:
+        cache = self._shown_file_cache()
+        count = cache.entry_count()
+        self._cache_usage_label.setText(
+            tr_n(
+                "{count} file, {size}",
+                "{count} files, {size}",
+                count,
+                size=format_size(cache.total_size()),
+            )
+        )
+        self._cache_clear_btn.setEnabled(cache.total_size() > 0)
+
+    def _on_choose_cache_dir(self) -> None:
+        chosen = QFileDialog.getExistingDirectory(
+            self,
+            tr("Folder for downloaded files"),
+            self._cache_dir_edit.text(),
+        )
+        if not chosen:
+            return
+        folder = Path(chosen)
+        # Always a dedicated sub-folder: the cache never mixes with the user's files.
+        if folder.name != "geostrata-files":
+            folder = folder / "geostrata-files"
+        self._cache_dir_edit.setText(str(folder))
+        self._refresh_cache_usage()
+
+    def _on_default_cache_dir(self) -> None:
+        self._cache_dir_edit.setText(str(default_cache_dir()))
+        self._refresh_cache_usage()
+
+    def _on_open_cache_dir(self) -> None:
+        folder = Path(self._cache_dir_edit.text().strip() or str(default_cache_dir()))
+        try:
+            folder.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            return
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(folder)))
+
+    def _on_clear_cache(self) -> None:
+        cache = self._shown_file_cache()
+        answer = QMessageBox.question(
+            self,
+            tr("Delete the downloaded files"),
+            tr(
+                "Delete {size} of downloaded files? They will be downloaded again the "
+                "next time their layer is loaded.",
+                size=format_size(cache.total_size()),
+            ),
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        freed, kept = cache.clear(in_use=open_layer_sources())
+        self._refresh_cache_usage()
+        if kept:
+            QMessageBox.information(
+                self,
+                tr("Delete the downloaded files"),
+                tr(
+                    "{freed} deleted. {kept} kept: used by a layer of the open project "
+                    "or being downloaded.",
+                    freed=format_size(freed),
+                    kept=format_size(kept),
+                ),
+            )
+
     def _on_save(self) -> None:
         self._sync_ovp_list_from_table()
         save_configured_overpass_servers(self._overpass_servers)
@@ -482,5 +633,15 @@ class GeostrataSettingsDialog(QDialog):
             SETTINGS_ICON_MODE_KEY,
             str(self._icon_mode_combo.currentData() or "custom"),
         )
+        cache_dir = self._cache_dir_edit.text().strip()
+        if not cache_dir or Path(cache_dir) == default_cache_dir():
+            settings.remove(SETTINGS_CACHE_DIR_KEY)
+        else:
+            settings.setValue(SETTINGS_CACHE_DIR_KEY, cache_dir)
+        max_gb = int(self._cache_max_spin.value())
+        if max_gb == DEFAULT_MAX_CACHE_GB:
+            settings.remove(SETTINGS_CACHE_MAX_GB_KEY)
+        else:
+            settings.setValue(SETTINGS_CACHE_MAX_GB_KEY, max_gb)
         self._sync_manager.set_manifest_urls(self._collect_urls_from_list())
         self.accept()

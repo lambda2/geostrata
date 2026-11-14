@@ -41,6 +41,42 @@ def _optional_text(value: Any) -> Optional[str]:
     return text or None
 
 
+_GEOMETRY_TYPES = ("point", "line", "polygon")
+
+
+def _optional_geometry_type(value: Any) -> Optional[str]:
+    """Return 'point' | 'line' | 'polygon', or None for anything else."""
+    text = str(value).strip().lower() if value is not None else ""
+    return text if text in _GEOMETRY_TYPES else None
+
+
+def _optional_time_spec(value: Any) -> Optional[Dict[str, Any]]:
+    """Parse the `time_json` column (or an already decoded dict) into a normalized dict.
+
+    ``{"offset_days": int, "step": "day" | "month", "format": str}``; None when the
+    entry has no time template or the JSON is unusable.
+    """
+    if value is None or value == "":
+        return None
+    parsed: Any = value
+    if isinstance(value, (str, bytes)):
+        try:
+            parsed = json.loads(value)
+        except (ValueError, TypeError):
+            return None
+    if not isinstance(parsed, dict):
+        return None
+    try:
+        offset_days = int(parsed.get("offset_days") or 0)
+    except (TypeError, ValueError):
+        offset_days = 0
+    step = str(parsed.get("step") or "day").strip().lower()
+    if step not in ("day", "month"):
+        step = "day"
+    fmt = str(parsed.get("format") or "YYYY-MM-DD")
+    return {"offset_days": offset_days, "step": step, "format": fmt}
+
+
 def _clamp_priority(value: Any) -> int:
     """Coerce a curated priority to an int in [-10, 10] (0 when missing or invalid)."""
     try:
@@ -80,6 +116,13 @@ class CatalogSourceRecord:
     priority: int = 0
     data_date: Optional[str] = None
     health_checked_at: Optional[str] = None
+    # Sub-layer selector: OGR layer name (file sources) or ArcGIS MapServer sublayer id.
+    layer: Optional[str] = None
+    # 'point' | 'line' | 'polygon': forces the OGR geometry type of a mixed file, and
+    # the geometry returned by an Overpass recipe.
+    geometry_type: Optional[str] = None
+    # Time template ({time} in `url` / `archive_target`), see uri_builder.resolve_time_value().
+    time: Optional[Dict[str, Any]] = None
 
     @property
     def is_worldwide(self) -> bool:
@@ -122,6 +165,9 @@ class CatalogSourceRecord:
             priority=_clamp_priority(data.get("priority")),
             data_date=_optional_text(data.get("data_date")),
             health_checked_at=_optional_text(data.get("health_checked_at")),
+            layer=_optional_text(data.get("layer")),
+            geometry_type=_optional_geometry_type(data.get("geometry_type")),
+            time=_optional_time_spec(data.get("time")),
         )
 
     def localized_name(self, lang: Optional[str] = None) -> str:
@@ -413,6 +459,9 @@ _OPTIONAL_COLUMNS: Tuple[Tuple[str, str], ...] = (
     ("priority", "0"),
     ("data_date", "NULL"),
     ("health_checked_at", "NULL"),
+    ("layer", "NULL"),
+    ("geometry_type", "NULL"),
+    ("time_json", "NULL"),
 )
 
 
@@ -564,7 +613,11 @@ class CatalogDatabaseClient:
         bbox: Optional[Tuple[float, float, float, float]],
         use_fts5: bool,
     ) -> List[sqlite3.Row]:
-        """Return every non-dead source of one catalog matching the words and the bbox."""
+        """Return every non-dead source of one catalog matching the words and the bbox.
+
+        `sources` may be a table (older catalogs) or a view with the same column names,
+        `rowid` included (normalised catalogs): PRAGMA table_info works on both.
+        """
         cols = {
             row[1]
             for row in conn.execute(f"PRAGMA {schema}.table_info(sources)").fetchall()
@@ -683,4 +736,7 @@ class CatalogDatabaseClient:
             priority=_clamp_priority(row["priority"]),
             data_date=_optional_text(row["data_date"]),
             health_checked_at=_optional_text(row["health_checked_at"]),
+            layer=_optional_text(row["layer"]),
+            geometry_type=_optional_geometry_type(row["geometry_type"]),
+            time=_optional_time_spec(row["time_json"]),
         )

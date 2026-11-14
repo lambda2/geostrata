@@ -121,6 +121,14 @@ OVERPASS_MIRRORS: Tuple[str, ...] = tuple(
 
 MAX_OVERPASS_AREA_DEG2 = 16.0
 MAX_CLAMPED_HALF_SPAN_DEG = 1.5
+# Polygon recipes ask for the full geometry of every way and relation, far heavier
+# than one centre point each: the extent is clamped to 0.5 x 0.5 degrees (~55 km).
+MAX_OVERPASS_POLYGON_AREA_DEG2 = 0.25
+MAX_CLAMPED_POLYGON_HALF_SPAN_DEG = 0.25
+
+GEOMETRY_POINT = "point"
+GEOMETRY_LINE = "line"
+GEOMETRY_POLYGON = "polygon"
 
 LINEAR_OVERPASS_KEYS: Tuple[str, ...] = (
     "waterway=",
@@ -262,22 +270,52 @@ def is_linear_overpass_entry(entry: CatalogSourceRecord) -> bool:
     return any(token in expr_lower for token in LINEAR_OVERPASS_KEYS)
 
 
+def resolve_overpass_geometry_mode(entry: CatalogSourceRecord) -> str:
+    """Decide which geometry an Overpass recipe returns: 'point', 'line' or 'polygon'.
+
+    1. The catalog `geometry_type` column when the author set it.
+    2. Otherwise lines when the embedded style is a line symbol or the recipe uses a
+       linear OSM key (waterway, railway, power line...).
+    3. Otherwise polygons when the embedded style is a fill symbol.
+    4. Otherwise one point per feature (node position, or centre of the way/relation):
+       the historical behaviour, cheap for the servers and right for points of interest
+       (a hospital is found whether it is mapped as a node or as a building).
+    """
+    if entry.geometry_type in (GEOMETRY_POINT, GEOMETRY_LINE, GEOMETRY_POLYGON):
+        return str(entry.geometry_type)
+    if is_linear_overpass_entry(entry):
+        return GEOMETRY_LINE
+    if entry.style_qml and 'symbol type="fill"' in entry.style_qml:
+        return GEOMETRY_POLYGON
+    return GEOMETRY_POINT
+
+
 def clamp_overpass_bbox(
     bbox_4326: Tuple[float, float, float, float],
+    geometry_mode: Optional[str] = None,
 ) -> Tuple[Tuple[float, float, float, float], bool]:
-    """Clamp overly large canvas extents around the canvas center to protect Overpass."""
+    """Clamp overly large canvas extents around the canvas center to protect Overpass.
+
+    Polygon recipes get a much smaller window than point/line recipes.
+    """
+    max_area = MAX_OVERPASS_AREA_DEG2
+    half_span = MAX_CLAMPED_HALF_SPAN_DEG
+    if geometry_mode == GEOMETRY_POLYGON:
+        max_area = MAX_OVERPASS_POLYGON_AREA_DEG2
+        half_span = MAX_CLAMPED_POLYGON_HALF_SPAN_DEG
+
     min_x, min_y, max_x, max_y = bbox_4326
     area = max(0.0, (max_x - min_x) * (max_y - min_y))
-    if area <= MAX_OVERPASS_AREA_DEG2:
+    if area <= max_area:
         return bbox_4326, False
 
     center_x = (min_x + max_x) / 2.0
     center_y = (min_y + max_y) / 2.0
     clamped = (
-        max(-180.0, center_x - MAX_CLAMPED_HALF_SPAN_DEG),
-        max(-90.0, center_y - MAX_CLAMPED_HALF_SPAN_DEG),
-        min(180.0, center_x + MAX_CLAMPED_HALF_SPAN_DEG),
-        min(90.0, center_y + MAX_CLAMPED_HALF_SPAN_DEG),
+        max(-180.0, center_x - half_span),
+        max(-90.0, center_y - half_span),
+        min(180.0, center_x + half_span),
+        min(90.0, center_y + half_span),
     )
     return clamped, True
 
@@ -286,8 +324,16 @@ def build_overpass_json_ql(
     expression_or_ql: str,
     bbox_4326: Tuple[float, float, float, float],
     prefer_lines: bool = False,
+    geometry_mode: Optional[str] = None,
 ) -> str:
-    """Build a fast [out:json] Overpass QL query (`out geom;` for lines, `out center;` for POIs)."""
+    """Build an [out:json] Overpass QL query for a shorthand recipe (`key=value|key=value`).
+
+    `geometry_mode` (default: 'line' when `prefer_lines`, else 'point') selects the output:
+    ways with `out geom;` for lines, nodes/ways/relations with `out geom;` for polygons,
+    nodes/ways/relations with `out center;` for points. Full QL recipes are left as written.
+    """
+    mode = geometry_mode or (GEOMETRY_LINE if prefer_lines else GEOMETRY_POINT)
+    prefer_lines = mode == GEOMETRY_LINE
     min_x, min_y, max_x, max_y = bbox_4326
     overpass_bbox = f"{min_y:.6f},{min_x:.6f},{max_y:.6f},{max_x:.6f}"
 
@@ -318,16 +364,187 @@ def build_overpass_json_ql(
             clauses.append(f'{element_kind}["{part}"]({overpass_bbox});')
 
     joined_clauses = "\n  ".join(clauses)
+    if mode == GEOMETRY_POLYGON:
+        # Full geometry of ways and of relation members; a longer server timeout and an
+        # explicit memory cap (256 MB) so an oversized request fails fast and cleanly.
+        return (
+            f"[out:json][timeout:25][maxsize:268435456];\n(\n  {joined_clauses}\n);\nout geom;"
+        )
     return (
         f"[out:json][timeout:15];\n(\n  {joined_clauses}\n);\n{out_directive}"
     )
 
 
+Ring = List[List[float]]
+
+
+def _way_coords(raw_geometry: Any) -> Ring:
+    """Read the `geometry` array of an Overpass way (or relation member) as [lon, lat] pairs."""
+    if not isinstance(raw_geometry, list):
+        return []
+    return [
+        [float(pt["lon"]), float(pt["lat"])]
+        for pt in raw_geometry
+        if isinstance(pt, dict) and "lon" in pt and "lat" in pt
+    ]
+
+
+def _is_closed_ring(coords: Ring) -> bool:
+    return len(coords) >= 4 and coords[0] == coords[-1]
+
+
+def _assemble_rings(segments: List[Ring]) -> List[Ring]:
+    """Join way segments end to end into closed rings (unclosed leftovers are dropped)."""
+    rings: List[Ring] = []
+    pending = [list(seg) for seg in segments if len(seg) >= 2]
+    while pending:
+        current = pending.pop(0)
+        while not _is_closed_ring(current):
+            tail = current[-1]
+            for idx, candidate in enumerate(pending):
+                if candidate[0] == tail:
+                    current.extend(candidate[1:])
+                elif candidate[-1] == tail:
+                    current.extend(reversed(candidate[:-1]))
+                else:
+                    continue
+                pending.pop(idx)
+                break
+            else:
+                break  # nothing continues this segment
+        if _is_closed_ring(current):
+            rings.append(current)
+    return rings
+
+
+def _point_in_ring(point: List[float], ring: Ring) -> bool:
+    """Ray-casting point-in-polygon test."""
+    x, y = point
+    inside = False
+    j = len(ring) - 1
+    for i in range(len(ring)):
+        xi, yi = ring[i]
+        xj, yj = ring[j]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
+            inside = not inside
+        j = i
+    return inside
+
+
+def _relation_polygons(elem: Dict[str, Any]) -> List[List[Ring]]:
+    """Build the polygons (outer ring + holes) of a multipolygon / boundary relation."""
+    outers: List[Ring] = []
+    inners: List[Ring] = []
+    members = elem.get("members")
+    for member in members if isinstance(members, list) else []:
+        if not isinstance(member, dict) or member.get("type") != "way":
+            continue
+        coords = _way_coords(member.get("geometry"))
+        if len(coords) < 2:
+            continue
+        (inners if member.get("role") == "inner" else outers).append(coords)
+
+    polygons: List[List[Ring]] = [[ring] for ring in _assemble_rings(outers)]
+    for hole in _assemble_rings(inners):
+        for polygon in polygons:
+            if _point_in_ring(hole[0], polygon[0]):
+                polygon.append(hole)
+                break
+    return polygons
+
+
+def _coords_center(coords: Ring) -> Optional[List[float]]:
+    """Centre of the bounding box of a coordinate list (what `out center` returns)."""
+    if not coords:
+        return None
+    xs = [pt[0] for pt in coords]
+    ys = [pt[1] for pt in coords]
+    return [(min(xs) + max(xs)) / 2.0, (min(ys) + max(ys)) / 2.0]
+
+
+def _polygon_mode_geometry(elem: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Geometry of one element of a polygon recipe: MultiPolygon for areas, else a Point.
+
+    Closed ways and multipolygon relations become MultiPolygons (one type, so the layer
+    is homogeneous). What OSM maps without an area (a node, an unclosed way, a relation
+    whose rings cannot be closed inside the extent) is kept as a point so that no feature
+    is lost; the caller puts those in a companion point layer.
+    """
+    elem_type = elem.get("type")
+    if elem_type == "node":
+        if "lon" in elem and "lat" in elem:
+            return {"type": "Point", "coordinates": [float(elem["lon"]), float(elem["lat"])]}
+        return None
+
+    if elem_type == "way":
+        coords = _way_coords(elem.get("geometry"))
+        if _is_closed_ring(coords):
+            return {"type": "MultiPolygon", "coordinates": [[coords]]}
+        center = _coords_center(coords)
+        return {"type": "Point", "coordinates": center} if center else None
+
+    if elem_type == "relation":
+        polygons = _relation_polygons(elem)
+        if polygons:
+            return {"type": "MultiPolygon", "coordinates": polygons}
+        all_coords: Ring = []
+        members = elem.get("members")
+        for member in members if isinstance(members, list) else []:
+            if not isinstance(member, dict):
+                continue
+            if "lon" in member and "lat" in member:
+                all_coords.append([float(member["lon"]), float(member["lat"])])
+            all_coords.extend(_way_coords(member.get("geometry")))
+        center = _coords_center(all_coords)
+        return {"type": "Point", "coordinates": center} if center else None
+
+    return None
+
+
+_GEOMETRY_KIND_BY_GEOJSON_TYPE = {
+    "Point": GEOMETRY_POINT,
+    "MultiPoint": GEOMETRY_POINT,
+    "LineString": GEOMETRY_LINE,
+    "MultiLineString": GEOMETRY_LINE,
+    "Polygon": GEOMETRY_POLYGON,
+    "MultiPolygon": GEOMETRY_POLYGON,
+}
+
+
+def split_features_by_geometry(geojson: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """Split a FeatureCollection into one homogeneous collection per geometry kind.
+
+    Returns ``{"polygon": {...}, "point": {...}}`` with only the kinds present, since a
+    QGIS vector layer holds a single geometry type.
+    """
+    groups: Dict[str, Dict[str, Any]] = {}
+    features = geojson.get("features")
+    for feature in features if isinstance(features, list) else []:
+        geometry = feature.get("geometry") if isinstance(feature, dict) else None
+        kind = _GEOMETRY_KIND_BY_GEOJSON_TYPE.get(
+            str(geometry.get("type")) if isinstance(geometry, dict) else ""
+        )
+        if kind is None:
+            continue
+        groups.setdefault(kind, {"type": "FeatureCollection", "features": []})[
+            "features"
+        ].append(feature)
+    return groups
+
+
 def convert_overpass_json_to_geojson(
     overpass_payload: Dict[str, Any],
     prefer_lines: bool = False,
+    geometry_mode: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Convert an Overpass JSON response (`elements`) into a homogeneous GeoJSON FeatureCollection."""
+    """Convert an Overpass JSON response (`elements`) into a GeoJSON FeatureCollection.
+
+    The collection is homogeneous in 'point' and 'line' modes. In 'polygon' mode it holds
+    MultiPolygons plus Points for the features OSM maps without an area (see
+    :func:`split_features_by_geometry`).
+    """
+    mode = geometry_mode or (GEOMETRY_LINE if prefer_lines else GEOMETRY_POINT)
+    prefer_lines = mode == GEOMETRY_LINE
     elements = overpass_payload.get("elements")
     if not isinstance(elements, list):
         elements = []
@@ -345,7 +562,9 @@ def convert_overpass_json_to_geojson(
 
         geometry: Optional[Dict[str, Any]] = None
 
-        if prefer_lines:
+        if mode == GEOMETRY_POLYGON:
+            geometry = _polygon_mode_geometry(elem)
+        elif prefer_lines:
             if isinstance(elem.get("geometry"), list) and elem["geometry"]:
                 coords = [
                     [float(pt["lon"]), float(pt["lat"])]
@@ -411,10 +630,16 @@ def convert_overpass_json_to_geojson(
     }
 
 
+# HTTP timeouts: a centre-point query answers in a few seconds; full geometries need
+# the server-side [timeout:25] plus transfer time.
+OVERPASS_HTTP_TIMEOUT_SEC = 8
+OVERPASS_GEOMETRY_HTTP_TIMEOUT_SEC = 30
+
+
 def fetch_overpass_with_failover(
     ql_query: str,
     mirrors: Optional[Sequence[str]] = None,
-    timeout_sec: int = 8,
+    timeout_sec: int = OVERPASS_HTTP_TIMEOUT_SEC,
     query_bbox: Optional[Tuple[float, float, float, float]] = None,
 ) -> Tuple[Dict[str, Any], str]:
     """Execute Overpass QL POST across priority-ordered mirrors until one succeeds.
@@ -474,12 +699,17 @@ def launch_overpass_fetch_task(
         QgsVectorLayer,
     )
 
-    prefer_lines = is_linear_overpass_entry(entry)
-    clamped_bbox, was_clamped = clamp_overpass_bbox(canvas_bbox_4326)
+    geometry_mode = resolve_overpass_geometry_mode(entry)
+    clamped_bbox, was_clamped = clamp_overpass_bbox(canvas_bbox_4326, geometry_mode)
     ql_query = build_overpass_json_ql(
         entry.url,
         clamped_bbox,
-        prefer_lines=prefer_lines,
+        geometry_mode=geometry_mode,
+    )
+    http_timeout = (
+        OVERPASS_GEOMETRY_HTTP_TIMEOUT_SEC
+        if geometry_mode == GEOMETRY_POLYGON
+        else OVERPASS_HTTP_TIMEOUT_SEC
     )
     priority_urls = resolve_priority_overpass_urls(clamped_bbox)
     out_dir = resolve_extraction_output_dir()
@@ -496,6 +726,8 @@ def launch_overpass_fetch_task(
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_geojson_path
+            # (geometry kind, file) of each layer to add; the first one is the main layer.
+            self.output_files: List[Tuple[str, Path]] = []
             self.feature_count: int = 0
             self.mirror_used: str = ""
             self.error_message: Optional[str] = None
@@ -507,7 +739,7 @@ def launch_overpass_fetch_task(
                 payload, mirror = fetch_overpass_with_failover(
                     ql_query,
                     mirrors=priority_urls,
-                    timeout_sec=8,
+                    timeout_sec=http_timeout,
                     query_bbox=clamped_bbox,
                 )
                 if self.isCanceled():
@@ -516,15 +748,32 @@ def launch_overpass_fetch_task(
 
                 geojson_dict = convert_overpass_json_to_geojson(
                     payload,
-                    prefer_lines=prefer_lines,
+                    geometry_mode=geometry_mode,
                 )
                 features = geojson_dict.get("features", [])
                 self.feature_count = len(features) if isinstance(features, list) else 0
 
-                self.output_file.write_text(
-                    json.dumps(geojson_dict, ensure_ascii=False),
-                    encoding="utf-8",
-                )
+                # One file per geometry kind (a polygon recipe may also return points);
+                # the kind the recipe asks for comes first and keeps the plain file name.
+                groups = split_features_by_geometry(geojson_dict)
+                for kind in sorted(groups, key=lambda k: (k != geometry_mode, k)):
+                    path = (
+                        self.output_file
+                        if not self.output_files
+                        else self.output_file.with_name(
+                            f"{self.output_file.stem}_{kind}.geojson"
+                        )
+                    )
+                    path.write_text(
+                        json.dumps(groups[kind], ensure_ascii=False),
+                        encoding="utf-8",
+                    )
+                    self.output_files.append((kind, path))
+                if not self.output_files:
+                    self.output_file.write_text(
+                        json.dumps(geojson_dict, ensure_ascii=False),
+                        encoding="utf-8",
+                    )
                 return True
             except Exception as exc:
                 self.error_message = str(exc)
@@ -565,14 +814,25 @@ def launch_overpass_fetch_task(
                 return
 
             suffix = f" {tr('[Local]')}" if is_offline_extract else ""
-            layer = QgsVectorLayer(
-                str(self.output_file),
-                f"{title_str}{suffix}",
-                "ogr",
-            )
-            if layer.isValid():
-                apply_layer_metadata_and_style(layer, entry)
-                QgsProject.instance().addMapLayer(layer)
+            kind_labels = {
+                GEOMETRY_POINT: tr("points"),
+                GEOMETRY_LINE: tr("lines"),
+                GEOMETRY_POLYGON: tr("polygons"),
+            }
+            added = 0
+            # Main layer first: companion point layers are then drawn above the polygons.
+            for index, (kind, path) in enumerate(self.output_files):
+                kind_note = f" ({kind_labels.get(kind, kind)})" if index else ""
+                layer = QgsVectorLayer(
+                    str(path),
+                    f"{title_str}{kind_note}{suffix}",
+                    "ogr",
+                )
+                if layer.isValid():
+                    apply_layer_metadata_and_style(layer, entry)
+                    QgsProject.instance().addMapLayer(layer)
+                    added += 1
+            if added:
                 clamp_note = (
                     tr(" (extent reduced to the centre of the map)") if was_clamped else ""
                 )

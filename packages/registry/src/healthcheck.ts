@@ -1,7 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import Database from 'better-sqlite3'
+import { type TimeSettings } from './schema.js'
+import { resolveTimePlaceholder } from './time.js'
 
 export type HealthStatus = 'ok' | 'degraded' | 'dead'
 
@@ -9,6 +11,8 @@ interface SourceHealthRow {
 	id: string
 	type: string
 	url: string
+	/** JSON of the entry's `time` block when its url contains `{time}`, else null. */
+	time_json: string | null
 }
 
 interface HealthCheckResult {
@@ -33,12 +37,25 @@ const OGC_SERVICE_BY_TYPE: Record<string, string> = {
 /** Tile templates legitimately answer 4xx for the 0/0/0 probe tile when their coverage is regional. */
 const TILE_TEMPLATE_TYPES = new Set(['xyz', 'tms', 'vectortile'])
 
-function extractTestableHttpUrl(sourceType: string, rawUrl: string): string | null {
+/** ArcGIS REST endpoints describe themselves at `<url>?f=json`. */
+const ARCGIS_REST_TYPES = new Set(['arcgisfeatureserver', 'arcgismapserver'])
+
+/**
+ * URL probed for a source, or null when nothing can be probed over HTTP. `{time}` is resolved
+ * as the plugin does at load time; `layer` and `geometry_type` never change the probed URL.
+ */
+export function extractTestableHttpUrl(
+	sourceType: string,
+	rawUrl: string,
+	time: TimeSettings | null = null,
+	now: Date = new Date(),
+): string | null {
 	if (sourceType === 'overpass') {
 		return 'https://overpass-api.de/api/status'
 	}
 
-	const withoutVsiZip = rawUrl.replace(/^\/vsizip\/+/, '')
+	const datedUrl = resolveTimePlaceholder(rawUrl, time, now)
+	const withoutVsiZip = datedUrl.replace(/^\/vsizip\/+/, '')
 	const withoutVsiCurl = withoutVsiZip.replace(/^\/vsicurl(_streaming)?\/+/, '')
 
 	if (!withoutVsiCurl.startsWith('http://') && !withoutVsiCurl.startsWith('https://')) {
@@ -53,6 +70,10 @@ function extractTestableHttpUrl(sourceType: string, rawUrl: string): string | nu
 			: `${baseUrl}?SERVICE=${ogcService}&REQUEST=GetCapabilities`
 	}
 
+	if (ARCGIS_REST_TYPES.has(sourceType)) {
+		return `${withoutVsiCurl.split('?')[0].replace(/\/+$/, '')}?f=json`
+	}
+
 	const probeUrl = withoutVsiCurl
 		.replace(/\{z\}/g, '0')
 		.replace(/\{x\}/g, '0')
@@ -63,7 +84,7 @@ function extractTestableHttpUrl(sourceType: string, rawUrl: string): string | nu
 	return probeUrl.includes('{') ? null : probeUrl
 }
 
-function classifyHttpStatus(
+export function classifyHttpStatus(
 	sourceType: string,
 	httpStatus: number,
 	latencyMs: number,
@@ -80,8 +101,28 @@ function classifyHttpStatus(
 	return 'dead'
 }
 
+function parseTimeSettings(timeJson: string | null): TimeSettings | null {
+	if (!timeJson) {
+		return null
+	}
+	try {
+		return JSON.parse(timeJson) as TimeSettings
+	} catch {
+		return null
+	}
+}
+
+/**
+ * ArcGIS REST answers HTTP 200 with `{"error":{"code":404,...}}` for a missing service:
+ * the code of the JSON body, when there is one, is the status to classify.
+ */
+export function extractArcgisErrorCode(body: string): number | null {
+	const match = /^\s*\{\s*"error"\s*:\s*\{[^}]*?"code"\s*:\s*(\d+)/.exec(body)
+	return match ? Number(match[1]) : null
+}
+
 async function checkSingleEndpoint(row: SourceHealthRow): Promise<HealthCheckResult> {
-	const targetUrl = extractTestableHttpUrl(row.type, row.url)
+	const targetUrl = extractTestableHttpUrl(row.type, row.url, parseTimeSettings(row.time_json))
 	if (!targetUrl) {
 		return {
 			id: row.id,
@@ -123,7 +164,23 @@ async function probeEndpoint(
 			signal: controller.signal,
 		})
 		const latencyMs = Date.now() - startTime
-		await response.body?.cancel()
+		if (ARCGIS_REST_TYPES.has(sourceType) && response.ok) {
+			const arcgisErrorCode = extractArcgisErrorCode(await response.text())
+			if (arcgisErrorCode !== null) {
+				return {
+					// 498 / 499 are the ArcGIS "invalid token" / "token required" codes.
+					status: classifyHttpStatus(
+						sourceType,
+						arcgisErrorCode === 498 || arcgisErrorCode === 499 ? 403 : arcgisErrorCode,
+						latencyMs,
+					),
+					latencyMs,
+					detail: `HTTP ${response.status}, ArcGIS error ${arcgisErrorCode}`,
+				}
+			}
+		} else {
+			await response.body?.cancel()
+		}
 
 		return {
 			status: classifyHttpStatus(sourceType, response.status, latencyMs),
@@ -145,18 +202,40 @@ async function probeEndpoint(
 
 const HEALTHCHECK_CONCURRENCY = 8
 
+/** `sources_data` in layout 2 (where `sources` is a view), `sources` in a layout 1 catalog. */
+export function resolveSourcesTableName(db: Database.Database): string {
+	const sourcesObject = db
+		.prepare("SELECT type FROM sqlite_master WHERE name = 'sources'")
+		.get() as { type: string } | undefined
+	return sourcesObject?.type === 'view' ? 'sources_data' : 'sources'
+}
+
+export function selectHealthRows(db: Database.Database): Array<SourceHealthRow> {
+	const columns = db.pragma('table_info(sources)') as Array<{ name: string }>
+	const hasTimeColumn = columns.some(function isTimeColumn(column) {
+		return column.name === 'time_json'
+	})
+	return db
+		.prepare(
+			`SELECT id, type, url, ${hasTimeColumn ? 'time_json' : 'NULL AS time_json'} FROM sources ORDER BY id ASC`,
+		)
+		.all() as Array<SourceHealthRow>
+}
+
 export async function runHealthcheck(): Promise<void> {
 	const packageRoot = getPackageRootDir()
-	const sqlitePath = path.join(packageRoot, 'dist', 'catalog.sqlite')
+	// Same override as the build, so a scratch build can be checked without touching dist/.
+	const distDir = process.env.GEOSTRATA_DIST_DIR
+		? path.resolve(process.env.GEOSTRATA_DIST_DIR)
+		: path.join(packageRoot, 'dist')
+	const sqlitePath = path.join(distDir, 'catalog.sqlite')
 
 	if (!fs.existsSync(sqlitePath)) {
 		throw new Error(`catalog.sqlite not found at ${sqlitePath}. Run "npm run build" first.`)
 	}
 
 	const db = new Database(sqlitePath)
-	const rows = db
-		.prepare('SELECT id, type, url FROM sources ORDER BY id ASC')
-		.all() as Array<SourceHealthRow>
+	const rows = selectHealthRows(db)
 
 	const results: Array<HealthCheckResult> = []
 	for (let offset = 0; offset < rows.length; offset += HEALTHCHECK_CONCURRENCY) {
@@ -164,7 +243,10 @@ export async function runHealthcheck(): Promise<void> {
 		results.push(...(await Promise.all(batch.map(checkSingleEndpoint))))
 	}
 
-	const updateStmt = db.prepare('UPDATE sources SET health_status = ? WHERE id = ?')
+	// `sources` is a view since layout 2: the statuses are written to the table behind it.
+	const updateStmt = db.prepare(
+		`UPDATE ${resolveSourcesTableName(db)} SET health_status = ? WHERE id = ?`,
+	)
 	const updateTransaction = db.transaction(function applyResults(
 		items: Array<HealthCheckResult>,
 	) {
@@ -186,7 +268,7 @@ export async function runHealthcheck(): Promise<void> {
 		),
 	}
 	fs.writeFileSync(
-		path.join(packageRoot, 'dist', 'health.json'),
+		path.join(distDir, 'health.json'),
 		`${JSON.stringify(healthReport, null, '\t')}\n`,
 	)
 
@@ -211,4 +293,6 @@ export async function runHealthcheck(): Promise<void> {
 	}
 }
 
-runHealthcheck()
+if (Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href) {
+	runHealthcheck()
+}

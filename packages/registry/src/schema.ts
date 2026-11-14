@@ -32,6 +32,10 @@ export const SourceTypeSchema = z.enum([
 	'geojson',
 	'archive',
 	'overpass',
+	/** ArcGIS REST layer endpoint, e.g. https://host/arcgis/rest/services/X/FeatureServer/0 */
+	'arcgisfeatureserver',
+	/** ArcGIS REST MapServer or ImageServer service root; `layer` selects a sublayer id. */
+	'arcgismapserver',
 ])
 
 export type SourceType = z.infer<typeof SourceTypeSchema>
@@ -61,6 +65,40 @@ export const LocalizedMetadataSchema = z.object({
 
 export type LocalizedMetadata = z.infer<typeof LocalizedMetadataSchema>
 
+export const GeometryTypeSchema = z.enum(['point', 'line', 'polygon'])
+
+export type GeometryType = z.infer<typeof GeometryTypeSchema>
+
+/** Placeholder of `url` / `archive_target` replaced at load time with a date, see TimeSchema. */
+export const TIME_PLACEHOLDER = '{time}'
+
+const TIME_FORMAT_TOKEN_PATTERN = /YYYY|MM|DD/
+
+/**
+ * Date substituted for `{time}`: today + `offset_days`, truncated to the first day of the
+ * month when `step` is 'month', rendered with `format` (tokens YYYY, MM, DD).
+ */
+export const TimeSchema = z
+	.object({
+		offset_days: z.number().int().default(0),
+		step: z.enum(['day', 'month']).default('day'),
+		format: z
+			.string()
+			.min(1)
+			.refine(
+				function validateTimeFormat(format) {
+					return TIME_FORMAT_TOKEN_PATTERN.test(format) && !/[{}]/.test(format)
+				},
+				{
+					message: 'time.format needs at least one of the tokens YYYY, MM, DD and no curly braces',
+				},
+			)
+			.default('YYYY-MM-DD'),
+	})
+	.strict()
+
+export type TimeSettings = z.infer<typeof TimeSchema>
+
 export const CatalogEntrySchema = z
 	.object({
 		id: z
@@ -86,6 +124,20 @@ export const CatalogEntrySchema = z
 		min_zoom: z.number().int().min(0).max(24).optional(),
 		max_zoom: z.number().int().min(0).max(24).optional(),
 		archive_target: z.string().min(1).optional(),
+		/**
+		 * Sub-layer selector: the layer name inside a multi-layer OGR file (fgb, geojson,
+		 * archive holding a GeoPackage) or the sublayer id of an `arcgismapserver` service.
+		 */
+		layer: z
+			.union([z.string().min(1), z.number().int().min(0)])
+			.transform(function stringifyLayer(layer) {
+				return String(layer)
+			})
+			.optional(),
+		/** Forces the geometry type when a file mixes several. */
+		geometry_type: GeometryTypeSchema.optional(),
+		/** Required when `url` or `archive_target` contains `{time}`, forbidden otherwise. */
+		time: TimeSchema.optional(),
 		/** Editorial ranking boost: higher values are listed earlier for an equally relevant search. */
 		priority: z.number().int().min(-10).max(10).default(0),
 		/** Free-text vintage or refresh rate of the data, e.g. "2021" or "updated daily". */
@@ -100,6 +152,25 @@ export const CatalogEntrySchema = z
 			path: ['archive_target'],
 		},
 	)
+	.superRefine(function validateTimePlaceholder(entry, context) {
+		const hasPlaceholder =
+			entry.url.includes(TIME_PLACEHOLDER) ||
+			Boolean(entry.archive_target?.includes(TIME_PLACEHOLDER))
+		if (hasPlaceholder && !entry.time) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: `a "time" block is required when url or archive_target contains ${TIME_PLACEHOLDER}`,
+				path: ['time'],
+			})
+		}
+		if (!hasPlaceholder && entry.time) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: `"time" is set but neither url nor archive_target contains ${TIME_PLACEHOLDER}`,
+				path: ['time'],
+			})
+		}
+	})
 
 export type CatalogEntry = z.infer<typeof CatalogEntrySchema>
 

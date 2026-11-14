@@ -3,13 +3,21 @@
 from __future__ import annotations
 
 import ast
+import datetime
+import gzip
+import http.server
+import io
 import json
 import re
+import socketserver
 import sqlite3
 import string
 import sys
 import tempfile
+import threading
+import time
 import unittest
+import zipfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -36,16 +44,27 @@ from geostrata.core.entry_details import (  # noqa: E402
     describe_entry,
     link_status_label,
 )
+from geostrata.core.file_cache import (  # noqa: E402
+    DownloadCancelled,
+    DownloadError,
+    FileCache,
+)
+from geostrata.core.loader_task import fetch_entry_file  # noqa: E402
 from geostrata.core.overpass_task import (  # noqa: E402
     build_overpass_json_ql,
     clamp_overpass_bbox,
     convert_overpass_json_to_geojson,
     normalize_overpass_endpoint,
+    resolve_overpass_geometry_mode,
     resolve_priority_overpass_urls,
+    split_features_by_geometry,
 )
 from geostrata.core.uri_builder import (  # noqa: E402
     build_overpass_ql,
     build_provider_uri,
+    entry_time_value,
+    needs_local_copy,
+    resolve_time_value,
 )
 
 
@@ -76,26 +95,33 @@ def build_temp_catalog(
     path: Path,
     entries: List[Dict[str, Any]],
     with_optional_columns: bool = True,
+    as_view: bool = False,
 ) -> Path:
     """Create a small catalog.sqlite with the same tables as packages/registry/src/build.ts.
 
     ``with_optional_columns=False`` reproduces an older / third-party catalog without
-    `priority`, `data_date`, `health_checked_at` and `i18n_json`.
+    `priority`, `data_date`, `health_checked_at`, `i18n_json`, `layer`, `geometry_type`
+    and `time_json`. ``as_view=True`` reproduces the normalised layout where `sources`
+    is a VIEW (with the same column names, `rowid` included) over another table.
     """
     optional_sql = (
         """,
             i18n_json TEXT NOT NULL DEFAULT '{}',
             priority INTEGER NOT NULL DEFAULT 0,
             data_date TEXT,
-            health_checked_at TEXT"""
+            health_checked_at TEXT,
+            layer TEXT,
+            geometry_type TEXT,
+            time_json TEXT"""
         if with_optional_columns
         else ""
     )
+    table = "source_rows" if as_view else "sources"
     conn = sqlite3.connect(str(path))
     try:
         conn.executescript(
             f"""
-            CREATE TABLE sources (
+            CREATE TABLE {table} (
                 rowid INTEGER PRIMARY KEY AUTOINCREMENT,
                 id TEXT NOT NULL UNIQUE,
                 name TEXT NOT NULL,
@@ -124,6 +150,8 @@ def build_temp_catalog(
             CREATE VIRTUAL TABLE sources_rtree USING rtree(id, minX, maxX, minY, maxY);
             """
         )
+        if as_view:
+            conn.execute("CREATE VIEW sources AS SELECT * FROM source_rows")
         # Some Python builds (e.g. the one bundled with QGIS 4 on macOS) lack FTS5: the
         # client then uses the `search_text LIKE` fallback, which these tests also cover.
         has_fts5 = True
@@ -181,9 +209,12 @@ def build_temp_catalog(
                 columns["priority"] = entry.get("priority", 0)
                 columns["data_date"] = entry.get("data_date")
                 columns["health_checked_at"] = entry.get("health_checked_at")
+                columns["layer"] = entry.get("layer")
+                columns["geometry_type"] = entry.get("geometry_type")
+                columns["time_json"] = entry.get("time_json")
             placeholders = ", ".join("?" for _ in columns)
             cursor = conn.execute(
-                f"INSERT INTO sources ({', '.join(columns)}) VALUES ({placeholders})",
+                f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})",
                 list(columns.values()),
             )
             row_id = cursor.lastrowid
@@ -834,6 +865,774 @@ class TestEntryDetails(unittest.TestCase):
         html_fr = build_details_html(record)
         self.assertIn("État du lien", html_fr)
         self.assertIn("Monde entier", html_fr)
+
+
+class TestCatalogContractV11(unittest.TestCase):
+    """Catalog 1.1 contract: ArcGIS types, `layer`, `geometry_type`, `time_json`, view layout."""
+
+    TODAY = datetime.date(2026, 11, 14)
+
+    def setUp(self) -> None:
+        i18n.set_language_override("en")
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp_dir = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        i18n.set_language_override(None)
+        self._tmp.cleanup()
+
+    def test_arcgis_uris(self) -> None:
+        feature_spec = build_provider_uri(
+            _dummy_record(
+                "arcgisfeatureserver",
+                "https://host/arcgis/rest/services/X/FeatureServer/0/",
+                crs="EPSG:3857",
+            )
+        )
+        self.assertEqual(feature_spec.provider, "arcgisfeatureserver")
+        self.assertEqual(feature_spec.layer_kind, "vector")
+        self.assertEqual(
+            feature_spec.uri,
+            "url='https://host/arcgis/rest/services/X/FeatureServer/0'",
+        )
+
+        map_spec = build_provider_uri(
+            _dummy_record(
+                "arcgismapserver",
+                "https://host/arcgis/rest/services/X/MapServer",
+                layer="3",
+            )
+        )
+        self.assertEqual(map_spec.provider, "arcgismapserver")
+        self.assertEqual(map_spec.layer_kind, "raster")
+        self.assertEqual(
+            map_spec.uri,
+            "format='PNG32' layer='3' url='https://host/arcgis/rest/services/X/MapServer'",
+        )
+
+        image_spec = build_provider_uri(
+            _dummy_record("arcgismapserver", "https://host/arcgis/rest/services/P/ImageServer")
+        )
+        self.assertIn("layer=''", image_spec.uri)
+        self.assertIn("url='https://host/arcgis/rest/services/P/ImageServer'", image_spec.uri)
+        self.assertFalse(needs_local_copy(_dummy_record("arcgismapserver", "https://host/MapServer")))
+
+    def test_ogr_layer_and_geometry_type_suffixes(self) -> None:
+        fgb = build_provider_uri(
+            _dummy_record("fgb", "https://example.org/all.fgb", geometry_type="line")
+        )
+        self.assertEqual(fgb.uri, "/vsicurl/https://example.org/all.fgb|geometrytype=LineString")
+
+        geojson = build_provider_uri(
+            _dummy_record("geojson", "https://example.org/mixed.geojson", geometry_type="polygon")
+        )
+        self.assertEqual(
+            geojson.uri, "/vsicurl/https://example.org/mixed.geojson|geometrytype=Polygon"
+        )
+
+        archive = _dummy_record(
+            "archive",
+            "https://example.org/bundle.zip",
+            archive_target="data/osm.gpkg",
+            layer="roads",
+            geometry_type="point",
+        )
+        self.assertEqual(
+            build_provider_uri(archive).uri,
+            "/vsizip//vsicurl/https://example.org/bundle.zip/data/osm.gpkg"
+            "|layername=roads|geometrytype=Point",
+        )
+        # Downloaded copy: same suffixes on the local path.
+        local = build_provider_uri(archive, local_path="/cache/x/data/osm.gpkg")
+        self.assertEqual(local.uri, "/cache/x/data/osm.gpkg|layername=roads|geometrytype=Point")
+        self.assertEqual((local.provider, local.layer_kind), ("ogr", "vector"))
+
+        raster = _dummy_record(
+            "archive", "https://example.org/dem.zip", archive_target="dem.tif", layer="ignored"
+        )
+        raster_spec = build_provider_uri(raster, local_path="/cache/y/dem.tif")
+        self.assertEqual((raster_spec.uri, raster_spec.provider), ("/cache/y/dem.tif", "gdal"))
+
+    def test_streamed_versus_downloaded_types(self) -> None:
+        downloaded = {
+            "archive": "https://example.org/a.zip",
+            "geojson": "/vsicurl/https://example.org/a.geojson",
+        }
+        streamed = {
+            "fgb": "https://example.org/a.fgb",
+            "cog": "https://example.org/a.tif",
+            "vrt": "https://example.org/a.vrt",
+            "wms": "https://example.org/wms?LAYERS=a",
+            "xyz": "https://example.org/{z}/{x}/{y}.png",
+            "overpass": "amenity=hospital",
+            "arcgisfeatureserver": "https://example.org/FeatureServer/0",
+        }
+        for source_type, url in downloaded.items():
+            self.assertTrue(needs_local_copy(_dummy_record(source_type, url)), source_type)
+        for source_type, url in streamed.items():
+            self.assertFalse(needs_local_copy(_dummy_record(source_type, url)), source_type)
+        # No http URL to download: left to GDAL as before.
+        self.assertFalse(needs_local_copy(_dummy_record("geojson", "/data/local.geojson")))
+
+    def test_time_value_resolution(self) -> None:
+        self.assertEqual(resolve_time_value(None, self.TODAY), "2026-11-14")
+        self.assertEqual(resolve_time_value({"offset_days": -1}, self.TODAY), "2026-11-13")
+        self.assertEqual(
+            resolve_time_value({"offset_days": -20, "step": "month"}, self.TODAY), "2026-10-01"
+        )
+        self.assertEqual(
+            resolve_time_value({"offset_days": -45, "format": "YYYY/MM/DD"}, self.TODAY),
+            "2026/09/30",
+        )
+        self.assertEqual(
+            resolve_time_value({"step": "month", "format": "YYYYMM"}, self.TODAY), "202611"
+        )
+        # Year boundary.
+        self.assertEqual(
+            resolve_time_value({"offset_days": -14}, datetime.date(2027, 1, 3)), "2026-12-20"
+        )
+
+    def test_time_template_in_urls_and_names(self) -> None:
+        wms = _dummy_record(
+            "wms",
+            "https://gibs.example/wms.cgi?SERVICE=WMS&REQUEST=GetMap&LAYERS=MODIS_Terra"
+            "&STYLES=&FORMAT=image/jpeg&TIME={time}&map=/srv/a b.map",
+            time={"offset_days": -2},
+        )
+        spec = build_provider_uri(wms, today=self.TODAY)
+        self.assertEqual(spec.display_name, "Test wms (2026-11-12)")
+        self.assertIn("layers=MODIS_Terra", spec.uri)
+        self.assertTrue(spec.uri.startswith("IgnoreGetMapUrl=1&contextualWMSLegend=0"), spec.uri)
+        self.assertIn("format=image/jpeg", spec.uri)
+        # Unknown KVP parameters stay in the service URL (double-encoded once inside the
+        # provider URI), so QGIS sends them with every request; managed ones do not.
+        self.assertTrue(
+            spec.uri.endswith(
+                "&url=https://gibs.example/wms.cgi?TIME%3D2026-11-12%26map%3D/srv/a%2520b.map"
+            ),
+            spec.uri,
+        )
+        self.assertNotIn("REQUEST", spec.uri)
+        self.assertEqual(entry_time_value(wms, self.TODAY), "2026-11-12")
+
+        plain_wms = build_provider_uri(
+            _dummy_record("wms", "https://example.org/wms?SERVICE=WMS&LAYERS=ortho")
+        )
+        self.assertTrue(plain_wms.uri.endswith("&url=https://example.org/wms"), plain_wms.uri)
+        self.assertEqual(plain_wms.display_name, "Test wms")
+        self.assertNotIn("IgnoreGetMapUrl", plain_wms.uri)
+        self.assertIsNone(entry_time_value(_dummy_record("wms", "https://example.org/wms")))
+
+        wmts = build_provider_uri(
+            _dummy_record(
+                "wmts",
+                "https://gibs.example/wmts.cgi?LAYER=VIIRS&TILEMATRIXSET=250m&FORMAT=image/jpeg"
+                "&TIME={time}",
+                time={"offset_days": -1, "step": "day", "format": "YYYY-MM-DD"},
+            ),
+            today=self.TODAY,
+        )
+        self.assertIn("&tileDimensions=TIME%3D2026-11-13&", wmts.uri)
+        self.assertTrue(
+            wmts.uri.endswith(
+                "url=https://gibs.example/wmts.cgi?TIME%3D2026-11-13"
+                "%26SERVICE%3DWMTS%26REQUEST%3DGetCapabilities"
+            ),
+            wmts.uri,
+        )
+
+        xyz = build_provider_uri(
+            _dummy_record(
+                "xyz",
+                "https://tiles.example/{time}/{z}/{y}/{x}.jpg",
+                time={"step": "month", "format": "YYYY-MM"},
+            ),
+            today=self.TODAY,
+        )
+        self.assertIn("url=https://tiles.example/2026-11/{z}/{y}/{x}.jpg", xyz.uri)
+
+        archive = _dummy_record(
+            "archive",
+            "https://example.org/export_{time}.zip",
+            archive_target="export_{time}.gpkg",
+            time={"offset_days": -1, "format": "YYYYMMDD"},
+        )
+        self.assertEqual(
+            build_provider_uri(archive, today=self.TODAY).uri,
+            "/vsizip//vsicurl/https://example.org/export_20261113.zip/export_20261113.gpkg",
+        )
+
+    def test_details_show_resolved_date_and_loading_mode(self) -> None:
+        entry = _dummy_record(
+            "archive",
+            "https://example.org/export_{time}.zip",
+            archive_target="a.gpkg",
+            time={"offset_days": 0},
+        )
+        rows = dict(describe_entry(entry))
+        utc_today = datetime.datetime.now(datetime.timezone.utc).date()
+        self.assertEqual(rows["Date loaded"], utc_today.isoformat())
+        self.assertIn("offline", rows["Loading"])
+        plain = dict(describe_entry(_dummy_record("xyz", "https://example.org/{z}/{x}/{y}.png")))
+        self.assertNotIn("Date loaded", plain)
+        self.assertNotIn("Loading", plain)
+        self.assertEqual(
+            dict(describe_entry(_dummy_record("arcgisfeatureserver", "https://h/FeatureServer/0")))[
+                "Format"
+            ],
+            "ArcGIS Feature Service (vector)",
+        )
+
+    CONTRACT_ENTRIES: List[Dict[str, Any]] = [
+        {
+            "id": "ke-roads",
+            "name": "Kenya roads",
+            "type": "archive",
+            "url": "https://example.org/ken.zip",
+            "tags": ["roads"],
+            "layer": "roads_lines",
+            "geometry_type": "line",
+        },
+        {
+            "id": "gibs-daily",
+            "name": "Daily imagery roads",
+            "type": "wms",
+            "url": "https://example.org/wms?LAYERS=x&TIME={time}",
+            "tags": ["roads"],
+            "time_json": json.dumps({"offset_days": -1, "step": "month", "format": "YYYY-MM"}),
+        },
+        {
+            "id": "bad-values",
+            "name": "Bad roads",
+            "tags": ["roads"],
+            "geometry_type": "blob",
+            "time_json": "{not json",
+        },
+    ]
+
+    def _records(self, **kwargs: Any) -> Dict[str, CatalogSourceRecord]:
+        path = build_temp_catalog(self.tmp_dir / "c.sqlite", self.CONTRACT_ENTRIES, **kwargs)
+        client = CatalogDatabaseClient([path])
+        return {r.id: r for r in client.search_sources("roads", WORLD_BBOX)}
+
+    def _assert_contract_columns(self, records: Dict[str, CatalogSourceRecord]) -> None:
+        self.assertEqual(records["ke-roads"].layer, "roads_lines")
+        self.assertEqual(records["ke-roads"].geometry_type, "line")
+        self.assertIsNone(records["ke-roads"].time)
+        self.assertEqual(
+            records["gibs-daily"].time,
+            {"offset_days": -1, "step": "month", "format": "YYYY-MM"},
+        )
+        self.assertIsNone(records["bad-values"].geometry_type)
+        self.assertIsNone(records["bad-values"].time)
+
+    def test_new_columns_are_read_and_optional(self) -> None:
+        records = self._records()
+        self._assert_contract_columns(records)
+
+        from dataclasses import asdict
+
+        # The locator serialises records to JSON and back.
+        round_trip = CatalogSourceRecord.from_dict(json.loads(json.dumps(asdict(records["gibs-daily"]))))
+        self.assertEqual(round_trip, records["gibs-daily"])
+
+        self._tmp.cleanup()
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp_dir = Path(self._tmp.name)
+        old = self._records(with_optional_columns=False)
+        self.assertEqual(len(old), 3)
+        for record in old.values():
+            self.assertIsNone(record.layer)
+            self.assertIsNone(record.geometry_type)
+            self.assertIsNone(record.time)
+
+    def test_sources_as_a_view(self) -> None:
+        records = self._records(as_view=True)
+        self.assertEqual(len(records), 3)
+        self._assert_contract_columns(records)
+        path = self.tmp_dir / "c.sqlite"
+        client = CatalogDatabaseClient([path])
+        # bbox (R-Tree join on the view's rowid column) + LIKE fallback + browse mode.
+        self.assertEqual(len(client.search_sources("", GOMA_BBOX)), 3)
+        client.allow_fts5 = False
+        self.assertEqual(
+            [r.id for r in client.search_sources("kenya", GOMA_BBOX)], ["ke-roads"]
+        )
+
+
+class TestOverpassGeometry(unittest.TestCase):
+    """Overpass recipes: points by default, lines or real polygons when the catalog says so."""
+
+    BBOX = (29.20, -1.70, 29.26, -1.64)
+
+    def setUp(self) -> None:
+        i18n.set_language_override("en")
+
+    def tearDown(self) -> None:
+        i18n.set_language_override(None)
+
+    def test_geometry_mode_rule(self) -> None:
+        mode = resolve_overpass_geometry_mode
+        self.assertEqual(mode(_dummy_record("overpass", "amenity=hospital")), "point")
+        self.assertEqual(mode(_dummy_record("overpass", "waterway=river")), "line")
+        self.assertEqual(
+            mode(_dummy_record("overpass", "amenity=hospital", geometry_type="polygon")), "polygon"
+        )
+        # The catalog column wins over the linear-key heuristic.
+        self.assertEqual(
+            mode(_dummy_record("overpass", "waterway=river", geometry_type="point")), "point"
+        )
+        fill_style = '<qgis><symbol type="fill" name="0"/></qgis>'
+        self.assertEqual(
+            mode(_dummy_record("overpass", "landuse=residential", style_qml=fill_style)), "polygon"
+        )
+
+    def test_default_query_is_unchanged(self) -> None:
+        self.assertEqual(
+            build_overpass_json_ql("amenity=hospital", self.BBOX),
+            '[out:json][timeout:15];\n(\n  nwr["amenity"="hospital"]'
+            "(-1.700000,29.200000,-1.640000,29.260000);\n);\nout center;",
+        )
+        line_ql = build_overpass_json_ql("waterway=river", self.BBOX, prefer_lines=True)
+        self.assertIn('way["waterway"="river"]', line_ql)
+        self.assertTrue(line_ql.endswith("out geom;"))
+        self.assertEqual(line_ql, build_overpass_json_ql("waterway=river", self.BBOX, geometry_mode="line"))
+
+    def test_polygon_query_and_clamp(self) -> None:
+        ql = build_overpass_json_ql("building=yes|landuse", self.BBOX, geometry_mode="polygon")
+        self.assertIn("[out:json][timeout:25][maxsize:268435456];", ql)
+        self.assertIn('nwr["building"="yes"]', ql)
+        self.assertIn('nwr["landuse"]', ql)
+        self.assertTrue(ql.endswith("out geom;"))
+
+        country = (28.0, -3.0, 31.0, 0.0)  # 9 deg2: fine for points, far too big for polygons
+        self.assertEqual(clamp_overpass_bbox(country), (country, False))
+        clamped, was_clamped = clamp_overpass_bbox(country, "polygon")
+        self.assertTrue(was_clamped)
+        self.assertAlmostEqual(clamped[2] - clamped[0], 0.5)
+        self.assertAlmostEqual(clamped[3] - clamped[1], 0.5)
+        self.assertEqual(clamp_overpass_bbox(self.BBOX, "polygon"), (self.BBOX, False))
+
+    def test_polygon_conversion(self) -> None:
+        def pts(*pairs: Tuple[float, float]) -> List[Dict[str, float]]:
+            return [{"lon": lon, "lat": lat} for lon, lat in pairs]
+
+        payload = {
+            "elements": [
+                {"type": "node", "id": 1, "lon": 29.2, "lat": -1.6, "tags": {"amenity": "school"}},
+                {
+                    "type": "way",
+                    "id": 2,
+                    "tags": {"building": "yes", "name": "Closed"},
+                    "geometry": pts((0, 0), (1, 0), (1, 1), (0, 1), (0, 0)),
+                },
+                {
+                    "type": "way",
+                    "id": 3,
+                    "tags": {"barrier": "fence"},
+                    "geometry": pts((0, 0), (2, 0), (2, 4)),
+                },
+                {
+                    "type": "relation",
+                    "id": 4,
+                    "tags": {"type": "multipolygon", "landuse": "forest"},
+                    "members": [
+                        # Outer ring split in two ways, the second one drawn backwards.
+                        {"type": "way", "role": "outer", "geometry": pts((0, 0), (10, 0), (10, 10))},
+                        {"type": "way", "role": "outer", "geometry": pts((0, 0), (0, 10), (10, 10))},
+                        {
+                            "type": "way",
+                            "role": "inner",
+                            "geometry": pts((4, 4), (6, 4), (6, 6), (4, 6), (4, 4)),
+                        },
+                        # A second, separate outer ring.
+                        {
+                            "type": "way",
+                            "role": "outer",
+                            "geometry": pts((20, 20), (21, 20), (21, 21), (20, 20)),
+                        },
+                    ],
+                },
+                {
+                    "type": "relation",
+                    "id": 5,
+                    "tags": {"type": "site"},
+                    "members": [{"type": "node", "role": "", "lon": 3.0, "lat": 5.0}],
+                },
+            ]
+        }
+        geojson = convert_overpass_json_to_geojson(payload, geometry_mode="polygon")
+        by_id = {f["properties"]["osm_id"]: f["geometry"] for f in geojson["features"]}
+        self.assertEqual(len(by_id), 5)
+        self.assertEqual(by_id["node/1"], {"type": "Point", "coordinates": [29.2, -1.6]})
+        self.assertEqual(by_id["way/2"]["type"], "MultiPolygon")
+        self.assertEqual(len(by_id["way/2"]["coordinates"][0][0]), 5)
+        # An unclosed way has no area: kept as the point `out center` would have returned.
+        self.assertEqual(by_id["way/3"], {"type": "Point", "coordinates": [1.0, 2.0]})
+        forest = by_id["relation/4"]
+        self.assertEqual(forest["type"], "MultiPolygon")
+        self.assertEqual(len(forest["coordinates"]), 2)
+        outer, hole = forest["coordinates"][0]
+        self.assertEqual(outer[0], outer[-1])
+        self.assertEqual(len(outer), 5)
+        self.assertEqual(hole[0], [4.0, 4.0])
+        self.assertEqual(len(forest["coordinates"][1]), 1)
+        self.assertEqual(by_id["relation/5"], {"type": "Point", "coordinates": [3.0, 5.0]})
+
+        groups = split_features_by_geometry(geojson)
+        self.assertEqual(sorted(groups), ["point", "polygon"])
+        self.assertEqual(len(groups["polygon"]["features"]), 2)
+        self.assertEqual(len(groups["point"]["features"]), 3)
+
+        # Same payload in the default mode: one point per element that has a position.
+        points = convert_overpass_json_to_geojson(payload)
+        self.assertEqual({f["geometry"]["type"] for f in points["features"]}, {"Point", "LineString"})
+
+
+class _RangeFileHandler(http.server.BaseHTTPRequestHandler):
+    """Tiny file server with ETag, conditional GET, Range/If-Range and failure injection."""
+
+    protocol_version = "HTTP/1.1"
+
+    def log_message(self, *args: Any) -> None:  # silence
+        pass
+
+    def do_GET(self) -> None:  # noqa: N802
+        state = self.server.state  # type: ignore[attr-defined]
+        state["requests"].append(dict(self.headers))
+        name = self.path.lstrip("/").split("?")[0]
+        if state.get("status"):
+            self.send_response(state["status"])
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if name not in state["files"]:
+            self.send_response(404)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        body, etag = state["files"][name]
+        validators = state.get("validators", True)
+        if validators and self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.end_headers()
+            return
+        start = 0
+        range_header = self.headers.get("Range")
+        if range_header and validators and self.headers.get("If-Range") == etag:
+            start = int(range_header.split("=")[1].split("-")[0])
+            self.send_response(206)
+            self.send_header("Content-Range", f"bytes {start}-{len(body) - 1}/{len(body)}")
+        else:
+            self.send_response(200)
+        payload = body[start:]
+        gzip_it = state.get("gzip") and "gzip" in (self.headers.get("Accept-Encoding") or "")
+        if gzip_it:
+            payload = gzip.compress(payload)
+            self.send_header("Content-Encoding", "gzip")
+        if validators:
+            self.send_header("ETag", etag)
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        cut = state.get("cut_after")
+        if cut is not None and state.get("cuts_left", 0) > 0:
+            state["cuts_left"] -= 1
+            self.wfile.write(payload[:cut])
+            self.wfile.flush()
+            self.close_connection = True  # body shorter than Content-Length
+            return
+        hold = state.get("hold_after")
+        if hold is not None:
+            # Send the beginning, then stall until the test releases the connection.
+            self.wfile.write(payload[:hold])
+            self.wfile.flush()
+            state["hold_event"].wait(10)
+            payload = payload[hold:]
+        self.wfile.write(payload)
+
+
+class _LocalHTTPServer(http.server.ThreadingHTTPServer):
+    daemon_threads = True
+
+    def server_bind(self) -> None:
+        # HTTPServer.server_bind() calls socket.getfqdn(), a reverse DNS lookup that can
+        # take tens of seconds on some machines; the tests do not need the host name.
+        socketserver.TCPServer.server_bind(self)
+        self.server_name = "127.0.0.1"
+        self.server_port = self.server_address[1]
+
+    def handle_error(self, request: Any, client_address: Any) -> None:
+        pass  # a client that cancels its download closes the socket: expected
+
+
+def _make_zip(members: Dict[str, bytes]) -> bytes:
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        for name, data in members.items():
+            archive.writestr(name, data)
+    return buffer.getvalue()
+
+
+class TestFileCache(unittest.TestCase):
+    """Background download cache: reuse, revalidation, resume, cancel, failures, size policy."""
+
+    def setUp(self) -> None:
+        i18n.set_language_override("en")
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name) / "cache"
+        self.state: Dict[str, Any] = {"files": {}, "requests": []}
+        self.server = _LocalHTTPServer(("127.0.0.1", 0), _RangeFileHandler)
+        self.server.state = self.state  # type: ignore[attr-defined]
+        threading.Thread(
+            target=self.server.serve_forever, kwargs={"poll_interval": 0.02}, daemon=True
+        ).start()
+        self.base = f"http://127.0.0.1:{self.server.server_address[1]}"
+        self.cache = FileCache(self.root, max_bytes=50 * 1024 * 1024)
+        # Incompressible payload so the ZIP is as large as its content (ranges matter).
+        import random
+
+        self.gpkg = random.Random(7).randbytes(300_000)
+        self.state["files"]["roads.zip"] = (
+            _make_zip({"data/roads.gpkg": self.gpkg, "data/readme.txt": b"hello"}),
+            '"v1"',
+        )
+
+    def tearDown(self) -> None:
+        i18n.set_language_override(None)
+        self.server.shutdown()
+        self.server.server_close()
+        self._tmp.cleanup()
+
+    def _fetch(self, **kwargs: Any) -> Any:
+        kwargs.setdefault("revalidate_after", 0)
+        return self.cache.fetch(f"{self.base}/roads.zip", "data/roads.gpkg", **kwargs)
+
+    def test_download_extract_then_reuse(self) -> None:
+        phases: List[str] = []
+        copy = self._fetch(progress=lambda phase, done, total: phases.append(phase))
+        self.assertFalse(copy.from_cache)
+        self.assertEqual(copy.file_path.read_bytes(), self.gpkg)
+        self.assertEqual(copy.open_path, copy.file_path.as_posix())
+        self.assertTrue(copy.open_path.endswith("/data/roads.gpkg"))
+        self.assertIn("download", phases)
+        self.assertIn("extract", phases)
+        # Only the target is kept: neither the ZIP nor the other members.
+        kept = sorted(p.name for p in copy.file_path.parent.parent.parent.rglob("*") if p.is_file())
+        self.assertEqual(kept, ["meta.json", "roads.gpkg"])
+        self.assertEqual(self.cache.entry_count(), 1)
+
+        # Within the trust window: no request at all (works offline).
+        self.server.shutdown()
+        again = self._fetch(revalidate_after=3600)
+        self.assertTrue(again.from_cache)
+        self.assertIsNone(again.stale_reason)
+        self.assertEqual(again.file_path, copy.file_path)
+        self.assertEqual(len(self.state["requests"]), 1)
+        self.assertEqual(self.cache.lookup(f"{self.base}/roads.zip", "data/roads.gpkg").file_path, copy.file_path)
+
+    def test_revalidation_and_remote_change(self) -> None:
+        first = self._fetch()
+        unchanged = self._fetch()
+        self.assertTrue(unchanged.from_cache)
+        self.assertEqual(self.state["requests"][-1].get("If-None-Match"), '"v1"')
+
+        new_gpkg = b"new content " * 1000
+        self.state["files"]["roads.zip"] = (_make_zip({"data/roads.gpkg": new_gpkg}), '"v2"')
+        # A layer of the open project still uses the old file: it must survive the refresh.
+        refreshed = self._fetch(in_use=[f"{first.file_path}|layername=roads"])
+        self.assertFalse(refreshed.from_cache)
+        self.assertEqual(refreshed.file_path.read_bytes(), new_gpkg)
+        self.assertNotEqual(refreshed.file_path, first.file_path)
+        self.assertTrue(first.file_path.is_file())
+        # Once no layer uses it, the next refresh removes the old version.
+        self.state["files"]["roads.zip"] = (_make_zip({"data/roads.gpkg": b"v3"}), '"v3"')
+        third = self._fetch()
+        self.assertFalse(first.file_path.exists())
+        self.assertFalse(refreshed.file_path.exists())
+        self.assertEqual(third.file_path.read_bytes(), b"v3")
+
+    def test_server_without_validators_is_downloaded_again(self) -> None:
+        self.state["validators"] = False
+        self._fetch()
+        again = self._fetch()
+        self.assertFalse(again.from_cache)
+        self.assertEqual(again.file_path.read_bytes(), self.gpkg)
+
+    def test_offline_falls_back_to_cached_copy(self) -> None:
+        first = self._fetch()
+        self.state["status"] = 503
+        import geostrata.core.file_cache as file_cache_module
+
+        original = file_cache_module.MAX_DOWNLOAD_ATTEMPTS
+        file_cache_module.MAX_DOWNLOAD_ATTEMPTS = 1
+        try:
+            stale = self._fetch()
+        finally:
+            file_cache_module.MAX_DOWNLOAD_ATTEMPTS = original
+        self.assertTrue(stale.from_cache)
+        self.assertIn("503", stale.stale_reason)
+        self.assertEqual(stale.file_path, first.file_path)
+
+    def test_failure_without_cache_raises_and_leaves_nothing_usable(self) -> None:
+        self.state["status"] = 404
+        with self.assertRaises(DownloadError) as caught:
+            self._fetch()
+        self.assertIn("404", str(caught.exception))
+        self.assertIsNone(self.cache.lookup(f"{self.base}/roads.zip", "data/roads.gpkg"))
+
+        self.state["status"] = None
+        with self.assertRaises(DownloadError) as missing:
+            self.cache.fetch(f"{self.base}/roads.zip", "data/nope.gpkg")
+        self.assertIn("data/nope.gpkg", str(missing.exception))
+        self.assertIn("data/roads.gpkg", str(missing.exception))
+
+        self.state["files"]["broken.zip"] = (b"<html>Service unavailable</html>", '"h"')
+        with self.assertRaises(DownloadError):
+            self.cache.fetch(f"{self.base}/broken.zip", "x.gpkg")
+        self.assertEqual(self.cache.entry_count(), 0)
+
+    def test_connection_cut_midway_is_resumed(self) -> None:
+        body = self.state["files"]["roads.zip"][0]
+        self.state["cut_after"] = 100_000
+        self.state["cuts_left"] = 2
+        import geostrata.core.file_cache as file_cache_module
+
+        original_sleep = file_cache_module._sleep_unless_canceled
+        file_cache_module._sleep_unless_canceled = lambda seconds, is_canceled: None
+        try:
+            copy = self._fetch()
+        finally:
+            file_cache_module._sleep_unless_canceled = original_sleep
+        self.assertEqual(copy.file_path.read_bytes(), self.gpkg)
+        self.assertEqual(copy.downloaded_bytes, len(body))
+        ranges = [req.get("Range") for req in self.state["requests"]]
+        self.assertEqual(ranges, [None, "bytes=100000-", "bytes=200000-"])
+
+    def test_cancel_keeps_partial_file_and_next_load_resumes(self) -> None:
+        # The server sends 50 kB then stalls: the download is cancelled mid-way.
+        self.state["hold_after"] = 50_000
+        self.state["hold_event"] = threading.Event()
+        received: List[int] = []
+
+        def cancel_after_some_bytes() -> bool:
+            return bool(received)
+
+        with self.assertRaises(DownloadCancelled):
+            self._fetch(
+                progress=lambda phase, done, total: received.append(done),
+                is_canceled=cancel_after_some_bytes,
+            )
+        self.state["hold_event"].set()
+        entry_dir = self.cache.entry_dir(f"{self.base}/roads.zip", "data/roads.gpkg")
+        part = entry_dir / "download.part"
+        self.assertTrue(part.is_file())
+        partial_size = part.stat().st_size
+        self.assertGreater(partial_size, 0)
+        self.assertLessEqual(partial_size, 50_000)
+        self.assertIsNone(self.cache.lookup(f"{self.base}/roads.zip", "data/roads.gpkg"))
+
+        self.state["hold_after"] = None
+        copy = self._fetch()
+        self.assertEqual(self.state["requests"][-1].get("Range"), f"bytes={partial_size}-")
+        self.assertEqual(copy.file_path.read_bytes(), self.gpkg)
+        self.assertFalse(part.exists())
+
+        # The remote file changed while a partial download was waiting: start again.
+        self.state["hold_after"] = 50_000
+        self.state["hold_event"] = threading.Event()
+        received.clear()
+        with self.assertRaises(DownloadCancelled):
+            self.cache.fetch(
+                f"{self.base}/roads.zip", "data/readme.txt",
+                progress=lambda phase, done, total: received.append(done),
+                is_canceled=cancel_after_some_bytes,
+            )
+        self.state["hold_event"].set()
+        self.state["hold_after"] = None
+        self.state["files"]["roads.zip"] = (_make_zip({"data/readme.txt": b"changed"}), '"v9"')
+        changed = self.cache.fetch(f"{self.base}/roads.zip", "data/readme.txt")
+        self.assertEqual(changed.file_path.read_bytes(), b"changed")
+
+    def test_geojson_is_stored_decompressed_and_zip_without_target(self) -> None:
+        document = json.dumps({"type": "FeatureCollection", "features": []}).encode() * 50
+        self.state["files"]["feed.php"] = (document, '"g1"')
+        self.state["gzip"] = True
+        entry = _dummy_record("geojson", f"/vsicurl/{self.base}/feed.php?format=geojson")
+        copy = fetch_entry_file(self.cache, entry)
+        self.assertEqual(self.state["requests"][-1].get("Accept-Encoding"), "gzip")
+        self.assertEqual(copy.file_path.read_bytes(), document)
+        self.assertTrue(copy.open_path.endswith(".geojson"))
+
+        whole = self.cache.fetch(f"{self.base}/roads.zip", "")
+        self.assertTrue(whole.open_path.startswith("/vsizip/"))
+        self.assertTrue(whole.open_path.endswith("/archive.zip"))
+        self.assertTrue(zipfile.is_zipfile(whole.file_path))
+
+    def test_shapefile_sidecars_are_extracted(self) -> None:
+        self.state["files"]["shp.zip"] = (
+            _make_zip(
+                {
+                    "adm/adm1.shp": b"shp",
+                    "adm/adm1.dbf": b"dbf",
+                    "adm/adm1.shx": b"shx",
+                    "adm/adm1.prj": b"prj",
+                    "adm/adm10.shp": b"other",
+                    "adm/adm2.shp": b"other",
+                }
+            ),
+            '"s"',
+        )
+        copy = self.cache.fetch(f"{self.base}/shp.zip", "/adm/ADM1.shp")
+        names = sorted(p.name for p in copy.file_path.parent.iterdir())
+        self.assertEqual(names, ["adm1.dbf", "adm1.prj", "adm1.shp", "adm1.shx"])
+
+    def test_size_limit_evicts_least_recently_used_but_not_files_in_use(self) -> None:
+        import random
+
+        for index in range(3):
+            self.state["files"][f"f{index}.zip"] = (
+                _make_zip({"d.gpkg": random.Random(index).randbytes(200_000)}),
+                f'"e{index}"',
+            )
+        self.cache.max_bytes = 450_000  # room for two extracted files, not three
+        first = self.cache.fetch(f"{self.base}/f0.zip", "d.gpkg")
+        time.sleep(0.02)
+        second = self.cache.fetch(f"{self.base}/f1.zip", "d.gpkg")
+        time.sleep(0.02)
+        self.cache.fetch(f"{self.base}/f0.zip", "d.gpkg", revalidate_after=3600)  # f0 used last
+        third = self.cache.fetch(f"{self.base}/f2.zip", "d.gpkg")
+        self.assertTrue(first.file_path.is_file())
+        self.assertFalse(second.file_path.exists())  # least recently used
+        self.assertTrue(third.file_path.is_file())
+
+        # A file used by an open layer is never evicted, even over the limit.
+        self.cache.max_bytes = 1
+        self.cache.evict(in_use=[str(first.file_path)])
+        self.assertTrue(first.file_path.is_file())
+        self.assertFalse(third.file_path.exists())
+
+    def test_clear_only_touches_cache_entries(self) -> None:
+        copy = self._fetch()
+        foreign_dir = self.root / "my-thesis"
+        foreign_dir.mkdir()
+        (foreign_dir / "chapter1.txt").write_text("precious")
+        lookalike = self.root / "holiday-0123456789abcdef"  # entry-like name, foreign content
+        lookalike.mkdir()
+        (lookalike / "photo.jpg").write_text("precious")
+        (self.root / "notes.txt").write_text("precious")
+
+        freed, kept = self.cache.clear(in_use=[copy.open_path])
+        self.assertEqual(freed, 0)
+        self.assertTrue(copy.file_path.is_file())
+        self.assertGreater(kept, 0)
+
+        freed, kept = self.cache.clear()
+        self.assertGreater(freed, 0)
+        self.assertEqual(kept, 0)
+        self.assertFalse(copy.file_path.exists())
+        self.assertTrue((foreign_dir / "chapter1.txt").is_file())
+        self.assertTrue((lookalike / "photo.jpg").is_file())
+        self.assertTrue((self.root / "notes.txt").is_file())
 
 
 def _collect_translatable_strings() -> Tuple[Dict[str, List[str]], List[str]]:

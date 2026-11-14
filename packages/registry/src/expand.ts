@@ -32,7 +32,7 @@ function applyFileDefaults(defaults: RawEntry, entry: RawEntry): RawEntry {
 
 function substitutePlaceholders(value: unknown, replacements: Record<string, string>): unknown {
 	if (typeof value === 'string') {
-		// Only the country placeholders are touched: {z}/{x}/{y} and {{bbox}} stay as they are.
+		// Only the country placeholders are touched: {z}/{x}/{y}, {{bbox}} and {time} stay as they are.
 		return value.replace(/\{(iso2|ISO2|iso3|ISO3|country|country_fr)\}/g, function replace(_match, key: string) {
 			return replacements[key]
 		})

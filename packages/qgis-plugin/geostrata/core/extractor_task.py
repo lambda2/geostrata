@@ -8,9 +8,13 @@ from typing import Any, Optional, Tuple
 
 from ..i18n import tr
 from .db_client import CatalogSourceRecord
+from .file_cache import DownloadCancelled, DownloadError, configured_file_cache
+from .loader_task import fetch_entry_file, open_layer_sources
 from .uri_builder import (
     apply_layer_metadata_and_style,
     build_provider_uri,
+    entry_display_name,
+    needs_local_copy,
 )
 
 _ACTIVE_EXTRACTOR_TASKS: list[Any] = []
@@ -54,10 +58,16 @@ def launch_offline_extraction_task(
         QgsVectorLayer,
     )
 
-    spec = build_provider_uri(entry, canvas_bbox_4326)
+    # File-based sources are clipped from the cached local copy (downloaded by this
+    # task when missing), the others from their streamed remote source.
+    uses_cache = needs_local_copy(entry)
+    file_cache = configured_file_cache() if uses_cache else None
+    in_use = open_layer_sources() if uses_cache else []
+    title = entry_display_name(entry)
+    remote_spec = build_provider_uri(entry, canvas_bbox_4326)
     output_dir = resolve_extraction_output_dir()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    is_raster = spec.layer_kind == "raster"
+    is_raster = remote_spec.layer_kind == "raster"
     ext = "tif" if is_raster else "gpkg"
     output_path = output_dir / f"{entry.id}_{timestamp}.{ext}"
 
@@ -69,17 +79,50 @@ def launch_offline_extraction_task(
 
         def __init__(self) -> None:
             super().__init__(
-                tr("Geostrata: offline extraction ({name})", name=entry.localized_name()),
+                tr("Geostrata: offline extraction ({name})", name=title),
                 QgsTask.CanCancel,
             )
             self.output_file: Path = output_path
             self.error_message: Optional[str] = None
+            self.was_canceled: bool = False
+            self._feedback = QgsProcessingFeedback()
+
+        def cancel(self) -> None:
+            self._feedback.cancel()
+            super().cancel()
+
+        def _on_download_progress(self, _phase: str, done: int, total: Optional[int]) -> None:
+            if total:
+                self.setProgress(60.0 * done / total)
 
         def run(self) -> bool:
+            spec = remote_spec
+            if file_cache is not None:
+                try:
+                    copy = fetch_entry_file(
+                        file_cache, entry, self._on_download_progress, self.isCanceled, in_use
+                    )
+                except DownloadCancelled:
+                    self.was_canceled = True
+                    return False
+                except DownloadError as exc:
+                    self.error_message = tr(
+                        "Could not load '{name}': {error}", name=title, error=str(exc)
+                    )
+                    return False
+                spec = build_provider_uri(
+                    entry, canvas_bbox_4326, local_path=copy.open_path
+                )
+                self.setProgress(60.0)
+
             try:
                 import processing
 
-                feedback = QgsProcessingFeedback()
+                feedback = self._feedback
+                base = 60.0 if file_cache is not None else 0.0
+                feedback.progressChanged.connect(
+                    lambda value: self.setProgress(base + (100.0 - base) * value / 100.0)
+                )
                 if is_raster:
                     source_layer = QgsRasterLayer(
                         spec.uri, spec.display_name, spec.provider
@@ -136,6 +179,15 @@ def launch_offline_extraction_task(
                     _ACTIVE_EXTRACTOR_TASKS.remove(self)
             except Exception:
                 pass
+            if self.was_canceled or (not result and self.isCanceled()):
+                if iface is not None and iface.messageBar() is not None:
+                    iface.messageBar().pushMessage(
+                        "Geostrata",
+                        tr("Offline extraction cancelled: {name}", name=title),
+                        level=Qgis.MessageLevel.Info,
+                        duration=5,
+                    )
+                return
             if not result or not self.output_file.is_file():
                 msg = self.error_message or tr("Offline extraction failed.")
                 QgsMessageLog.logMessage(
@@ -150,7 +202,7 @@ def launch_offline_extraction_task(
                     )
                 return
 
-            layer_title = f"{entry.localized_name()} {tr('[Local]')}"
+            layer_title = f"{title} {tr('[Local]')}"
             if is_raster:
                 local_layer = QgsRasterLayer(
                     str(self.output_file), layer_title, "gdal"

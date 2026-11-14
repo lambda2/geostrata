@@ -1,8 +1,8 @@
 # HOT OSM per-country exports (Humanitarian OpenStreetMap Team raw-data-api bucket, also published on HDX).
 # One templated entry per theme, expanded for every country whose file answered an HTTP range
 # request on 2026-11-14 and holds at least one feature (empty exports are left out).
-# Archives above 150 MB are left out: the plugin streams the whole zip and QGIS would freeze for minutes
-# (use the Overpass recipes or the country's own sources there).
+# Archives above 1 GB are left out. Smaller ones are downloaded in the background by the plugin
+# and kept in its local file cache, so a 500 MB country is slow the first time only.
 # To refresh the lists, re-probe the URL for every ISO3 of assets/polygons/country-index.json.
 defaults:
   type: archive
@@ -44,16 +44,18 @@ sources:
         name: "Export HOT OSM - Routes - {country_fr}"
         description: "Toutes les routes, pistes et sentiers OpenStreetMap du pays ({country_fr}) (highway=*) en lignes, avec nom, classe, revêtement, état, largeur, voies, sens unique et ponts. Instantané national exporté par le Humanitarian OpenStreetMap Team ; l'exhaustivité dépend de la cartographie OSM locale. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
     for_each_country: [
-      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARM, ATA, ATF, ATG, AZE, BDI, BEN, BFA, BGD, BGR, BHR, BHS,
-      BIH, BLM, BLR, BLZ, BMU, BRB, BRN, BTN, BWA, CAF, CIV, CMR, COG, COK, COM, CPV, CRI, CUB, CUW,
-      CYM, CYP, DJI, DMA, DNK, DOM, DZA, ECU, ERI, EST, ETH, FJI, FLK, FRO, FSM, GAB, GEO, GGY, GHA,
-      GIN, GMB, GNB, GNQ, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IMN, IOT, IRQ, ISL, ISR, JAM,
-      JEY, JOR, KAZ, KGZ, KHM, KIR, KNA, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA,
-      MAC, MCO, MDA, MDV, MHL, MKD, MLI, MLT, MNE, MNG, MOZ, MRT, MSR, MUS, MWI, NAM, NCL, NER, NIC,
-      NIU, NRU, NZL, OMN, PAN, PCN, PLW, PNG, PRI, PRK, PRY, PSE, PYF, QAT, RWA, SAU, SDN, SEN, SGP,
-      SGS, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWZ, SYC, SYR, TCA, TCD, TGO,
-      TJK, TKM, TLS, TON, TTO, TUN, TUV, TWN, URY, UZB, VAT, VCT, VEN, VGB, VIR, VUT, WLF, WSM, YEM,
-      ZMB, ZWE
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL, CIV,
+      CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DJI, DMA, DNK, DOM, DZA, ECU,
+      EGY, ERI, EST, ETH, FIN, FJI, FLK, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN, GMB, GNB, GNQ, GRC,
+      GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IOT, IRL, IRN, IRQ, ISL, ISR, ITA, JAM,
+      JEY, JOR, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU,
+      LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR,
+      MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN, PAK, PAN, PCN, PER,
+      PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SGS, SHN,
+      SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA,
+      TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VAT, VCT, VEN, VGB, VIR,
+      VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
     ]
   - id: "{iso2}-hotosm-buildings"
     name: "HOT OSM Export - Building Footprints - {country}"
@@ -75,15 +77,18 @@ sources:
         name: "Export HOT OSM - Emprises de bâtiments - {country_fr}"
         description: "Toutes les emprises de bâtiments OpenStreetMap du pays ({country_fr}) (building=*) en polygones, avec nom, type, niveaux, matériaux et adresse. Instantané national exporté par le Humanitarian OpenStreetMap Team ; couverture inégale hors des zones cartographiées lors de mapathons. Couche très volumineuse. Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
     for_each_country: [
-      ABW, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AZE, BDI, BEN, BFA, BGR, BHR, BHS, BIH,
-      BLM, BLZ, BMU, BOL, BRB, BRN, BTN, BWA, CAF, CHL, CIV, COG, COK, COM, CPV, CRI, CUB, CUW, CYM,
-      CYP, DJI, DMA, DOM, ECU, EGY, ERI, EST, ETH, FJI, FLK, FRO, FSM, GAB, GEO, GGY, GMB, GNB, GNQ,
-      GRC, GRD, GRL, GUY, HKG, HND, HRV, HTI, IMN, IOT, IRN, IRQ, ISL, ISR, JAM, JEY, JOR, KGZ, KHM,
-      KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LSO, LUX, LVA, MAC, MAR, MCO, MDA, MDV, MHL,
-      MKD, MLT, MNE, MNG, MRT, MSR, MUS, MYS, NAM, NCL, NER, NIC, NIU, NRU, OMN, PAK, PAN, PCN, PLW,
-      PNG, PRI, PRK, PRY, PSE, PYF, QAT, RWA, SAU, SEN, SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, STP,
-      SUR, SVN, SWZ, SYC, SYR, TCA, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUV, TWN, URY, UZB, VAT,
-      VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CAN, CHE, CHL,
+      CHN, CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRO, FSM, GAB, GEO, GGY, GHA, GIN, GMB, GNB,
+      GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IMN, IOT, IRL, IRN, IRQ, ISL, ISR, JAM,
+      JEY, JOR, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU,
+      LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR,
+      MUS, MWI, MYS, NAM, NCL, NER, NIC, NIU, NLD, NOR, NPL, NRU, NZL, OMN, PAK, PAN, PCN, PER, PHL,
+      PLW, PNG, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SGS, SHN, SLB, SLE,
+      SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM,
+      TLS, TON, TTO, TUN, TUR, TUV, TWN, UGA, UKR, URY, UZB, VAT, VCT, VEN, VGB, VIR, VNM, VUT, WLF,
+      WSM, YEM, ZAF, ZMB, ZWE
     ]
   - id: "{iso2}-hotosm-health-facilities"
     name: "HOT OSM Export - Health Facilities (points) - {country}"
@@ -256,17 +261,18 @@ sources:
         name: "Export HOT OSM - Cours d'eau - {country_fr}"
         description: "Rivières, ruisseaux, canaux, drains et fossés OpenStreetMap du pays ({country_fr}) (waterway=*) en lignes, avec nom, type, largeur, profondeur et passages couverts. Les lacs et les surfaces des grands fleuves ne sont pas inclus (objets linéaires uniquement). Le GeoPackage zippé est lu en flux : quelques secondes pour un petit pays, premier chargement et déplacements lents pour un grand (archives de plus de 1 Go pour les plus grands pays)."
     for_each_country: [
-      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUT, AZE, BDI, BEL, BEN, BFA, BGD,
-      BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRB, BRN, BTN, BWA, CAF, CHE, CHL, CIV, CMR, COD,
-      COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DJI, DMA, DNK, DOM, DZA, ECU, EGY, ERI,
-      ESP, EST, ETH, FIN, FJI, FLK, FRO, FSM, GAB, GEO, GGY, GHA, GIN, GMB, GNB, GNQ, GRC, GRD, GRL,
-      GTM, GUY, HKG, HND, HRV, HTI, HUN, IMN, IND, IOT, IRL, IRN, IRQ, ISL, ISR, JAM, JEY, JOR, KAZ,
-      KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC,
-      MAR, MCO, MDA, MDG, MDV, MEX, MKD, MLI, MLT, MMR, MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM,
-      NCL, NER, NGA, NIC, NLD, NPL, NZL, OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG, PRI, PRK, PRT, PRY,
-      PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN, SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP,
-      SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA, TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV,
-      TWN, TZA, UGA, UKR, URY, UZB, VCT, VEN, VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
+      ABW, AFG, AGO, AIA, ALB, AND, ARE, ARG, ARM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN, BFA,
+      BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ, BMU, BOL, BRA, BRB, BRN, BTN, BWA, CAF, CHE, CHL, CHN,
+      CIV, CMR, COD, COG, COK, COL, COM, CPV, CRI, CUB, CUW, CYM, CYP, CZE, DEU, DJI, DMA, DNK, DOM,
+      DZA, ECU, EGY, ERI, ESP, EST, ETH, FIN, FJI, FLK, FRA, FRO, FSM, GAB, GBR, GEO, GGY, GHA, GIN,
+      GMB, GNB, GNQ, GRC, GRD, GRL, GTM, GUY, HKG, HND, HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN,
+      IRQ, ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ, KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR,
+      LBY, LCA, LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAR, MCO, MDA, MDG, MDV, MEX, MKD, MLI, MLT, MMR,
+      MNE, MNG, MOZ, MRT, MSR, MUS, MWI, MYS, NAM, NCL, NER, NGA, NIC, NLD, NOR, NPL, NZL, OMN, PAK,
+      PAN, PCN, PER, PHL, PLW, PNG, POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, ROU, RWA, SAU, SDN, SEN,
+      SGP, SGS, SHN, SLB, SLE, SLV, SMR, SOM, SRB, SSD, STP, SUR, SVK, SVN, SWE, SWZ, SYC, SYR, TCA,
+      TCD, TGO, THA, TJK, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN, TZA, UGA, UKR, URY, UZB, VCT, VEN,
+      VGB, VIR, VNM, VUT, WLF, WSM, YEM, ZAF, ZMB, ZWE
     ]
   - id: "{iso2}-hotosm-airports"
     name: "HOT OSM Export - Airports and Airfields (points) - {country}"

@@ -132,7 +132,7 @@ class GeostrataDockWidget(QDockWidget):
 
         action_row = QHBoxLayout()
         self._stream_btn = QPushButton(tr("Load"), container)
-        self._stream_btn.setToolTip(tr("Add the layer to QGIS, streamed from its source"))
+        self._stream_btn.setToolTip(tr("Add the layer to QGIS (files are downloaded in the background)"))
         self._extract_btn = QPushButton(tr("Extract (.gpkg/.tif)"), container)
         self._extract_btn.setToolTip(
             tr("Clip the layer to the current map extent and save it locally")
